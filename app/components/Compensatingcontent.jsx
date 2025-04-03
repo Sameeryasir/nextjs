@@ -7,6 +7,7 @@ import {
   ChevronLast,
   ChevronLeft,
   ChevronRight,
+  X
 } from "lucide-react";
 import Addnew from "./Addnew";
 
@@ -53,44 +54,55 @@ function CompensatingRecord() {
         </div>
 
         {/* Filters */}
-        <div className="grid md:grid-cols-3 gap-4 mb-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+          {/* Registration Date Section */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-600">
               Registration Date
             </label>
-            <input
-              type="date"
-              value={registrationDate}
-              onChange={(e) => setRegistrationDate(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
+            <div className="flex items-center gap-2">
+              <input
+                type="date"
+                value={registrationDate}
+                onChange={(e) => setRegistrationDate(e.target.value)}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Code
-            </label>
-            <input
-              type="text"
-              value={customerCode}
-              onChange={(e) => setCustomerCode(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Customer ID
+
+          {/* Customer Information Section */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-600">
+              Customer Information
             </label>
             <div className="flex gap-2">
               <input
                 type="text"
+                value={customerCode}
+                onChange={(e) => setCustomerCode(e.target.value)}
+                placeholder="Code"
+                className="w-20 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+              <input
+                type="text"
                 value={customerId}
                 onChange={(e) => setCustomerId(e.target.value)}
+                placeholder="Customer ID"
                 className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
-              <button className="bg-orange-500 text-white px-3 py-2 rounded-md hover:bg-orange-600 transition">
-                <Search size={18} />
+              <button
+                type="button"
+                onClick={() => {
+                  setCustomerCode("");
+                  setCustomerId("");
+                }}
+                className="bg-gray-300 text-gray-700 px-3 py-2 rounded-md hover:bg-gray-400 transition flex items-center"
+              >
+                <X size={18} />
               </button>
-              <button className="bg-gray-300 text-gray-700 px-3 py-2 rounded-md hover:bg-gray-400 transition">
+              <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition flex items-center gap-1">
+                <Search size={18} />
+                <span>Search</span>
               </button>
             </div>
           </div>

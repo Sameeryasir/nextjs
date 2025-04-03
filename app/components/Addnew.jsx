@@ -164,7 +164,7 @@ function Addnew({ isOpen, onClose }) {
             <div className="overflow-x-auto mt-4">
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-blue-800 text-white">
+                  <tr className="bg-gray-800 text-white">
                     <th className="px-4 py-2 text-left font-normal">Date</th>
                     <th className="px-4 py-2 text-left font-normal">Type</th>
                     <th className="px-4 py-2 text-left font-normal">Remark</th>
@@ -208,7 +208,7 @@ function Addnew({ isOpen, onClose }) {
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-700"
+              className="px-6 py-2 bg-gray-800 text-white rounded-md "
             >
               Ok
             </button>
