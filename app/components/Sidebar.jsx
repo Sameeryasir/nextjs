@@ -61,7 +61,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="w-64 bg-gray-800 text-white h-screen flex flex-col">
+    <div className="w-70 bg-gray-800 text-white h-screen flex flex-col">
       {/* Header */}
       <div className="p-4 bg-[#0A1A3B] flex items-center gap-3">
         <Bell className="w-6 h-6 text-blue-300" />
@@ -84,14 +84,18 @@ export default function Sidebar() {
             } ${item.indented ? "ml-4" : ""}`}
             onClick={() => handleOptionChange(item.id)}
           >
-            <div
-              className={`w-4 h-4 rounded-full border-2 border-white flex-shrink-0 ${
-                selectedOption === item.id ? "bg-blue-400" : ""
-              }`}
-            ></div>
-s            <span className="whitespace-nowrap">{item.name}</span>
+            <div className="flex items-center gap-3 flex-grow">
+              <div
+                className={`w-4 h-4 rounded-full border-2 border-white flex-shrink-0 ${
+                  selectedOption === item.id ? "bg-blue-400" : ""
+                }`}
+              ></div>
+              {item.icon}
+              <span className="text-left">{item.name}</span>
+            </div>
           </div>
         ))}
+
         {/* Message Subscription */}
         <div className="flex items-center gap-3 p-2 hover:bg-blue-700 rounded cursor-pointer">
           <MessageSquare className="w-5 h-5 text-blue-300" />

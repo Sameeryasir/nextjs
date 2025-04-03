@@ -56,7 +56,7 @@ function Content() {
   return (
     <div className="p-6">
       <div className="flex gap-4 mb-6 pl-50">
-        <button className="px-4 py-2 bg-[#FF9900] text-white rounded">
+        <button className="px-4 py-2 bg-[#FF9900] text-white rounded hover:cursor-pointer">
           Search
         </button>
         <button className="px-4 py-2 bg-[#FF9900] text-white rounded">
