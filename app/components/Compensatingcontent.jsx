@@ -39,13 +39,13 @@ function CompensatingRecord() {
             List Of Compensating
           </h1>
           <div className="flex space-x-3">
-            <button className="bg-orange-500 text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md hover:bg-orange-600 transition">
+            <button className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md  transition">
               <RefreshCw size={18} />
               Refresh
             </button>
             <button
               onClick={() => setShowModal(true)}
-              className="bg-orange-500 text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md hover:bg-orange-600 transition"
+              className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md hover:bg-[#FF9900] transition"
             >
               <Plus size={18} />
               New

@@ -50,9 +50,11 @@ function SearchCustomer() {
         </div>
       </div>
 
-      <button className="mt-8 px-6 py-2 bg-orange-500 text-white rounded-md transition-colors shadow-sm text-left w-auto">
-        Identify Customer
-      </button>
+      <div className="flex justify-center">
+        <button className="mt-8 px-6 py-2 bg-[#FF9900] text-white rounded-md transition-colors shadow-sm w-auto text-center">
+          Identify Customer
+        </button>
+      </div>
     </div>
   );
 }
