@@ -12,6 +12,7 @@ import {
   Info,
   MonitorDot,
 } from "lucide-react";
+import Link from "next/link";
 
 export default function Sidebar() {
   const [selectedOption, setSelectedOption] = useState("compensating");
@@ -20,45 +21,45 @@ export default function Sidebar() {
     setSelectedOption(option);
   };
 
-  const menuItems = [
-    {
-      id: "contract",
-      name: "Contract Management",
-      icon: <FileText className="w-5 h-5 text-blue-300" />,
-      indented: false,
-    },
-    {
-      id: "compensating",
-      name: "Compensating",
-      icon: <Database className="w-5 h-5 text-blue-300" />,
-      indented: true,
-    },
-    {
-      id: "vending",
-      name: "Vending",
-      icon: <Package className="w-5 h-5 text-blue-300" />,
-      indented: true,
-    },
-    {
-      id: "maintenance",
-      name: "Maintenance Token",
-      icon: <Key className="w-5 h-5 text-blue-300" />,
-      indented: true,
-    },
-    {
-      id: "key-issue",
-      name: "Key Issue Token",
-      icon: <Shield className="w-5 h-5 text-blue-300" />,
-      indented: true,
-    },
-    {
-      id: "free-issue",
-      name: "Free Issue Token",
-      icon: <Key className="w-5 h-5 text-blue-300" />,
-      indented: true,
-    },
-    
-  ];
+ const menuItems = [
+   {
+     id: "contract",
+     name: "Contract Management",
+     icon: <FileText className="w-5 h-5 text-blue-300" />,
+     route: "/",
+   },
+   {
+     id: "compensating",
+     name: "Compensating",
+     icon: <Database className="w-5 h-5 text-blue-300" />,
+     route: "/compensation",
+   },
+   {
+     id: "vending",
+     name: "Vending",
+     icon: <Package className="w-5 h-5 text-blue-300" />,
+     route: "/vending",
+   },
+   {
+     id: "maintenance",
+     name: "Maintenance Token",
+     icon: <Key className="w-5 h-5 text-blue-300" />,
+     route: "",
+   },
+   {
+     id: "key-issue",
+     name: "Key Issue Token",
+     icon: <Shield className="w-5 h-5 text-blue-300" />,
+     route: "",
+   },
+   {
+     id: "free-issue",
+     name: "Free Issue Token",
+     icon: <Key className="w-5 h-5 text-blue-300" />,
+     route: "",
+   },
+ ];
+
 
   return (
     <div className="w-70 bg-gray-800 text-white h-screen flex flex-col">
@@ -91,7 +92,9 @@ export default function Sidebar() {
                 }`}
               ></div>
               {item.icon}
-              <span className="text-left">{item.name}</span>
+              <Link href={item.route} className="text-left">
+                {item.name}
+              </Link>
             </div>
           </div>
         ))}
