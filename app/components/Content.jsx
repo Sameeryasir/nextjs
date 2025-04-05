@@ -55,7 +55,7 @@ function Content() {
 
   return (
     <div className="p-6">
-      <div className="flex gap-4 mb-6 pl-50">
+      <div className="flex gap-4 mb-6 pl-150">
         <button className="px-4 py-2 bg-[#FF9900] text-white rounded hover:cursor-pointer">
           Search
         </button>
@@ -107,7 +107,7 @@ function Content() {
             {tableData.map((row, index) => (
               <tr
                 key={index}
-                className={index % 2 === 0 ? "bg-white" : "bg-orange-50"}
+                className={index % 2 === 0 ? "bg-white" : "bg-orange-100"}
               >
                 <td className="p-3">{row.code}</td>
                 <td className="p-3">{row.regDate}</td>

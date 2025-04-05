@@ -5,12 +5,13 @@ const PaymentSection = () => {
   return (
     <div className="space-y-4">
       {/* Payment Info Heading */}
-      <div className="px-6">
-        <h3 className="font-medium text-gray-700">Payment Info</h3>
+      <div className="px-6 mt-5">
+        <h3 className="font-medium text-gray-400">Free To Pay</h3>
+        <h3 className="font-medium pt-4">Payment Info</h3>
       </div>
 
       {/* Payment Sections */}
-      <div className="flex justify-between p-6">
+      <div className="flex justify-between p-6 border-t border-gray-200">
         {/* Left Section */}
         <div className="space-y-4 text-left w-1/3">
           <div className="flex items-center">

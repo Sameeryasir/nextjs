@@ -45,7 +45,7 @@ function CompensatingRecord() {
             </button>
             <button
               onClick={() => setShowModal(true)}
-              className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md hover:bg-[#FF9900] transition"
+              className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md hover:bg-[#FF9900] transition w-[110px]"
             >
               <Plus size={18} />
               New
@@ -96,45 +96,50 @@ function CompensatingRecord() {
                   setCustomerCode("");
                   setCustomerId("");
                 }}
-                className="bg-gray-300 text-gray-700 px-3 py-2 rounded-md hover:bg-gray-400 transition flex items-center"
+                className="bg-[#FF9900]  text-white px-3 py-2 rounded-md hover:bg-[#FF9900]  transition flex items-center text-lg"
+              >
+                ...
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setCustomerCode("");
+                  setCustomerId("");
+                }}
+                className="bg-[#FF9900]  text-white px-3 py-2 rounded-md hover:bg-[#FF9900]  transition flex items-center"
               >
                 <X size={18} />
               </button>
-              <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition flex items-center gap-1">
-                <Search size={18} />
-                <span>Search</span>
-              </button>
             </div>
           </div>
+          <button className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md  transition w-[120px]">
+            <Search size={16} />
+            <span>Search</span>
+          </button>
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between bg-gray-100 p-3 rounded-md shadow-sm mb-4">
-          <div className="flex gap-2">
-            <button className="border p-2 rounded hover:bg-gray-200">
-              <ChevronFirst size={18} />
-            </button>
-            <button className="border p-2 rounded hover:bg-gray-200">
-              <ChevronLeft size={18} />
-            </button>
-            <button className="border p-2 rounded hover:bg-gray-200">
-              <ChevronRight size={18} />
-            </button>
-            <button className="border p-2 rounded hover:bg-gray-200">
-              <ChevronLast size={18} />
-            </button>
-          </div>
-          <span className="text-sm text-gray-600">
-            Total Records, Record 1-, Page 1/2059, Turn To Page
-          </span>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              className="border rounded w-16 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-            <button className="text-orange-500 hover:text-orange-600 transition">
-              →
-            </button>
+        <div className="p-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="flex gap-2">
+              <ChevronFirst className="w-5 h-5" />
+              <ChevronLeft className="w-5 h-5" />
+              <ChevronRight className="w-5 h-5 text-orange-500" />
+              <ChevronLast className="w-5 h-5 text-orange-500" />
+            </div>
+            <div className="flex items-center gap-2 bg-gray-100 px-3 py-1 rounded">
+              <span className="text-sm text-gray-600">
+                Total 1 Records, Record 1-1, Page 1/1
+              </span>
+              <span className="text-sm text-gray-600">|</span>
+              <span className="text-sm text-gray-600">Turn To Page</span>
+              <input
+                type="text"
+                className="w-12 border rounded px-2 py-1 text-sm text-center"
+                value="1"
+              />
+              <ChevronRight className="w-4 h-4 text-green-500 hover:text-green-600" />
+            </div>
           </div>
         </div>
 
@@ -142,7 +147,7 @@ function CompensatingRecord() {
         <div className="overflow-x-auto">
           <table className="w-full border border-gray-200 rounded-lg shadow-sm">
             <thead>
-              <tr className="bg-orange-500 text-white">
+              <tr className="bg-[#FF9900] text-white">
                 <th className="px-4 py-3 text-left">Code</th>
                 <th className="px-4 py-3 text-left">Full Name</th>
                 <th className="px-4 py-3 text-left">Date</th>
@@ -156,17 +161,17 @@ function CompensatingRecord() {
               {records.map((record, index) => (
                 <tr
                   key={index}
-                  className="border-b transition hover:bg-gray-100 even:bg-gray-50"
+                  className=" transition hover:bg-gray-100 even:bg-gray-50"
                 >
                   <td className="px-4 py-3 flex items-center gap-2">
                     <span className="inline-block w-4 text-orange-500">⚡</span>
                     {record.code}
                   </td>
-                  <td className="px-4 py-3">{record.fullName}</td>
-                  <td className="px-4 py-3">{record.date}</td>
-                  <td className="px-4 py-3">{record.types}</td>
-                  <td className="px-4 py-3">{record.bizTypes}</td>
-                  <td className="px-4 py-3 text-right font-semibold text-gray-700">
+                  <td className="px-6 py-5">{record.fullName}</td>
+                  <td className="px-6 py-5">{record.date}</td>
+                  <td className="px-6 py-5">{record.types}</td>
+                  <td className="px-6 py-5">{record.bizTypes}</td>
+                  <td className="px-6 py-5 text-right font-semibold text-gray-700">
                     {record.amount.toFixed(2)}
                   </td>
                   <td className="px-4 py-3">{record.operator}</td>
