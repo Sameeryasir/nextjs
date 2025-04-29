@@ -1,10 +1,10 @@
-import Vending from '@/app/components/Vendingpage'
+import Vending from '@/app/components/Vending'
 import React from 'react'
 
-function VendingPage() {
+function page() {
   return (
     <div><Vending/></div>
   )
 }
 
-export default VendingPage
+export default page

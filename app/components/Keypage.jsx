@@ -12,7 +12,7 @@ import {
   Search,
 } from "lucide-react";
 
-function Token() {
+function Keypage() {
   const [meterNum, setMeterNum] = useState("24170163497");
   const [accountNo, setAccountNo] = useState("");
   const [tokenType, setTokenType] = useState("STS Standard");
@@ -174,4 +174,4 @@ function Token() {
   );
 }
 
-export default Token;
+export default Keypage;

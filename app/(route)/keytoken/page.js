@@ -1,10 +1,9 @@
-import Token from '@/app/components/Keypage'
+import Keychangetokenpage from '@/app/components/Keyissuetokenpage'
 import React from 'react'
 
-function Tokenpage() {
+function page() {
   return (
-    <div><Token/></div>
-  )
+<Keychangetokenpage/>  )
 }
 
-export default Tokenpage
+export default page
