@@ -1,3 +1,4 @@
+import SpecialTokenTable from "@/app/components/SpecialTokenTable";
 import React from "react";
 
 function page() {
@@ -5,20 +6,25 @@ function page() {
     <>
       <div className="bg-white p-6">
         {/* Header Row with Title and Action Buttons */}
-        <div className="flex gap-4 justify-end">
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-            Refresh
-          </button>
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-            New
-          </button>{" "}
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-            Import
-          </button>
+        <div className="flex justify-between items-center gap-4">
+          <h1 className="text-xl font-medium text-gray-900 mb-4">Special Token</h1>
+
+          <div className="flex gap-4">
+            <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+              Refresh
+            </button>
+            <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+              New
+            </button>
+            <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+              Import
+            </button>
+          </div>
         </div>
-        <h1 className="text-xl font-medium text-gray-900">Special Token</h1>
+
         <div className="max-w-2xl text-left mb-14 space-y-8">
           {/* Customer Information Section */}
+
           <section className="mt-6">
             <div className="space-y-4">
               <div className="flex items-center gap-4">
@@ -51,6 +57,7 @@ function page() {
             </button>
           </div>
         </div>
+        <SpecialTokenTable />
       </div>
     </>
   );

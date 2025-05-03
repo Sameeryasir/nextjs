@@ -22,6 +22,10 @@ import {
   Ticket,
   ListOrdered,
   KeyIcon,
+  House,
+  Home,
+  HomeIcon,
+  File,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -29,7 +33,6 @@ export default function Sidebar() {
   const [selectedOption, setSelectedOption] = useState("contract"); // Default to "contract"
   const [activeMenu, setActiveMenu] = useState("business"); // Track which menu is open
 
-  // Initialize with business menu open and contract selected
   useEffect(() => {
     setActiveMenu("business");
     setSelectedOption("contract");
@@ -39,6 +42,28 @@ export default function Sidebar() {
     setActiveMenu(activeMenu === menu ? null : menu);
   };
 
+  const arrearProject=[
+    {id:'project',
+      name:"Project",
+      icon:<File className="w-5 h-5 text-white"/>,
+      route:'/arrearproject'
+    },
+    {
+      id:"",
+      name:"",
+      icon:"",
+      route:''
+    }
+  ]  
+  const warehouseItems=[
+  {
+    id:"warehouse",
+    name:"Warehouse",
+    icon:<HomeIcon className="w-5 h-5 text-white"/>,
+    route:"/warehouse",
+  },
+
+]
   const securityItems = [
     {
       id: "securitymodule",
@@ -81,7 +106,7 @@ export default function Sidebar() {
       name:"Special Token",
       icon:<KeyIcon className="w-5 h-5 text-white"/>,
       route:"/specialtoken"
-    }
+    },
   ];
 
   const financeItems = [
@@ -246,14 +271,63 @@ export default function Sidebar() {
           ))}
 
         {/* Static Menu Items */}
-        <div className="p-4 mb-3 hover:bg-[#FF9900] flex items-center justify-start gap-3 cursor-pointer">
-          <Info className="w-5 h-5 text-blue-300" />
-          <span>Base Information</span>
+        <div
+          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center justify-start gap-3 cursor-pointer"
+          onClick={() => handleMenuToggle("warehouse")}
+        >
+          <House className="w-5 h-5 text-white" />
+          <span>Meter Warehouse</span>
         </div>
-        <div className="p-4 mb-3 hover:bg-[#FF9900] flex items-center justify-start gap-3 cursor-pointer">
-          <MonitorDot className="w-5 h-5 text-blue-300" />
-          <span>System Information</span>
+        {activeMenu === "warehouse" &&
+          warehouseItems.map((item) => (
+            <Link href={item.route} className="text-left" key={item.id}>
+              <div
+                className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
+                  selectedOption === item.id ? "bg-blue-700" : ""
+                }`}
+                onClick={() => setSelectedOption(item.id)}
+              >
+                <div className="flex items-center gap-3 flex-grow">
+                  <div
+                    className={`w-4 h-4 rounded-full border-2 border-white flex-shrink-0 ${
+                      selectedOption === item.id ? "bg-blue-400" : ""
+                    }`}
+                  ></div>
+                  {item.icon}
+                  {item.name}
+                </div>
+              </div>
+            </Link>
+          ))}
+        <div
+          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center justify-start gap-3 cursor-pointer
+        "
+          onClick={() => handleMenuToggle("project")}
+        >
+          <MonitorDot className="w-5 h-5 text-white" />
+          <span>Arrear</span>
         </div>
+        {activeMenu === "project" &&
+          arrearProject.map((item) => (
+            <Link href={item.route} className="text-left" key={item.id}>
+              <div
+                className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
+                  selectedOption === item.id ? "bg-blue-700" : ""
+                }`}
+                onClick={() => setSelectedOption(item.id)}
+              >
+                <div className="flex items-center gap-3 flex-grow">
+                  <div
+                    className={`w-4 h-4 rounded-full border-2 border-white flex-shrink-0 ${
+                      selectedOption === item.id ? "bg-blue-400" : ""
+                    }`}
+                  ></div>
+                  {item.icon}
+                  {item.name}
+                </div>
+              </div>
+            </Link>
+          ))}
       </nav>
     </div>
   );

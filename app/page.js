@@ -1,3 +1,4 @@
+import PostizHero from "./components/Axie";
 import BalencerManagement from "./components/BalencerManagement";
 import Content from "./components/Content";
 import Creditbalence from "./components/Creditbalence";
