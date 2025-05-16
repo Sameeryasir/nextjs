@@ -1,4 +1,4 @@
-import TokenGenerator from "@/app/components/Keychanges";
+import TokenGenerator from "app/components/Keychanges";
 import React from "react";
 function page() {
   return (
