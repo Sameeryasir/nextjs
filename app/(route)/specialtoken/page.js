@@ -1,4 +1,5 @@
 import SpecialTokenTable from "@/app/components/SpecialTokenTable";
+import Link from "next/link";
 import React from "react";
 
 function page() {
@@ -7,15 +8,19 @@ function page() {
       <div className="bg-white p-6">
         {/* Header Row with Title and Action Buttons */}
         <div className="flex justify-between items-center gap-4">
-          <h1 className="text-xl font-medium text-gray-900 mb-4">Special Token</h1>
+          <h1 className="text-xl font-medium text-gray-900 mb-4">
+            Special Token
+          </h1>
 
           <div className="flex gap-4">
             <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
               Refresh
             </button>
-            <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-              New
-            </button>
+            <Link href={'/new'}>
+              <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+                New
+              </button>
+            </Link>
             <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
               Import
             </button>

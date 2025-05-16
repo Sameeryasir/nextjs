@@ -19,7 +19,7 @@ function CustomerRegisteration({ onClose }) {
             <X size={16} />
           </button>
         </div>
-        <form className="space-y-5">
+          <form className="space-y-5">
           <div className="flex items-center gap-x-4">
             <label htmlFor="fullName" className="text-sm text-black w-1/4">
               {" "}

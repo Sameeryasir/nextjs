@@ -7,6 +7,7 @@ import Modifydialogue from "./components/Modifydialogue";
 import Newstockin from "./components/Newstockin";
 import Newwarehouse from "./components/Newwarehouse";
 import Securitypage from "./components/Securitypage";
+import Specailnewbutton from "./components/Specailnewbutton";
 import Stockin from "./components/Stockin";
 import Stockindialogue from "./components/Stockindialogue";
 import Stockout from "./components/Stockout";
