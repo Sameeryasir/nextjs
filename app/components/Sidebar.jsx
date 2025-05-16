@@ -14,7 +14,6 @@ import {
   MonitorDot,
   Banknote,
   MessagesSquare,
-  icons,
   Wallet,
   Layers,
   WalletCards,
@@ -23,7 +22,6 @@ import {
   ListOrdered,
   KeyIcon,
   House,
-  Home,
   HomeIcon,
   File,
   Warehouse,
@@ -32,8 +30,8 @@ import {
 import Link from "next/link";
 
 export default function Sidebar() {
-  const [selectedOption, setSelectedOption] = useState("contract"); // Default to "contract"
-  const [activeMenu, setActiveMenu] = useState("business"); // Track which menu is open
+  const [selectedOption, setSelectedOption] = useState("contract");
+  const [activeMenu, setActiveMenu] = useState("business");
 
   useEffect(() => {
     setActiveMenu("business");
@@ -44,50 +42,42 @@ export default function Sidebar() {
     setActiveMenu(activeMenu === menu ? null : menu);
   };
 
-  const arrearProject=[
-    {id:'project',
-      name:"Project",
-      icon:<File className="w-5 h-5 text-white"/>,
-      route:'/arrearproject'
+  const arrearProject = [
+    {
+      id: "project",
+      name: "Project",
+      icon: <File className="w-5 h-5 text-white" />,
+      route: "/arrearproject",
+    },
+  ];
+
+  const warehouseItems = [
+    {
+      id: "warehouse",
+      name: "Warehouse",
+      icon: <HomeIcon className="w-5 h-5 text-white" />,
+      route: "/warehouse",
     },
     {
-      id:"",
-      name:"",
-      icon:"",
-      route:''
-    }
-  ]  
-  const warehouseItems=[
-  {
-    id:"warehouse",
-    name:"Warehouse",
-    icon:<HomeIcon className="w-5 h-5 text-white"/>,
-    route:"/warehouse",
-  },
-  {
-    id:"stockin",
-    name:"Stock In",
-    icon:<StoreIcon className="w-5 h-5 text-white"/>,
-    route:"/stockin"
-  },
-  {
-    id:'stockout',
-    name:"Stock Out",
-    icon:<StoreIcon className="w-5 h-5 text-white"/>,
-    route:"/stockout"
-  },
-  {
-    id:"stocktransfer",
-    name:"Stock Transfer",
-    icon:<StoreIcon className="w-5 h-5 text-white"/>,
-    route:"/stocktransfer"
+      id: "stockin",
+      name: "Stock In",
+      icon: <StoreIcon className="w-5 h-5 text-white" />,
+      route: "/stockin",
+    },
+    {
+      id: "stockout",
+      name: "Stock Out",
+      icon: <StoreIcon className="w-5 h-5 text-white" />,
+      route: "/stockout",
+    },
+    {
+      id: "stocktransfer",
+      name: "Stock Transfer",
+      icon: <StoreIcon className="w-5 h-5 text-white" />,
+      route: "/stocktransfer",
+    },
+  ];
 
-  }
-
-
-]
-
- 
   const securityItems = [
     {
       id: "securitymodule",
@@ -126,10 +116,10 @@ export default function Sidebar() {
       route: "/transaction_viewer",
     },
     {
-      id:'specialtoken',
-      name:"Special Token",
-      icon:<KeyIcon className="w-5 h-5 text-white"/>,
-      route:"/specialtoken"
+      id: "specialtoken",
+      name: "Special Token",
+      icon: <KeyIcon className="w-5 h-5 text-white" />,
+      route: "/specialtoken",
     },
   ];
 
@@ -188,25 +178,25 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="w-70 bg-gray-800 text-white h-screen flex flex-col">
+    <div className="w-full sm:w-64 bg-gray-800 text-white min-h-screen flex flex-col overflow-y-auto">
       {/* Header */}
-      <div className="p-4 flex items-center ml-19">
+      <div className="p-4 flex items-center">
         <span className="font-semibold text-lg">SECDAIS</span>
       </div>
 
-      {/* Menu Items */}
-      <nav className="">
-        {/* Business Section */}
+      {/* Sidebar Content */}
+      <nav className="flex-1 px-2">
+        {/* Business */}
         <div
-          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center justify-start gap-3 cursor-pointer"
+          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center gap-3 cursor-pointer"
           onClick={() => handleMenuToggle("business")}
         >
           <Building2 className="w-5 h-5" />
-          <span className="font-medium text-left">Business</span>
+          <span className="font-medium">Business</span>
         </div>
         {activeMenu === "business" &&
           menuItems.map((item) => (
-            <Link href={item.route} className="text-left" key={item.id}>
+            <Link href={item.route} key={item.id}>
               <div
                 className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
                   selectedOption === item.id ? "bg-blue-700" : ""
@@ -215,7 +205,7 @@ export default function Sidebar() {
               >
                 <div className="flex items-center gap-3 flex-grow">
                   <div
-                    className={`w-4 h-4 rounded-full border-2 border-white flex-shrink-0 ${
+                    className={`w-4 h-4 rounded-full border-2 border-white ${
                       selectedOption === item.id ? "bg-blue-400" : ""
                     }`}
                   ></div>
@@ -226,17 +216,17 @@ export default function Sidebar() {
             </Link>
           ))}
 
-        {/* Finance Section */}
+        {/* Finance */}
         <div
-          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center justify-start gap-3 cursor-pointer"
+          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center gap-3 cursor-pointer"
           onClick={() => handleMenuToggle("finance")}
         >
-          <Banknote className="w-5 h-5 text-white" />
+          <Banknote className="w-5 h-5" />
           <span>Finance</span>
         </div>
         {activeMenu === "finance" &&
           financeItems.map((item) => (
-            <Link href={item.route} className="text-left" key={item.id}>
+            <Link href={item.route} key={item.id}>
               <div
                 className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
                   selectedOption === item.id ? "bg-blue-700" : ""
@@ -245,7 +235,7 @@ export default function Sidebar() {
               >
                 <div className="flex items-center gap-3 flex-grow">
                   <div
-                    className={`w-4 h-4 rounded-full border-2 border-white flex-shrink-0 ${
+                    className={`w-4 h-4 rounded-full border-2 border-white ${
                       selectedOption === item.id ? "bg-blue-400" : ""
                     }`}
                   ></div>
@@ -256,25 +246,25 @@ export default function Sidebar() {
             </Link>
           ))}
 
-        {/* Message Subscription (static link) */}
+        {/* Message Subscription */}
         <Link href={"/messegesubscription"}>
-          <div className="p-4 mb-3 hover:bg-[#FF9900] flex items-center justify-start gap-3 cursor-pointer">
-            <MessagesSquare className="w-5 h-5 text-white" />
+          <div className="p-4 mb-3 hover:bg-[#FF9900] flex items-center gap-3 cursor-pointer">
+            <MessagesSquare className="w-5 h-5" />
             <span>Message Subscription</span>
           </div>
         </Link>
 
-        {/* Security Module Section */}
+        {/* Security Module */}
         <div
-          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center justify-start gap-3 cursor-pointer"
+          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center gap-3 cursor-pointer"
           onClick={() => handleMenuToggle("security")}
         >
-          <Banknote className="w-5 h-5 text-white" />
+          <Shield className="w-5 h-5" />
           <span>Security Module</span>
         </div>
         {activeMenu === "security" &&
           securityItems.map((item) => (
-            <Link href={item.route} className="text-left" key={item.id}>
+            <Link href={item.route} key={item.id}>
               <div
                 className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
                   selectedOption === item.id ? "bg-blue-700" : ""
@@ -283,7 +273,7 @@ export default function Sidebar() {
               >
                 <div className="flex items-center gap-3 flex-grow">
                   <div
-                    className={`w-4 h-4 rounded-full border-2 border-white flex-shrink-0 ${
+                    className={`w-4 h-4 rounded-full border-2 border-white ${
                       selectedOption === item.id ? "bg-blue-400" : ""
                     }`}
                   ></div>
@@ -294,51 +284,17 @@ export default function Sidebar() {
             </Link>
           ))}
 
-        {/* Static Menu Items */}
+        {/* Warehouse */}
         <div
-          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center justify-start gap-3 cursor-pointer"
+          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center gap-3 cursor-pointer"
           onClick={() => handleMenuToggle("warehouse")}
         >
-          <House className="w-5 h-5 text-white" />
+          <House className="w-5 h-5" />
           <span>Meter Warehouse</span>
         </div>
         {activeMenu === "warehouse" &&
           warehouseItems.map((item) => (
-            <>
-              {" "}
-              <Link href={item.route} className="text-left" key={item.id}>
-                <div
-                  className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
-                    selectedOption === item.id ? "bg-blue-700" : ""
-                  }`}
-                  onClick={() => setSelectedOption(item.id)}
-                >
-                  <div className="flex items-center gap-3 flex-grow">
-                    <div
-                      className={`w-4 h-4 rounded-full border-2 border-white flex-shrink-0 ${
-                        selectedOption === item.id ? "bg-blue-400" : ""
-                      }`}
-                    ></div>
-                    {item.icon}
-                    {item.name}
-                  </div>
-                </div>
-              </Link>
-               
-          
-            </>
-          ))}
-        <div
-          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center justify-start gap-3 cursor-pointer
-        "
-          onClick={() => handleMenuToggle("project")}
-        >
-          <MonitorDot className="w-5 h-5 text-white" />
-          <span>Arrear</span>
-        </div>
-        {activeMenu === "project" &&
-          arrearProject.map((item) => (
-            <Link href={item.route} className="text-left" key={item.id}>
+            <Link href={item.route} key={item.id}>
               <div
                 className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
                   selectedOption === item.id ? "bg-blue-700" : ""
@@ -347,7 +303,37 @@ export default function Sidebar() {
               >
                 <div className="flex items-center gap-3 flex-grow">
                   <div
-                    className={`w-4 h-4 rounded-full border-2 border-white flex-shrink-0 ${
+                    className={`w-4 h-4 rounded-full border-2 border-white ${
+                      selectedOption === item.id ? "bg-blue-400" : ""
+                    }`}
+                  ></div>
+                  {item.icon}
+                  {item.name}
+                </div>
+              </div>
+            </Link>
+          ))}
+
+        {/* Arrear */}
+        <div
+          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center gap-3 cursor-pointer"
+          onClick={() => handleMenuToggle("project")}
+        >
+          <MonitorDot className="w-5 h-5" />
+          <span>Arrear</span>
+        </div>
+        {activeMenu === "project" &&
+          arrearProject.map((item) => (
+            <Link href={item.route} key={item.id}>
+              <div
+                className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
+                  selectedOption === item.id ? "bg-blue-700" : ""
+                }`}
+                onClick={() => setSelectedOption(item.id)}
+              >
+                <div className="flex items-center gap-3 flex-grow">
+                  <div
+                    className={`w-4 h-4 rounded-full border-2 border-white ${
                       selectedOption === item.id ? "bg-blue-400" : ""
                     }`}
                   ></div>
