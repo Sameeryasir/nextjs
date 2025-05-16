@@ -11,7 +11,7 @@ import {
   Calendar,
   Search
 } from "lucide-react";
-
+import Link from "next/link";
 function Maintaintoken() {
   const [meterNum, setMeterNum] = useState("24170163497");
   const [accountNo, setAccountNo] = useState("");
@@ -61,29 +61,33 @@ function Maintaintoken() {
     },
     // More records...
   ];
-
+ const Reload = () => {
+   window.location.reload();
+ };
   return (
     <div className="p-6">
       <div className="">
         {/* Header */}
         <div className=" bg-white">
-          <div className="max-w-7xl mx-9">
+          <div className="">
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-2xl font-semibold text-gray-800">
                 Maintainance Token
               </h1>
               <div className="flex gap-2">
-                <button className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md  transition">
+                <button
+                  onClick={() => Reload()}
+                  className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md  transition hover:cursor-pointer"
+                >
                   <RefreshCw size={18} />
                   Refresh
                 </button>
-                <button
-                  onClick={() => setShowModal(true)}
-                  className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md hover:bg-[#FF9900] transition w-[110px]"
-                >
-                  <Plus size={18} />
-                  New
-                </button>
+                <Link href="/compensatingnewform">
+                  <button className="bg-[#FF9900] text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 shadow-md hover:bg-[#FF9900] transition w-auto sm:w-[110px] hover:cursor-pointer">
+                    <Plus size={16} />
+                    <span className="hidden sm:inline">New</span>
+                  </button>
+                </Link>
               </div>
             </div>
 

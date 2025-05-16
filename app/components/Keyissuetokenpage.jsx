@@ -137,7 +137,6 @@ function Keychangetokenpage() {
           </div>
         </section>
       </div>
-      <Keypage/>
     </div>
   );
 }

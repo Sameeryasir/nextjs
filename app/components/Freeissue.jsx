@@ -11,7 +11,7 @@ import {
   Calendar,
   Search,
 } from "lucide-react";
-
+import Link from "next/link";
 function Freeissue() {
   const [meterNum, setMeterNum] = useState("24170163497");
   const [accountNo, setAccountNo] = useState("");
@@ -62,29 +62,32 @@ function Freeissue() {
     },
     // More records...
   ];
-
+const reload=()=>{
+  window.location.reload();
+}
   return (
     <div className="p-6">
       <div className="">
         {/* Header */}
-        <div className=" bg-white max-w-7xl mx-9">
+        <div className=" bg-white ">
           <div className="">
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-2xl font-semibold text-gray-800">
                 Free Issue List
               </h1>
               <div className="flex gap-2">
-                <button className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md  transition">
+                <button 
+                onClick={()=>reload()}
+                className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md  transition hover:cursor-pointer">
                   <RefreshCw size={18} />
                   Refresh
                 </button>
-                <button
-                  onClick={() => setShowModal(true)}
-                  className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md hover:bg-[#FF9900] transition w-[110px]"
-                >
-                  <Plus size={18} />
-                  New
-                </button>
+                <Link href={'/freeissuenewbutton'}>
+                  <button className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md hover:cursor-pointer transition w-[110px]">
+                    <Plus size={18} />
+                    New
+                  </button>
+                </Link>
               </div>
             </div>
 

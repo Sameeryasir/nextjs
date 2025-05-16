@@ -4,12 +4,17 @@
   import Modifydialogue from "./Modifydialogue";
   function SecurityForm() {
     const [showdialogue,setshowdialogue]=useState(false);
+    const handlereload=()=>{
+      window.location.reload();
+    }
     return (
       <>
         {" "}
         <div className="bg-white">
           <div className="flex justify-end space-x-4">
-            <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+            <button 
+            onClick={()=>handlereload()}
+            className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
               Refresh
             </button>
             <button

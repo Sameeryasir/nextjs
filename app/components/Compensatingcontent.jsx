@@ -7,16 +7,16 @@ import {
   ChevronLast,
   ChevronLeft,
   ChevronRight,
-  X
+  X,
 } from "lucide-react";
 import Addnew from "./Addnew";
-
+import Link from "next/link";
 function CompensatingRecord() {
   const [registrationDate, setRegistrationDate] = useState("2025-02-14");
   const [customerCode, setCustomerCode] = useState("02");
   const [customerId, setCustomerId] = useState("02-NGAZID.Ja");
   const [showModal, setShowModal] = useState(false);
-
+  const [showdialogue, setShowdialogue] = useState(false);
   // Sample data
   const records = Array(5).fill({
     code: "00000000155",
@@ -27,11 +27,13 @@ function CompensatingRecord() {
     amount: 148.7,
     operator: "Admin",
   });
+  const Reload = () => {
+    window.location.reload();
+  };
 
   return (
     <div className="w-full bg-white p-4 md:p-6">
       <Addnew isOpen={showModal} onClose={() => setShowModal(false)} />
-
       <div className="w-full bg-white">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-4 mb-4 gap-4 sm:gap-0">
@@ -39,17 +41,21 @@ function CompensatingRecord() {
             List Of Compensating
           </h1>
           <div className="flex space-x-2 sm:space-x-3 w-full sm:w-auto">
-            <button className="bg-[#FF9900] text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 shadow-md transition text-sm sm:text-base">
+            <button
+              onClick={() => Reload()}
+              className="bg-[#FF9900] text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 shadow-md transition text-sm sm:text-base hover:cursor-pointer"
+            >
               <RefreshCw size={16} />
               <span className="hidden sm:inline">Refresh</span>
             </button>
-            <button
-              onClick={() => setShowModal(true)}
-              className="bg-[#FF9900] text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 shadow-md hover:bg-[#FF9900] transition w-auto sm:w-[110px]"
-            >
-              <Plus size={16} />
-              <span className="hidden sm:inline">New</span>
-            </button>
+            <div>
+              <Link href="/compensatingnewform">
+                <button className="bg-[#FF9900] text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 shadow-md hover:bg-[#FF9900] transition w-auto sm:w-[110px] hover:cursor-pointer">
+                  <Plus size={16} />
+                  <span className="hidden sm:inline">New</span>
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -92,11 +98,8 @@ function CompensatingRecord() {
               />
               <button
                 type="button"
-                onClick={() => {
-                  setCustomerCode("");
-                  setCustomerId("");
-                }}
-                className="bg-[#FF9900] text-white px-2 sm:px-3 py-2 rounded-md hover:bg-[#FF9900] transition flex items-center text-sm sm:text-lg"
+                onClick={() => setShowModal(true)}
+                className="bg-[#FF9900] text-white px-2 sm:px-3 py-2 rounded-md hover:bg-[#FF9900] transition flex items-center text-sm sm:text-lg hover:cursor-pointer "
               >
                 ...
               </button>
@@ -113,10 +116,10 @@ function CompensatingRecord() {
             </div>
           </div>
           <div className="md:col-span-2">
-              <button className="bg-[#FF9900] text-white px-3 py-2 rounded-md flex items-center gap-2 shadow-md transition w-full sm:w-[120px] justify-center">
-                <Search size={16} />
-                <span>Search</span>
-              </button>
+            <button className="bg-[#FF9900] text-white px-3 py-2 rounded-md flex items-center gap-2 shadow-md transition w-full sm:w-[120px] justify-center">
+              <Search size={16} />
+              <span>Search</span>
+            </button>
           </div>
         </div>
 

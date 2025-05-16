@@ -1,25 +1,32 @@
+"use client";
 import React from "react";
 import BalencerTable from "./BalencerTable";
-
+import { useState } from "react";
+import Newdialogue from "./Newdialogue";
 function BalencerManagement() {
+  const [showForm, setShowForm] = useState(false);
   return (
     <div className="min-h-screen bg-white ">
       <div className="flex flex-1 justify-end gap-10">
         <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
           Refresh
         </button>{" "}
-        <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+        <button
+          onClick={() => setShowForm(true)}
+          className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40"
+        >
           New
         </button>
+        {showForm && (
+          <Newdialogue onClose={() => setShowForm(false)} />
+        )}
       </div>
       <div className="max-w-2xl text-left ml-8 mb-10 space-y-8">
-        {/* Customer Information Section */}
         <section className>
           <h1 className="text-xl font-medium text-gray-900 mb-6">
             Load-Balencer
           </h1>
           <div className="space-y-4">
-            {/* Code + Other Code - Unified row */}
 
             <div className="flex items-center gap-4">
               <label className="w-32 text-sm text-gray-500">Code</label>

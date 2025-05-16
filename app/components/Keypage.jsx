@@ -11,6 +11,7 @@ import {
   Calendar,
   Search,
 } from "lucide-react";
+import Link from "next/link";
 
 function Keypage() {
   const [meterNum, setMeterNum] = useState("24170163497");
@@ -66,14 +67,29 @@ function Keypage() {
     <div className="p-6">
       <div className="">
         {/* Header */}
+
         <div className=" bg-white">
-          <div className="max-w-7xl mx-9">
+          <div className="">
+            {/* Header with buttons aligned to right */}
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-2xl font-semibold text-gray-800">
-                Key Change List{" "}
+                Key Change List
               </h1>
+              <div className="flex gap-4">
+                {" "}
+                {/* Added gap between buttons */}
+                <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+                  Refresh
+                </button>
+                <Link href={'/keytokenpage'}>
+                  <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+                    Search
+                  </button>
+                </Link>
+              </div>
             </div>
 
+            {/* Rest of your content remains the same */}
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -101,7 +117,7 @@ function Keypage() {
               </div>
 
               <div>
-                <button className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md  transition w-[120px]">
+                <button className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md transition w-[120px]">
                   <Search size={16} />
                   <span>Search</span>
                 </button>
@@ -109,7 +125,6 @@ function Keypage() {
             </div>
           </div>
         </div>
-
         {/* Table Section */}
         <div className="bg-white ">
           <div className="p-4  flex items-center justify-between text-sm text-gray-600">

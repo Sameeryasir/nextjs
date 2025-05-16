@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Search } from "lucide-react";
-
+import Link from "next/link";
 const SearchForm = () => {
   const [formData, setFormData] = useState({
     description: "",
@@ -22,8 +22,17 @@ const SearchForm = () => {
   };
 
   return (
-    <div className="w-full max-w-1xl mx-auto p-6  mt-10">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Search Subscription</h2>
+    <div className="w-full max-w-1xl mx-auto p-6">
+      <div className="flex justify-between items-center w-full mb-6">
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Search Subscription
+        </h2>
+        <Link href={"/new_subscription"}>
+          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+            New
+          </button>
+        </Link>
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -71,7 +80,6 @@ const SearchForm = () => {
           </button>
         </div>
       </form>
-      
     </div>
   );
 };

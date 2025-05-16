@@ -1,4 +1,5 @@
 import Warehousetable from '@/app/components/Warehousetable';
+import Link from 'next/link';
 import React from 'react'
 
 function page() {
@@ -13,9 +14,11 @@ function page() {
           <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
             Refresh
           </button>
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-            New
-          </button>
+          <Link href={'/newwarehouse'}>
+            <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+              New
+            </button>
+          </Link>
           <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
             Modify
           </button>

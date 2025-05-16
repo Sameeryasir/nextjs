@@ -26,6 +26,8 @@ import {
   Home,
   HomeIcon,
   File,
+  Warehouse,
+  StoreIcon,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -62,8 +64,30 @@ export default function Sidebar() {
     icon:<HomeIcon className="w-5 h-5 text-white"/>,
     route:"/warehouse",
   },
+  {
+    id:"stockin",
+    name:"Stock In",
+    icon:<StoreIcon className="w-5 h-5 text-white"/>,
+    route:"/stockin"
+  },
+  {
+    id:'stockout',
+    name:"Stock Out",
+    icon:<StoreIcon className="w-5 h-5 text-white"/>,
+    route:"/stockout"
+  },
+  {
+    id:"stocktransfer",
+    name:"Stock Transfer",
+    icon:<StoreIcon className="w-5 h-5 text-white"/>,
+    route:"/stocktransfer"
+
+  }
+
 
 ]
+
+ 
   const securityItems = [
     {
       id: "securitymodule",
@@ -280,24 +304,29 @@ export default function Sidebar() {
         </div>
         {activeMenu === "warehouse" &&
           warehouseItems.map((item) => (
-            <Link href={item.route} className="text-left" key={item.id}>
-              <div
-                className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
-                  selectedOption === item.id ? "bg-blue-700" : ""
-                }`}
-                onClick={() => setSelectedOption(item.id)}
-              >
-                <div className="flex items-center gap-3 flex-grow">
-                  <div
-                    className={`w-4 h-4 rounded-full border-2 border-white flex-shrink-0 ${
-                      selectedOption === item.id ? "bg-blue-400" : ""
-                    }`}
-                  ></div>
-                  {item.icon}
-                  {item.name}
+            <>
+              {" "}
+              <Link href={item.route} className="text-left" key={item.id}>
+                <div
+                  className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
+                    selectedOption === item.id ? "bg-blue-700" : ""
+                  }`}
+                  onClick={() => setSelectedOption(item.id)}
+                >
+                  <div className="flex items-center gap-3 flex-grow">
+                    <div
+                      className={`w-4 h-4 rounded-full border-2 border-white flex-shrink-0 ${
+                        selectedOption === item.id ? "bg-blue-400" : ""
+                      }`}
+                    ></div>
+                    {item.icon}
+                    {item.name}
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+               
+          
+            </>
           ))}
         <div
           className="p-4 mb-3 hover:bg-[#FF9900] flex items-center justify-start gap-3 cursor-pointer
