@@ -276,7 +276,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="bg-gray-900 text-white shadow-lg overflow-y-auto top-0 left-0 w-72 h-full border-r border-gray-800">
+    <aside className="bg-gray-900 text-white shadow-lg overflow-y-auto top-0 shrink-0 left-0 w-72 h-full border-r border-gray-800">
       <div className="p-5 border-b border-gray-800">
         <h1 className="text-2xl font-bold tracking-wide text-white">
           <span className="text-orange-400">SEC</span>
