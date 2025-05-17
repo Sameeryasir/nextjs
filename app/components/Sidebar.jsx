@@ -21,6 +21,9 @@ import {
   House,
   HomeIcon,
   StoreIcon,
+  MessageCircle,
+  ChevronDown,
+  ChevronRight,
 } from "lucide-react";
 
 const SidebarSection = ({
@@ -33,40 +36,50 @@ const SidebarSection = ({
   setSelectedOption,
 }) => {
   return (
-    <div>
+    <div className="mb-1">
       <div
-        className="flex items-center px-5 py-3 cursor-pointer hover:bg-orange-500 transition-colors"
+        className="flex items-center justify-between px-5 py-3 cursor-pointer hover:bg-orange-500/90 transition-colors rounded-md mx-2"
         onClick={onToggle}
       >
-        {icon}
-        <span className="ml-3 font-medium">{title}</span>
+        <div className="flex items-center">
+          <span className="text-orange-400">{icon}</span>
+          <span className="ml-3 font-medium text-gray-100">{title}</span>
+        </div>
+        {activeMenu ? (
+          <ChevronDown className="w-4 h-4 text-gray-300" />
+        ) : (
+          <ChevronRight className="w-4 h-4 text-gray-300" />
+        )}
       </div>
 
-      {activeMenu &&
-        items.map((item) => (
-          <Link href={item.route} key={item.id}>
-            <div
-              onClick={() => setSelectedOption(item.id)}
-              className={`flex items-center px-6 py-2 gap-3 cursor-pointer transition-colors rounded-md ${
-                selectedOption === item.id
-                  ? "border-l-4 border-orange-500 bg-gray-800"
-                  : "hover:bg-gray-700"
-              }`}
-            >
-              <div className="flex items-center gap-3 flex-grow">
-                <div
-                  className={`w-3 h-3 rounded-full border-2 ${
-                    selectedOption === item.id
-                      ? "bg-orange-500 border-orange-500"
-                      : "border-gray-500"
-                  }`}
-                ></div>
-                {item.icon}
-                <span className="text-sm">{item.name}</span>
+      {activeMenu && (
+        <div className="mt-1 mb-3 ml-4 pl-2 border-l border-gray-700">
+          {items.map((item) => (
+            <Link href={item.route} key={item.id}>
+              <div
+                onClick={() => setSelectedOption(item.id)}
+                className={`flex items-center px-4 py-2 gap-3 cursor-pointer transition-colors rounded-md mx-2 ${
+                  selectedOption === item.id
+                    ? "border-l-2 border-orange-500 bg-gray-800/80"
+                    : "hover:bg-gray-700/60"
+                }`}
+              >
+                <div className="flex items-center gap-3 flex-grow">
+                  <div
+                    className={`w-2 h-2 rounded-full ${
+                      selectedOption === item.id
+                        ? "bg-orange-500"
+                        : "bg-gray-500"
+                    }`}
+                  ></div>
+                  <span className="text-gray-300">{item.icon}</span>
+                  <span className="text-sm text-gray-200">{item.name}</span>
+                </div>
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -164,6 +177,15 @@ export default function Sidebar() {
     },
   ];
 
+  const messageItems = [
+    {
+      id: "messegesubscription",
+      name: "Message Subscription",
+      icon: <MessageCircle className="w-4 h-4" />,
+      route: "/messegesubscription",
+    },
+  ];
+
   const menuItems = [
     {
       id: "contract",
@@ -203,20 +225,13 @@ export default function Sidebar() {
     },
   ];
 
-  const messageSubscriptionItem = {
-    id: "messagesubscription",
-    name: "Message Subscription",
-    icon: <MessagesSquare className="w-4 h-4" />,
-    route: "/messegesubscription",
-  };
-
   const allItems = [
     ...menuItems,
     ...financeItems,
     ...securityItems,
     ...warehouseItems,
     ...arrearProject,
-    messageSubscriptionItem,
+    ...messageItems,
   ];
 
   const getInitialOption = () => {
@@ -231,7 +246,7 @@ export default function Sidebar() {
     if (securityItems.some((i) => i.id === id)) return "security";
     if (warehouseItems.some((i) => i.id === id)) return "warehouse";
     if (arrearProject.some((i) => i.id === id)) return "project";
-    if (id === "messagesubscription") return "messages";
+    if (messageItems.some((i) => i.id === id)) return "message";
     return "business";
   };
 
@@ -251,7 +266,8 @@ export default function Sidebar() {
         setActiveMenu("warehouse");
       else if (arrearProject.some((i) => i.id === current.id))
         setActiveMenu("project");
-      else if (current.id === "messagesubscription") setActiveMenu("messages");
+      else if (messageItems.some((i) => i.id === current.id))
+        setActiveMenu("message");
     }
   }, [pathname]);
 
@@ -259,18 +275,16 @@ export default function Sidebar() {
     setActiveMenu(activeMenu === menu ? null : menu);
   };
 
-  const handleMessageSubscriptionClick = () => {
-    setSelectedOption("messagesubscription");
-    setActiveMenu("messages");
-  };
-
   return (
-    <aside className="bg-gray-900 text-white shadow-lg overflow-y-auto top-0 left-0 w-72 min-w-72 shrink-0 h-screen">
-      <div className="p-5 border-b border-gray-700">
-        <h1 className="text-2xl font-bold tracking-wide text-white">SECDAIS</h1>
+    <aside className="bg-gray-900 text-white shadow-lg overflow-y-auto top-0 left-0 w-72 h-full border-r border-gray-800">
+      <div className="p-5 border-b border-gray-800">
+        <h1 className="text-2xl font-bold tracking-wide text-white">
+          <span className="text-orange-400">SEC</span>
+          <span>DAIS</span>
+        </h1>
       </div>
 
-      <nav className="mt-4">
+      <nav className="mt-4 pb-6">
         <SidebarSection
           title="Business"
           icon={<Building2 className="w-5 h-5" />}
@@ -280,6 +294,7 @@ export default function Sidebar() {
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
         />
+
         <SidebarSection
           title="Finance"
           icon={<Banknote className="w-5 h-5" />}
@@ -289,19 +304,17 @@ export default function Sidebar() {
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
         />
-        <Link href="/messegesubscription">
-          <div
-            onClick={handleMessageSubscriptionClick}
-            className={`flex items-center px-5 py-3 transition-colors cursor-pointer ${
-              selectedOption === "messagesubscription"
-                ? ""
-                : "hover:bg-orange-500"
-            }`}
-          >
-            <MessagesSquare className="w-5 h-5" />
-            <span className="ml-3">Message Subscription</span>
-          </div>
-        </Link>
+
+        <SidebarSection
+          title="Messages"
+          icon={<MessagesSquare className="w-5 h-5" />}
+          items={messageItems}
+          activeMenu={activeMenu === "message"}
+          onToggle={() => toggleMenu("message")}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+        />
+
         <SidebarSection
           title="Security"
           icon={<Shield className="w-5 h-5" />}
@@ -311,6 +324,7 @@ export default function Sidebar() {
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
         />
+
         <SidebarSection
           title="Meter Warehouse"
           icon={<House className="w-5 h-5" />}
@@ -320,6 +334,7 @@ export default function Sidebar() {
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
         />
+
         <SidebarSection
           title="Arrear"
           icon={<MonitorDot className="w-5 h-5" />}
