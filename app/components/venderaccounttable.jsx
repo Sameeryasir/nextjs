@@ -46,7 +46,9 @@ function Venderaccounttable() {
       operator: "1450",
     },
   ];
-
+const handleReload=()=>{
+  window.location.reload()
+}
   return (
     <div className="w-full bg-white mt-10 ">
       <div className="flex flex-col pb-4 mb-4 gap-4">
@@ -55,7 +57,9 @@ function Venderaccounttable() {
             Vendor Account List
           </h1>
           <div className="flex space-x-2 sm:space-x-3 w-full sm:w-auto">
-            <button className="bg-[#FF9900] text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 shadow-md transition text-sm sm:text-base">
+            <button 
+            onClick={()=>handleReload()}
+            className="bg-[#FF9900] hover:cursor-pointer text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 shadow-md transition text-sm sm:text-base">
               <RefreshCw size={16} />
               <span className="hidden sm:inline">Refresh</span>
             </button>

@@ -34,12 +34,17 @@ function Stocktransfer() {
       operator: "1450",
     },
   ];
+  const handleReload=()=>{
+    window.location.reload()
+  }
   return (
     <div className="w-full bg-white p-2 md:p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-semibold text-gray-800">Transfer List</h1>
         <div className="flex gap-4">
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+          <button 
+          onClick={()=>handleReload()}
+          className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
             Refresh
           </button>
           <Link href={'/newtransfer'}>

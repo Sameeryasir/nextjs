@@ -1,3 +1,4 @@
+"use client";
 import React from 'react'
 import {
   RefreshCw,
@@ -7,11 +8,16 @@ import {
   ChevronLast,
 } from "lucide-react";
 function Creditbalence() {
+  const handleReload =()=> {
+    window.location.reload()
+  }
   return (
-    <>
+    <div>
       <div className="flex items-center justify-between mt-8">
         <h1 className="text-xl font-medium text-gray-900 ml-8">Security-Module</h1>
-        <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+        <button 
+        onClick={()=>handleReload()}
+        className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
           Refresh
         </button>
       </div>
@@ -120,7 +126,7 @@ function Creditbalence() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -10,23 +10,17 @@ import {
   Key,
   Package,
   Shield,
-  Info,
   MonitorDot,
   Banknote,
   MessagesSquare,
   Wallet,
   Layers,
-  WalletCards,
-  KeyRound,
   Ticket,
   ListOrdered,
   KeyIcon,
   House,
   HomeIcon,
-  File,
   StoreIcon,
-  Menu,
-  X,
 } from "lucide-react";
 
 const SidebarSection = ({
@@ -84,7 +78,7 @@ export default function Sidebar() {
     {
       id: "project",
       name: "Project",
-      icon: <File className="w-4 h-4" />,
+      icon: <FileText className="w-4 h-4" />,
       route: "/arrearproject",
     },
   ];
@@ -205,7 +199,7 @@ export default function Sidebar() {
       id: "free-issue",
       name: "Free Issue Token",
       icon: <Key className="w-4 h-4" />,
-      route: "freetoken",
+      route: "/freetoken",
     },
   ];
 
@@ -234,7 +228,6 @@ export default function Sidebar() {
 
   const [selectedOption, setSelectedOption] = useState(getInitialOption);
   const [activeMenu, setActiveMenu] = useState(getInitialMenu);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const current = allItems.find((item) => item.route === pathname);
@@ -257,80 +250,64 @@ export default function Sidebar() {
   };
 
   return (
-    <>
-      {/* Mobile toggle button */}
-      <div className="md:hidden p-4 bg-gray-900 text-white flex justify-between items-center">
-        <h1 className="text-xl font-bold">SECDAIS</h1>
-        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-          {isMobileMenuOpen ? <X /> : <Menu />}
-        </button>
+    <aside className="bg-gray-900 text-white shadow-lg overflow-y-auto top-0 left-0 w-72 min-w-72 shrink-0 h-screen">
+      <div className="p-5 border-b border-gray-700">
+        <h1 className="text-2xl font-bold tracking-wide text-white">SECDAIS</h1>
       </div>
 
-      <aside
-        className={`bg-gray-900 text-white h-screen shadow-lg overflow-y-auto z-50 fixed md:relative top-0 left-0 transition-transform transform ${
-          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 w-64 md:w-72`}
-      >
-        <div className="p-5 border-b border-gray-700 hidden md:block">
-          <h1 className="text-2xl font-bold tracking-wide text-white">
-            SECDAIS
-          </h1>
-        </div>
-
-        <nav className="mt-4">
-          <SidebarSection
-            title="Business"
-            icon={<Building2 className="w-5 h-5" />}
-            items={menuItems}
-            activeMenu={activeMenu === "business"}
-            onToggle={() => toggleMenu("business")}
-            selectedOption={selectedOption}
-            setSelectedOption={setSelectedOption}
-          />
-          <SidebarSection
-            title="Finance"
-            icon={<Banknote className="w-5 h-5" />}
-            items={financeItems}
-            activeMenu={activeMenu === "finance"}
-            onToggle={() => toggleMenu("finance")}
-            selectedOption={selectedOption}
-            setSelectedOption={setSelectedOption}
-          />
-          <Link href="/messegesubscription">
-            <div className="flex items-center px-5 py-3 hover:bg-orange-500 transition-colors cursor-pointer">
-              <MessagesSquare className="w-5 h-5" />
-              <span className="ml-3">Message Subscription</span>
-            </div>
-          </Link>
-          <SidebarSection
-            title="Security"
-            icon={<Shield className="w-5 h-5" />}
-            items={securityItems}
-            activeMenu={activeMenu === "security"}
-            onToggle={() => toggleMenu("security")}
-            selectedOption={selectedOption}
-            setSelectedOption={setSelectedOption}
-          />
-          <SidebarSection
-            title="Meter Warehouse"
-            icon={<House className="w-5 h-5" />}
-            items={warehouseItems}
-            activeMenu={activeMenu === "warehouse"}
-            onToggle={() => toggleMenu("warehouse")}
-            selectedOption={selectedOption}
-            setSelectedOption={setSelectedOption}
-          />
-          <SidebarSection
-            title="Arrear"
-            icon={<MonitorDot className="w-5 h-5" />}
-            items={arrearProject}
-            activeMenu={activeMenu === "project"}
-            onToggle={() => toggleMenu("project")}
-            selectedOption={selectedOption}
-            setSelectedOption={setSelectedOption}
-          />
-        </nav>
-      </aside>
-    </>
+      <nav className="mt-4">
+        <SidebarSection
+          title="Business"
+          icon={<Building2 className="w-5 h-5" />}
+          items={menuItems}
+          activeMenu={activeMenu === "business"}
+          onToggle={() => toggleMenu("business")}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+        />
+        <SidebarSection
+          title="Finance"
+          icon={<Banknote className="w-5 h-5" />}
+          items={financeItems}
+          activeMenu={activeMenu === "finance"}
+          onToggle={() => toggleMenu("finance")}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+        />
+        <Link href="/messegesubscription">
+          <div className="flex items-center px-5 py-3 hover:bg-orange-500 transition-colors cursor-pointer">
+            <MessagesSquare className="w-5 h-5" />
+            <span className="ml-3">Message Subscription</span>
+          </div>
+        </Link>
+        <SidebarSection
+          title="Security"
+          icon={<Shield className="w-5 h-5" />}
+          items={securityItems}
+          activeMenu={activeMenu === "security"}
+          onToggle={() => toggleMenu("security")}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+        />
+        <SidebarSection
+          title="Meter Warehouse"
+          icon={<House className="w-5 h-5" />}
+          items={warehouseItems}
+          activeMenu={activeMenu === "warehouse"}
+          onToggle={() => toggleMenu("warehouse")}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+        />
+        <SidebarSection
+          title="Arrear"
+          icon={<MonitorDot className="w-5 h-5" />}
+          items={arrearProject}
+          activeMenu={activeMenu === "project"}
+          onToggle={() => toggleMenu("project")}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+        />
+      </nav>
+    </aside>
   );
 }

@@ -11,6 +11,9 @@ function Vendorsessoinform() {
   const handlePrint = () => {
     window.print();
   };
+  const handleReload=()=>{
+    window.location.reload();
+  }
 
   return (
     <div className="bg-white">
@@ -19,7 +22,9 @@ function Vendorsessoinform() {
           Vendor Session List
         </h1>
         <div className="flex justify-end space-x-2 sm:space-x-4 ">
-          <button className="bg-[#FF9900] text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md flex items-center justify-center gap-1 sm:gap-2 shadow-md hover:bg-[#FF9900] transition w-auto sm:w-[110px] hover:cursor-pointer">
+          <button 
+          onClick={()=>handleReload()}
+          className="bg-[#FF9900] text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md flex items-center justify-center gap-1 sm:gap-2 shadow-md hover:bg-[#FF9900] transition w-auto sm:w-[110px] hover:cursor-pointer">
             <span className="hidden sm:inline">Refresh</span>
           </button>
           <button

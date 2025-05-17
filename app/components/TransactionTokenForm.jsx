@@ -1,7 +1,11 @@
+"use client";
 import React from "react";
 import Transactiontable from "./Transactiontable";
 
 function TransactionTokenForm() {
+  const handleReload=()=>{
+    window.location.reload()
+  }
   return (
     <>
       <div className="bg-white p-6">
@@ -10,7 +14,9 @@ function TransactionTokenForm() {
           <h1 className="text-xl font-medium text-gray-900">
             Transcation Token List
           </h1>
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+          <button 
+          onClick={()=>handleReload()}
+          className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
             Refresh
           </button>
         </div>

@@ -3,8 +3,10 @@ import React from 'react'
 
 function page() {
   return (
-    <div><Creditbalence/></div>
-  )
+    <>
+      <Creditbalence />
+    </>
+  );
 }
 
 export default page

@@ -62,7 +62,9 @@ function Keypage() {
     },
     // More records...
   ];
-
+const handleReload=()=>{
+  window.location.reload()
+}
   return (
     <div className="p-6">
       <div className="">
@@ -78,7 +80,9 @@ function Keypage() {
               <div className="flex gap-4">
                 {" "}
                 {/* Added gap between buttons */}
-                <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+                <button 
+                onClick={()=>handleReload()}
+                className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
                   Refresh
                 </button>
                 <Link href={'/keytokenpage'}>

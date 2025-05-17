@@ -4,13 +4,18 @@ import BalencerTable from "./BalencerTable";
 import { useState } from "react";
 import Newdialogue from "./Newdialogue";
 function BalencerManagement() {
+  const handleReload=()=>{
+    window.location.reload();
+  }
   const [showForm, setShowForm] = useState(false);
   return (
     <div className="min-h-screen bg-white ">
       <div className="flex items-center justify-between mt-8">
         <h1 className="text-xl font-medium text-gray-900 ml-10">Load-Balancer</h1>
         <div className="flex gap-4">
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+          <button 
+          onClick={()=>handleReload()}
+          className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
             Refresh
           </button>
           <button

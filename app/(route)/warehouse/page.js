@@ -1,8 +1,12 @@
+"use client";
 import Warehousetable from '@/app/components/Warehousetable';
 import Link from 'next/link';
 import React from 'react'
 
 function page() {
+  const handleReload=()=>{
+    window.location.reload()
+  }
   return (
     <div className="bg-white p-6">
       {/* Header Row with Title and Action Buttons */}
@@ -11,7 +15,9 @@ function page() {
           Warehouse List
         </h1>
         <div className="flex gap-4">
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+          <button 
+          onClick={()=>handleReload()}
+          className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
             Refresh
           </button>
           <Link href={'/newwarehouse'}>
