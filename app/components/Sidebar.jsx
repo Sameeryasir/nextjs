@@ -193,7 +193,7 @@ export default function Sidebar() {
       id: "key-issue",
       name: "Key Issue Token",
       icon: <Shield className="w-4 h-4" />,
-      route: "/Keytoken",
+      route: "/keytoken",
     },
     {
       id: "free-issue",
@@ -203,12 +203,20 @@ export default function Sidebar() {
     },
   ];
 
+  const messageSubscriptionItem = {
+    id: "messagesubscription",
+    name: "Message Subscription",
+    icon: <MessagesSquare className="w-4 h-4" />,
+    route: "/messegesubscription",
+  };
+
   const allItems = [
     ...menuItems,
     ...financeItems,
     ...securityItems,
     ...warehouseItems,
     ...arrearProject,
+    messageSubscriptionItem,
   ];
 
   const getInitialOption = () => {
@@ -223,6 +231,7 @@ export default function Sidebar() {
     if (securityItems.some((i) => i.id === id)) return "security";
     if (warehouseItems.some((i) => i.id === id)) return "warehouse";
     if (arrearProject.some((i) => i.id === id)) return "project";
+    if (id === "messagesubscription") return "messages";
     return "business";
   };
 
@@ -242,11 +251,17 @@ export default function Sidebar() {
         setActiveMenu("warehouse");
       else if (arrearProject.some((i) => i.id === current.id))
         setActiveMenu("project");
+      else if (current.id === "messagesubscription") setActiveMenu("messages");
     }
   }, [pathname]);
 
   const toggleMenu = (menu) => {
     setActiveMenu(activeMenu === menu ? null : menu);
+  };
+
+  const handleMessageSubscriptionClick = () => {
+    setSelectedOption("messagesubscription");
+    setActiveMenu("messages");
   };
 
   return (
@@ -275,7 +290,14 @@ export default function Sidebar() {
           setSelectedOption={setSelectedOption}
         />
         <Link href="/messegesubscription">
-          <div className="flex items-center px-5 py-3 hover:bg-orange-500 transition-colors cursor-pointer">
+          <div
+            onClick={handleMessageSubscriptionClick}
+            className={`flex items-center px-5 py-3 transition-colors cursor-pointer ${
+              selectedOption === "messagesubscription"
+                ? ""
+                : "hover:bg-orange-500"
+            }`}
+          >
             <MessagesSquare className="w-5 h-5" />
             <span className="ml-3">Message Subscription</span>
           </div>
