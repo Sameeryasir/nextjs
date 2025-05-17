@@ -47,31 +47,34 @@ export default function BranchPopup({
   if (!isOpen) return null;
 
   return (
-    <div ref={popupRef} className="absolute left-32 top-12 z-50 w-[800px] bg-white border border-gray-300 rounded shadow-lg">
+    <div
+      ref={popupRef}
+      className="absolute left-32 top-12 z-50 w-[800px] bg-white border border-gray-300 rounded shadow-lg"
+    >
       <div className="p-3 border-b border-gray-300 bg-gray-100">
         <h3 className="font-semibold">Select The Branch</h3>
-        
+
         {/* Full Name Row */}
         <div className="flex items-center mt-2">
           <label className="text-sm font-medium mr-2 w-20">Full Name</label>
           <input
             type="text"
-            className="px-2 py-1 border border-gray-300 rounded text-sm flex-1 bg-gray-50"
+            className="w-[400px] px-2 py-1 border border-gray-300 rounded text-sm bg-gray-50"
           />
         </div>
-        
+
         {/* Code Row */}
         <div className="flex items-center mt-2">
           <label className="text-sm font-medium mr-2 w-20">Code</label>
           <input
             type="text"
-            className="px-2 py-1 border border-gray-300 rounded text-sm flex-1 bg-gray-50"
+            className="w-[400px] px-2 py-1 border border-gray-300 rounded text-sm bg-gray-50"
           />
         </div>
-        
+
         {/* Search Button Row */}
         <div className="flex ml-22 mt-2">
-          <button 
+          <button
             type="button"
             className="px-4 w-30 py-1 bg-[#01143C] text-white rounded text-sm"
             onClick={onSearchSubmit}
@@ -86,11 +89,12 @@ export default function BranchPopup({
           <div className="text-sm text-red-500 mt-1">{error}</div>
         ) : (
           <div className="text-sm text-gray-500 mt-1">
-            Total {totalRecords} Records, Showing {recordStart} - {recordEnd}, Page {currentPage} of {totalPages}
+            Total {totalRecords} Records, Showing {recordStart} - {recordEnd},
+            Page {currentPage} of {totalPages}
           </div>
         )}
       </div>
-      
+
       {/* Scrollable Table Area */}
       <div className="overflow-y-auto max-h-[400px]">
         <table ref={tableRef} className="w-full text-sm">
@@ -106,7 +110,7 @@ export default function BranchPopup({
           </thead>
           <tbody>
             {branches.map((branch, index) => (
-              <tr 
+              <tr
                 key={index}
                 className="border-b hover:bg-blue-50 cursor-pointer even:bg-gray-50"
                 onClick={() => onSelect(branch)}
@@ -129,7 +133,7 @@ export default function BranchPopup({
           Showing {recordStart} to {recordEnd} of {totalRecords} entries
         </div>
         <div className="flex space-x-2">
-          <button 
+          <button
             className="px-3 py-1 border border-gray-300 rounded bg-white disabled:opacity-50"
             disabled={currentPage === 1 || isLoading}
             onClick={() => onPageChange(currentPage - 1)}
@@ -139,7 +143,7 @@ export default function BranchPopup({
           <span className="px-3 py-1 text-sm">
             Page {currentPage} of {totalPages}
           </span>
-          <button 
+          <button
             className="px-3 py-1 border border-gray-300 rounded bg-white disabled:opacity-50"
             disabled={currentPage === totalPages || isLoading}
             onClick={() => onPageChange(currentPage + 1)}
@@ -151,14 +155,14 @@ export default function BranchPopup({
 
       {/* Footer Buttons */}
       <div className="flex justify-end p-3 bg-gray-50 border-t border-gray-300">
-        <button 
+        <button
           type="button"
           className="px-4 py-2 bg-gray-200 rounded mr-2"
           onClick={onClose}
         >
           Cancel
         </button>
-        <button 
+        <button
           type="button"
           className="px-4 py-2 bg-[#01143C] text-white rounded"
           onClick={onClose}

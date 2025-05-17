@@ -9,6 +9,7 @@ import {
   ChevronLast,
   X,
 } from "lucide-react";
+import Link from "next/link";
 import Stockindialogue from "./Stockindialogue";
 function Stocktransfer() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -41,9 +42,11 @@ function Stocktransfer() {
           <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
             Refresh
           </button>
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-            New
-          </button>
+          <Link href={'/newtransfer'}>
+            <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+              New
+            </button>
+          </Link>
         </div>
       </div>
       <div className="bg-white max-w-7xl mx-6 py-8 px-6">

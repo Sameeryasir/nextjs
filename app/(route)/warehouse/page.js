@@ -19,15 +19,7 @@ function page() {
               New
             </button>
           </Link>
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-            Modify
-          </button>
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-            Delete
-          </button>
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-            Details
-          </button>
+       
         </div>
       </div>
 

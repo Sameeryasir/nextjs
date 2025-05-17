@@ -1,12 +1,11 @@
 "use client";
-
 import React from "react";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Stockindialogue from "./Stockindialogue";
+import Stockindialogue from "@/app/components/Stockindialogue";
 import Link from "next/link";
-function Newstockin() {
+function Page() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const router = useRouter();
@@ -20,8 +19,7 @@ function Newstockin() {
     <div className="min-h-screen bg-white ">
       <div className="max-w-1xl mx-auto space-y-8 ml-8">
         {/* Section Header */}
-        <h1 className="text-xl font-semibold text-gray-900">New Stock In</h1>
-
+        <h1 className="text-xl font-semibold text-gray-900">New Stock Out</h1>
         {/* Form Fields */}
         <div className="space-y-5">
           <div className="flex items-center">
@@ -105,22 +103,13 @@ function Newstockin() {
           </div>
 
           <div className="flex items-center">
-            <label className="w-40 text-sm text-gray-600">SGC</label>
-            <input
-              type="text"
-              className="flex-1 max-w-md px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
-            />
-          </div>
-
-          <div className="flex items-center">
-            <label className="w-40 text-sm text-gray-600">TI</label>
+            <label className="w-40 text-sm text-gray-600">Starting Code</label>
             <input
               type="text"
               className="flex-1 max-w-md px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
             />
           </div>
         </div>
-
         <div className="flex items-center">
           <label className="w-40 text-sm text-gray-600">Starting Code</label>
           <input
@@ -151,41 +140,6 @@ function Newstockin() {
           />
         </div>
         <div className="flex items-center">
-          <label className="w-40 text-sm text-gray-600">Current</label>
-          <input
-            type="text"
-            className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
-            placeholder=""
-          />
-          <p className="pl-2 text-gray-400">A</p>
-        </div>
-        <div className="flex items-center">
-          <label className="w-40 text-sm text-gray-600">Init.Value</label>
-          <input
-            type="text"
-            className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
-            placeholder=""
-          />
-          <p className="pl-2 text-gray-400">Kwh</p>
-        </div>
-        <div className="flex items-center">
-          <label className="w-40 text-sm text-gray-600">Max.Power</label>
-          <input
-            type="text"
-            className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
-            placeholder=""
-          />
-          <p className="pl-2 text-gray-400">KVA</p>
-        </div>
-        <div className="flex items-center">
-          <label className="w-40 text-sm text-gray-600">Prod.Date</label>
-          <input
-            type="text"
-            className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
-            placeholder=""
-          />
-        </div>
-        <div className="flex items-center">
           <label className="w-40 text-sm text-gray-600">Expiray Date</label>
           <input
             type="text"
@@ -202,7 +156,23 @@ function Newstockin() {
           />
         </div>
         <div className="flex items-center">
+          <label className="w-40 text-sm text-gray-600">Checker</label>
+          <input
+            type="text"
+            className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
+            placeholder=""
+          />
+        </div>
+        <div className="flex items-center">
           <label className="w-40 text-sm text-gray-600">Operator</label>
+          <input
+            type="text"
+            className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
+            placeholder=""
+          />
+        </div>{" "}
+        <div className="flex items-center">
+          <label className="w-40 text-sm text-gray-600">Operation Date</label>
           <input
             type="text"
             className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
@@ -223,7 +193,7 @@ function Newstockin() {
         >
           <span>Refresh</span>
         </button>
-        <Link href={"/stockin"}>
+        <Link href={"/stockout"}>
           <button className="bg-[#FF9900] text-white px-3 py-2 rounded-md flex items-center gap-2 shadow-md transition w-full sm:w-[120px] justify-center hover:cursor-pointer">
             <span>Return</span>
           </button>
@@ -233,4 +203,4 @@ function Newstockin() {
   );
 }
 
-export default Newstockin;
+export default Page;

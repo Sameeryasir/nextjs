@@ -1,14 +1,12 @@
 "use client";
-
 import React from "react";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Stockindialogue from "./Stockindialogue";
+import Stockindialogue from "@/app/components/Stockindialogue";
 import Link from "next/link";
-function Newstockin() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+function Page() {
+const [isDialogOpen,setIsDialogOpen]=useState(false);
   const router = useRouter();
   const handleReload = () => {
     window.location.reload();
@@ -20,8 +18,7 @@ function Newstockin() {
     <div className="min-h-screen bg-white ">
       <div className="max-w-1xl mx-auto space-y-8 ml-8">
         {/* Section Header */}
-        <h1 className="text-xl font-semibold text-gray-900">New Stock In</h1>
-
+        <h1 className="text-xl font-semibold text-gray-900">New Transfer</h1>
         {/* Form Fields */}
         <div className="space-y-5">
           <div className="flex items-center">
@@ -61,25 +58,20 @@ function Newstockin() {
             />
           </div>
           <div className="flex items-center">
-            <label className="w-40 text-sm text-gray-600">Warehouse</label>
+            <label className="w-40 text-sm text-gray-600">Source</label>
             <div className="flex gap-4">
-              {/* First Input: Value */}
               <input
                 type="text"
-                className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
-                placeholder=""
+                className="w-40 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
               />
-
-              {/* Second Input: Dropdown for time units */}
               <input
                 type="text"
-                className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
-                placeholder=""
+                className="w-40 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
               />
               <div className="flex items-center gap-2 ml-2">
                 <button
                   type="button"
-                  className="bg-[#FF9900] text-white px-2 sm:px-3 py-2 rounded-md hover:bg-[#FF9900] transition flex items-center justify-center text-sm sm:text-lg w-[50px] hover:cursor-pointer"
+                  className="hover:cursor-pointer bg-[#FF9900] text-white px-3 py-2 rounded-md hover:bg-opacity-90 transition flex items-center justify-center w-10 h-10"
                   onClick={() => setIsDialogOpen(true)}
                 >
                   ...
@@ -89,13 +81,45 @@ function Newstockin() {
                 )}
                 <button
                   type="button"
-                  className="bg-[#FF9900] text-white px-3 py-2 rounded-md hover:bg-opacity-90 transition flex items-center justify-center w-10 h-10"
+                  className="hover:cursor-pointer bg-[#FF9900] text-white px-3 py-2 rounded-md hover:bg-opacity-90 transition flex items-center justify-center w-10 h-10"
                 >
                   <X size={16} />
                 </button>
               </div>
             </div>
           </div>
+          <div className="flex items-center">
+            <label className="w-40 text-sm text-gray-600">Destination</label>
+            <div className="flex gap-4">
+              <input
+                type="text"
+                className="w-40 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
+              />
+              <input
+                type="text"
+                className="w-40 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
+              />
+              <div className="flex items-center gap-2 ml-2">
+                <button
+                  type="button"
+                  className="hover:cursor-pointer bg-[#FF9900] text-white px-3 py-2 rounded-md hover:bg-opacity-90 transition flex items-center justify-center w-10 h-10"
+                  onClick={() => setIsDialogOpen(true)}
+                >
+                  ...
+                </button>
+                {isDialogOpen && (
+                  <Stockindialogue onClose={() => setIsDialogOpen(false)} />
+                )}
+                <button
+                  type="button"
+                  className="hover:cursor-pointer bg-[#FF9900] text-white px-3 py-2 rounded-md hover:bg-opacity-90 transition flex items-center justify-center w-10 h-10"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            </div>
+          </div>
+
           <div className="flex items-center">
             <label className="w-40 text-sm text-gray-600">Meter Model</label>
             <input
@@ -105,22 +129,13 @@ function Newstockin() {
           </div>
 
           <div className="flex items-center">
-            <label className="w-40 text-sm text-gray-600">SGC</label>
-            <input
-              type="text"
-              className="flex-1 max-w-md px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
-            />
-          </div>
-
-          <div className="flex items-center">
-            <label className="w-40 text-sm text-gray-600">TI</label>
+            <label className="w-40 text-sm text-gray-600">Starting Code</label>
             <input
               type="text"
               className="flex-1 max-w-md px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
             />
           </div>
         </div>
-
         <div className="flex items-center">
           <label className="w-40 text-sm text-gray-600">Starting Code</label>
           <input
@@ -151,49 +166,6 @@ function Newstockin() {
           />
         </div>
         <div className="flex items-center">
-          <label className="w-40 text-sm text-gray-600">Current</label>
-          <input
-            type="text"
-            className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
-            placeholder=""
-          />
-          <p className="pl-2 text-gray-400">A</p>
-        </div>
-        <div className="flex items-center">
-          <label className="w-40 text-sm text-gray-600">Init.Value</label>
-          <input
-            type="text"
-            className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
-            placeholder=""
-          />
-          <p className="pl-2 text-gray-400">Kwh</p>
-        </div>
-        <div className="flex items-center">
-          <label className="w-40 text-sm text-gray-600">Max.Power</label>
-          <input
-            type="text"
-            className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
-            placeholder=""
-          />
-          <p className="pl-2 text-gray-400">KVA</p>
-        </div>
-        <div className="flex items-center">
-          <label className="w-40 text-sm text-gray-600">Prod.Date</label>
-          <input
-            type="text"
-            className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
-            placeholder=""
-          />
-        </div>
-        <div className="flex items-center">
-          <label className="w-40 text-sm text-gray-600">Expiray Date</label>
-          <input
-            type="text"
-            className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
-            placeholder=""
-          />
-        </div>
-        <div className="flex items-center">
           <label className="w-40 text-sm text-gray-600">Remarks</label>
           <input
             type="text"
@@ -202,7 +174,23 @@ function Newstockin() {
           />
         </div>
         <div className="flex items-center">
+          <label className="w-40 text-sm text-gray-600">Checker</label>
+          <input
+            type="text"
+            className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
+            placeholder=""
+          />
+        </div>
+        <div className="flex items-center">
           <label className="w-40 text-sm text-gray-600">Operator</label>
+          <input
+            type="text"
+            className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
+            placeholder=""
+          />
+        </div>{" "}
+        <div className="flex items-center">
+          <label className="w-40 text-sm text-gray-600">Operation Date</label>
           <input
             type="text"
             className="w-60 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
@@ -223,7 +211,7 @@ function Newstockin() {
         >
           <span>Refresh</span>
         </button>
-        <Link href={"/stockin"}>
+        <Link href={"/stocktransfer"}>
           <button className="bg-[#FF9900] text-white px-3 py-2 rounded-md flex items-center gap-2 shadow-md transition w-full sm:w-[120px] justify-center hover:cursor-pointer">
             <span>Return</span>
           </button>
@@ -233,4 +221,4 @@ function Newstockin() {
   );
 }
 
-export default Newstockin;
+export default Page;

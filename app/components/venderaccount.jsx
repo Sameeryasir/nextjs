@@ -3,9 +3,15 @@ import { ChevronDown } from "lucide-react";
 import Venderaccounttable from "./venderaccounttable";
 function Venderaccount() {
   return (
-    <div className="min-h-screen bg-white ">
-      <div className="max-w-2xl text-left ml-8 mb-10 space-y-8">
-        {/* Customer Information Section */}
+    <div className= "bg-white ">
+  
+      <Venderaccounttable />
+    </div>
+  );
+}
+
+export default Venderaccount;
+   
         <section className>
           <h1 className="text-xl font-medium text-gray-900 mb-6">
             Customer Information
@@ -93,10 +99,3 @@ function Venderaccount() {
             </div>
           </div>
         </section>
-      </div>
-      <Venderaccounttable />
-    </div>
-  );
-}
-
-export default Venderaccount;

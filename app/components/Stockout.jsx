@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
+import Stockindialogue from "./Stockindialogue";
 function Stockout() {
   const [startDate, setStartDate] = useState(new Date());
   const tableData = Array(6).fill({
@@ -33,17 +34,25 @@ function Stockout() {
       operator: "1450",
     },
   ];
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+const handleReload=()=>{
+  window.location.reload();
+}
   return (
     <div className="w-full bg-white p-2 md:p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-semibold text-gray-800">Stock-Out List</h1>
         <div className="flex gap-4">
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+          <button 
+          onClick={()=>handleReload()}
+          className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
             Refresh
           </button>
-            <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-              New
-            </button>
+          <Link href={'/newstockout'}>
+          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+            New
+          </button>
+          </Link>
         </div>
       </div>
       <div className="bg-white max-w-7xl mx-6 py-8 px-6">
@@ -119,10 +128,14 @@ function Stockout() {
                 />
                 <button
                   type="button"
+                  onClick={()=>setIsDialogOpen(true)}
                   className="bg-[#FF9900] text-white px-2 sm:px-3 py-2 rounded-md hover:bg-[#FF9900] transition flex items-center justify-center text-sm sm:text-lg w-[50px] hover:cursor-pointer"
                 >
                   ...
                 </button>
+                {isDialogOpen && (
+                  <Stockindialogue onClose={() => setIsDialogOpen(false)} />
+                )}
                 <button
                   type="button"
                   className="bg-[#FF9900] text-white px-2 sm:px-3 py-2 rounded-md hover:bg-[#FF9900] transition flex items-center justify-center w-[50px] hover:cursor-pointer"

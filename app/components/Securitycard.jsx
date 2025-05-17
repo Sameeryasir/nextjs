@@ -3,7 +3,7 @@ import { Plus, RefreshCw, Settings, X } from "lucide-react"; // icons from lucid
 
 function Securitycard() {
   return (
-    <div className=" max-w-3xl">
+    <div className="w-full max-w-5xl">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-black">Security Module</h2>

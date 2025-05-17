@@ -2,6 +2,7 @@
 import React from "react";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 function Newwarehouse() {
   const router = useRouter();
@@ -9,6 +10,9 @@ function Newwarehouse() {
   const handleSubmit = () => {
     router.push("/warehouse");
   };
+  const handleReload=()=>{
+   window.location.reload();
+  }
   return (
     <div className="min-h-screen bg-white ">
       <div className="max-w-1xl mx-auto space-y-8 ml-8">
@@ -122,12 +126,17 @@ function Newwarehouse() {
         >
           <span>Submit</span>
         </button>
-        <button className="bg-[#FF9900] text-white px-3 py-2 rounded-md flex items-center gap-2 shadow-md transition w-full sm:w-[120px] justify-center hover:cursor-pointer">
+        <button 
+        onClick={()=>handleReload()}
+        className="bg-[#FF9900] text-white px-3 py-2 rounded-md flex items-center gap-2 shadow-md transition w-full sm:w-[120px] justify-center hover:cursor-pointer">
           <span>Refresh</span>
         </button>
-        <button className="bg-[#FF9900] text-white px-3 py-2 rounded-md flex items-center gap-2 shadow-md transition w-full sm:w-[120px] justify-center hover:cursor-pointer">
-          <span>Return</span>
-        </button>
+        <Link href={"/warehouse"}>
+          {" "}
+          <button className="bg-[#FF9900] text-white px-3 py-2 rounded-md flex items-center gap-2 shadow-md transition w-full sm:w-[120px] justify-center hover:cursor-pointer">
+            <span>Return</span>
+          </button>
+        </Link>
       </div>
     </div>
   );

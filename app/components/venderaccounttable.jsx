@@ -48,7 +48,7 @@ function Venderaccounttable() {
   ];
 
   return (
-    <div className="w-full bg-white mt-10 ml-5">
+    <div className="w-full bg-white mt-10 ">
       <div className="flex flex-col pb-4 mb-4 gap-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
@@ -60,7 +60,8 @@ function Venderaccounttable() {
               <span className="hidden sm:inline">Refresh</span>
             </button>
             <button
-              className="bg-[#FF9900] text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 shadow-md hover:bg-[#FF9900] transition w-auto sm:w-[110px]"
+              className="
+              hover:cursor-pointer bg-[#FF9900] text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 shadow-md hover:bg-[#FF9900] transition w-auto sm:w-[110px]"
               onClick={() => setshowAllocateDialog(true)}
             >
               <span className="hidden sm:inline ml-3">Allocate</span>

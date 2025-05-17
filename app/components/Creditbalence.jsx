@@ -9,16 +9,14 @@ import {
 function Creditbalence() {
   return (
     <>
-      <div className="flex flex-1 justify-end ">
-        <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40 ">
+      <div className="flex items-center justify-between mt-8">
+        <h1 className="text-xl font-medium text-gray-900 ml-8">Security-Module</h1>
+        <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
           Refresh
         </button>
       </div>
-      
+
       <div className="w-full bg-white p-2 md:p-6">
-        <h1 className="text-xl font-medium text-gray-900 mb-6 ml-5">
-          Security-Module
-        </h1>
         <div className="bg-white rounded-lg shadow mb-4 sm:mb-6 overflow-x-auto">
           <div className="p-2 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
             <div className="flex items-center gap-2 sm:gap-4">

@@ -36,7 +36,7 @@ function CompensatingRecord() {
       <Addnew isOpen={showModal} onClose={() => setShowModal(false)} />
       <div className="w-full bg-white">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-4 mb-4 gap-4 sm:gap-0">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center  pb-4 mb-4 gap-4 sm:gap-0">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
             List Of Compensating
           </h1>

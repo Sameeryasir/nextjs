@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
-  Bell,
   Building2,
   FileText,
   Database,
   Key,
-  MessageSquare,
   Package,
   Shield,
   Info,
@@ -24,29 +24,67 @@ import {
   House,
   HomeIcon,
   File,
-  Warehouse,
   StoreIcon,
+  Menu,
+  X,
 } from "lucide-react";
-import Link from "next/link";
+
+const SidebarSection = ({
+  title,
+  icon,
+  items,
+  activeMenu,
+  onToggle,
+  selectedOption,
+  setSelectedOption,
+}) => {
+  return (
+    <div>
+      <div
+        className="flex items-center px-5 py-3 cursor-pointer hover:bg-orange-500 transition-colors"
+        onClick={onToggle}
+      >
+        {icon}
+        <span className="ml-3 font-medium">{title}</span>
+      </div>
+
+      {activeMenu &&
+        items.map((item) => (
+          <Link href={item.route} key={item.id}>
+            <div
+              onClick={() => setSelectedOption(item.id)}
+              className={`flex items-center px-6 py-2 gap-3 cursor-pointer transition-colors rounded-md ${
+                selectedOption === item.id
+                  ? "border-l-4 border-orange-500 bg-gray-800"
+                  : "hover:bg-gray-700"
+              }`}
+            >
+              <div className="flex items-center gap-3 flex-grow">
+                <div
+                  className={`w-3 h-3 rounded-full border-2 ${
+                    selectedOption === item.id
+                      ? "bg-orange-500 border-orange-500"
+                      : "border-gray-500"
+                  }`}
+                ></div>
+                {item.icon}
+                <span className="text-sm">{item.name}</span>
+              </div>
+            </div>
+          </Link>
+        ))}
+    </div>
+  );
+};
 
 export default function Sidebar() {
-  const [selectedOption, setSelectedOption] = useState("contract");
-  const [activeMenu, setActiveMenu] = useState("business");
-
-  useEffect(() => {
-    setActiveMenu("business");
-    setSelectedOption("contract");
-  }, []);
-
-  const handleMenuToggle = (menu) => {
-    setActiveMenu(activeMenu === menu ? null : menu);
-  };
+  const pathname = usePathname();
 
   const arrearProject = [
     {
       id: "project",
       name: "Project",
-      icon: <File className="w-5 h-5 text-white" />,
+      icon: <File className="w-4 h-4" />,
       route: "/arrearproject",
     },
   ];
@@ -55,25 +93,25 @@ export default function Sidebar() {
     {
       id: "warehouse",
       name: "Warehouse",
-      icon: <HomeIcon className="w-5 h-5 text-white" />,
+      icon: <HomeIcon className="w-4 h-4" />,
       route: "/warehouse",
     },
     {
       id: "stockin",
       name: "Stock In",
-      icon: <StoreIcon className="w-5 h-5 text-white" />,
+      icon: <StoreIcon className="w-4 h-4" />,
       route: "/stockin",
     },
     {
       id: "stockout",
       name: "Stock Out",
-      icon: <StoreIcon className="w-5 h-5 text-white" />,
+      icon: <StoreIcon className="w-4 h-4" />,
       route: "/stockout",
     },
     {
       id: "stocktransfer",
       name: "Stock Transfer",
-      icon: <StoreIcon className="w-5 h-5 text-white" />,
+      icon: <StoreIcon className="w-4 h-4" />,
       route: "/stocktransfer",
     },
   ];
@@ -82,43 +120,37 @@ export default function Sidebar() {
     {
       id: "securitymodule",
       name: "Security Module",
-      icon: <Shield className="w-5 h-5 text-white" />,
+      icon: <Shield className="w-4 h-4" />,
       route: "/security_module",
     },
     {
       id: "Balencermanagement",
-      name: "Balencer Management",
-      icon: <Layers className="w-5 h-5 text-white" />,
+      name: "Balancer Management",
+      icon: <Layers className="w-4 h-4" />,
       route: "/balencer_management",
     },
     {
       id: "creditbalence",
-      name: "Credit Balence",
-      icon: <Wallet className="w-5 h-5 text-white" />,
+      name: "Credit Balance",
+      icon: <Wallet className="w-4 h-4" />,
       route: "/credit_balence",
-    },
-    {
-      id: "keychanges",
-      name: "Key Changes",
-      icon: <KeyRound className="w-5 h-5 text-white" />,
-      route: "/key_changes",
     },
     {
       id: "tokenavailability",
       name: "Token Availability",
-      icon: <Ticket className="w-5 h-5 text-white" />,
+      icon: <Ticket className="w-4 h-4" />,
       route: "/token_availability",
     },
     {
       id: "transactionviewer",
       name: "Transaction Viewer",
-      icon: <ListOrdered className="w-5 h-5 text-white" />,
+      icon: <ListOrdered className="w-4 h-4" />,
       route: "/transaction_viewer",
     },
     {
       id: "specialtoken",
       name: "Special Token",
-      icon: <KeyIcon className="w-5 h-5 text-white" />,
+      icon: <KeyIcon className="w-4 h-4" />,
       route: "/specialtoken",
     },
   ];
@@ -126,14 +158,14 @@ export default function Sidebar() {
   const financeItems = [
     {
       id: "venderaccount",
-      name: "Vender Account",
-      icon: <FileText className="w-5 h-5 text-blue-300" />,
+      name: "Vendor Account",
+      icon: <FileText className="w-4 h-4" />,
       route: "/venderaccount",
     },
     {
       id: "vendersession",
-      name: "Vender Session",
-      icon: <FileText className="w-5 h-5 text-blue-300" />,
+      name: "Vendor Session",
+      icon: <FileText className="w-4 h-4" />,
       route: "/vendorsession",
     },
   ];
@@ -142,208 +174,163 @@ export default function Sidebar() {
     {
       id: "contract",
       name: "Contract Management",
-      icon: <FileText className="w-5 h-5 text-blue-300" />,
+      icon: <FileText className="w-4 h-4" />,
       route: "/",
     },
     {
       id: "compensating",
       name: "Compensating",
-      icon: <Database className="w-5 h-5 text-blue-300" />,
+      icon: <Database className="w-4 h-4" />,
       route: "/compensation",
     },
     {
       id: "vending",
       name: "Vending",
-      icon: <Package className="w-5 h-5 text-blue-300" />,
+      icon: <Package className="w-4 h-4" />,
       route: "/vending",
     },
     {
       id: "maintenance",
       name: "Maintenance Token",
-      icon: <Key className="w-5 h-5 text-blue-300" />,
+      icon: <Key className="w-4 h-4" />,
       route: "/tokenpage",
     },
     {
       id: "key-issue",
       name: "Key Issue Token",
-      icon: <Shield className="w-5 h-5 text-blue-300" />,
+      icon: <Shield className="w-4 h-4" />,
       route: "/Keytoken",
     },
     {
       id: "free-issue",
       name: "Free Issue Token",
-      icon: <Key className="w-5 h-5 text-blue-300" />,
+      icon: <Key className="w-4 h-4" />,
       route: "freetoken",
     },
   ];
 
+  const allItems = [
+    ...menuItems,
+    ...financeItems,
+    ...securityItems,
+    ...warehouseItems,
+    ...arrearProject,
+  ];
+
+  const getInitialOption = () => {
+    const current = allItems.find((item) => item.route === pathname);
+    return current?.id || "contract";
+  };
+
+  const getInitialMenu = () => {
+    const id = getInitialOption();
+    if (menuItems.some((i) => i.id === id)) return "business";
+    if (financeItems.some((i) => i.id === id)) return "finance";
+    if (securityItems.some((i) => i.id === id)) return "security";
+    if (warehouseItems.some((i) => i.id === id)) return "warehouse";
+    if (arrearProject.some((i) => i.id === id)) return "project";
+    return "business";
+  };
+
+  const [selectedOption, setSelectedOption] = useState(getInitialOption);
+  const [activeMenu, setActiveMenu] = useState(getInitialMenu);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const current = allItems.find((item) => item.route === pathname);
+    if (current) {
+      setSelectedOption(current.id);
+      if (menuItems.some((i) => i.id === current.id)) setActiveMenu("business");
+      else if (financeItems.some((i) => i.id === current.id))
+        setActiveMenu("finance");
+      else if (securityItems.some((i) => i.id === current.id))
+        setActiveMenu("security");
+      else if (warehouseItems.some((i) => i.id === current.id))
+        setActiveMenu("warehouse");
+      else if (arrearProject.some((i) => i.id === current.id))
+        setActiveMenu("project");
+    }
+  }, [pathname]);
+
+  const toggleMenu = (menu) => {
+    setActiveMenu(activeMenu === menu ? null : menu);
+  };
+
   return (
-    <div className="w-full sm:w-64 bg-gray-800 text-white min-h-screen flex flex-col overflow-y-auto">
-      {/* Header */}
-      <div className="p-4 flex items-center">
-        <span className="font-semibold text-lg">SECDAIS</span>
+    <>
+      {/* Mobile toggle button */}
+      <div className="md:hidden p-4 bg-gray-900 text-white flex justify-between items-center">
+        <h1 className="text-xl font-bold">SECDAIS</h1>
+        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          {isMobileMenuOpen ? <X /> : <Menu />}
+        </button>
       </div>
 
-      {/* Sidebar Content */}
-      <nav className="flex-1 px-2">
-        {/* Business */}
-        <div
-          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center gap-3 cursor-pointer"
-          onClick={() => handleMenuToggle("business")}
-        >
-          <Building2 className="w-5 h-5" />
-          <span className="font-medium">Business</span>
+      <aside
+        className={`bg-gray-900 text-white h-screen shadow-lg overflow-y-auto z-50 fixed md:relative top-0 left-0 transition-transform transform ${
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 w-64 md:w-72`}
+      >
+        <div className="p-5 border-b border-gray-700 hidden md:block">
+          <h1 className="text-2xl font-bold tracking-wide text-white">
+            SECDAIS
+          </h1>
         </div>
-        {activeMenu === "business" &&
-          menuItems.map((item) => (
-            <Link href={item.route} key={item.id}>
-              <div
-                className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
-                  selectedOption === item.id ? "bg-blue-700" : ""
-                }`}
-                onClick={() => setSelectedOption(item.id)}
-              >
-                <div className="flex items-center gap-3 flex-grow">
-                  <div
-                    className={`w-4 h-4 rounded-full border-2 border-white ${
-                      selectedOption === item.id ? "bg-blue-400" : ""
-                    }`}
-                  ></div>
-                  {item.icon}
-                  {item.name}
-                </div>
-              </div>
-            </Link>
-          ))}
 
-        {/* Finance */}
-        <div
-          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center gap-3 cursor-pointer"
-          onClick={() => handleMenuToggle("finance")}
-        >
-          <Banknote className="w-5 h-5" />
-          <span>Finance</span>
-        </div>
-        {activeMenu === "finance" &&
-          financeItems.map((item) => (
-            <Link href={item.route} key={item.id}>
-              <div
-                className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
-                  selectedOption === item.id ? "bg-blue-700" : ""
-                }`}
-                onClick={() => setSelectedOption(item.id)}
-              >
-                <div className="flex items-center gap-3 flex-grow">
-                  <div
-                    className={`w-4 h-4 rounded-full border-2 border-white ${
-                      selectedOption === item.id ? "bg-blue-400" : ""
-                    }`}
-                  ></div>
-                  {item.icon}
-                  {item.name}
-                </div>
-              </div>
-            </Link>
-          ))}
-
-        {/* Message Subscription */}
-        <Link href={"/messegesubscription"}>
-          <div className="p-4 mb-3 hover:bg-[#FF9900] flex items-center gap-3 cursor-pointer">
-            <MessagesSquare className="w-5 h-5" />
-            <span>Message Subscription</span>
-          </div>
-        </Link>
-
-        {/* Security Module */}
-        <div
-          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center gap-3 cursor-pointer"
-          onClick={() => handleMenuToggle("security")}
-        >
-          <Shield className="w-5 h-5" />
-          <span>Security Module</span>
-        </div>
-        {activeMenu === "security" &&
-          securityItems.map((item) => (
-            <Link href={item.route} key={item.id}>
-              <div
-                className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
-                  selectedOption === item.id ? "bg-blue-700" : ""
-                }`}
-                onClick={() => setSelectedOption(item.id)}
-              >
-                <div className="flex items-center gap-3 flex-grow">
-                  <div
-                    className={`w-4 h-4 rounded-full border-2 border-white ${
-                      selectedOption === item.id ? "bg-blue-400" : ""
-                    }`}
-                  ></div>
-                  {item.icon}
-                  {item.name}
-                </div>
-              </div>
-            </Link>
-          ))}
-
-        {/* Warehouse */}
-        <div
-          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center gap-3 cursor-pointer"
-          onClick={() => handleMenuToggle("warehouse")}
-        >
-          <House className="w-5 h-5" />
-          <span>Meter Warehouse</span>
-        </div>
-        {activeMenu === "warehouse" &&
-          warehouseItems.map((item) => (
-            <Link href={item.route} key={item.id}>
-              <div
-                className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
-                  selectedOption === item.id ? "bg-blue-700" : ""
-                }`}
-                onClick={() => setSelectedOption(item.id)}
-              >
-                <div className="flex items-center gap-3 flex-grow">
-                  <div
-                    className={`w-4 h-4 rounded-full border-2 border-white ${
-                      selectedOption === item.id ? "bg-blue-400" : ""
-                    }`}
-                  ></div>
-                  {item.icon}
-                  {item.name}
-                </div>
-              </div>
-            </Link>
-          ))}
-
-        {/* Arrear */}
-        <div
-          className="p-4 mb-3 hover:bg-[#FF9900] flex items-center gap-3 cursor-pointer"
-          onClick={() => handleMenuToggle("project")}
-        >
-          <MonitorDot className="w-5 h-5" />
-          <span>Arrear</span>
-        </div>
-        {activeMenu === "project" &&
-          arrearProject.map((item) => (
-            <Link href={item.route} key={item.id}>
-              <div
-                className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
-                  selectedOption === item.id ? "bg-blue-700" : ""
-                }`}
-                onClick={() => setSelectedOption(item.id)}
-              >
-                <div className="flex items-center gap-3 flex-grow">
-                  <div
-                    className={`w-4 h-4 rounded-full border-2 border-white ${
-                      selectedOption === item.id ? "bg-blue-400" : ""
-                    }`}
-                  ></div>
-                  {item.icon}
-                  {item.name}
-                </div>
-              </div>
-            </Link>
-          ))}
-      </nav>
-    </div>
+        <nav className="mt-4">
+          <SidebarSection
+            title="Business"
+            icon={<Building2 className="w-5 h-5" />}
+            items={menuItems}
+            activeMenu={activeMenu === "business"}
+            onToggle={() => toggleMenu("business")}
+            selectedOption={selectedOption}
+            setSelectedOption={setSelectedOption}
+          />
+          <SidebarSection
+            title="Finance"
+            icon={<Banknote className="w-5 h-5" />}
+            items={financeItems}
+            activeMenu={activeMenu === "finance"}
+            onToggle={() => toggleMenu("finance")}
+            selectedOption={selectedOption}
+            setSelectedOption={setSelectedOption}
+          />
+          <Link href="/messegesubscription">
+            <div className="flex items-center px-5 py-3 hover:bg-orange-500 transition-colors cursor-pointer">
+              <MessagesSquare className="w-5 h-5" />
+              <span className="ml-3">Message Subscription</span>
+            </div>
+          </Link>
+          <SidebarSection
+            title="Security"
+            icon={<Shield className="w-5 h-5" />}
+            items={securityItems}
+            activeMenu={activeMenu === "security"}
+            onToggle={() => toggleMenu("security")}
+            selectedOption={selectedOption}
+            setSelectedOption={setSelectedOption}
+          />
+          <SidebarSection
+            title="Meter Warehouse"
+            icon={<House className="w-5 h-5" />}
+            items={warehouseItems}
+            activeMenu={activeMenu === "warehouse"}
+            onToggle={() => toggleMenu("warehouse")}
+            selectedOption={selectedOption}
+            setSelectedOption={setSelectedOption}
+          />
+          <SidebarSection
+            title="Arrear"
+            icon={<MonitorDot className="w-5 h-5" />}
+            items={arrearProject}
+            activeMenu={activeMenu === "project"}
+            onToggle={() => toggleMenu("project")}
+            selectedOption={selectedOption}
+            setSelectedOption={setSelectedOption}
+          />
+        </nav>
+      </aside>
+    </>
   );
 }
