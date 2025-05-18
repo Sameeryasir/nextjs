@@ -52,7 +52,7 @@ function SearchCustomer() {
 
   return (
     <>
-      <div className="flex items-left gap-3 mb-4">
+      <div className="flex items-left gap-3 mb-10">
         <h1 className="text-xl font-bold text-gray-900">Customer List</h1>
       </div>
 
@@ -110,18 +110,18 @@ function SearchCustomer() {
                     name="meterNum"
                     value={searchParams.meterNum}
                     onChange={handleSearch}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-2"
                     placeholder="Enter meter number"
                   />
                 </div>
               </div>
             </div>
-            <div className="mt-6 flex ml-120 gap-6">
-              <button className="flex  px-6 py-2.5 bg-[#FF9900] text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            <div className="mt-7 flex ml-20 gap-6 ">
+              <button className="hover:cursor-pointer flex  px-6 py-2.5 bg-[#FF9900] text-white rounded-md focus:outline-none focus:ring-2  focus:ring-offset-2">
                 <Search className="h-5 w-5 mr-2" />
                 Search
               </button>
-              <button className="flex items-center px-6 py-2.5 bg-[#FF9900] text-white rounded hover:bg-[#FF8800] transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              <button className="hover:cursor-pointer flex items-center px-6 py-2.5 bg-[#FF9900] text-white rounded hover:bg-[#FF8800] transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 onClick={handleOpen}> Search By History Installed
               </button>
 
@@ -135,7 +135,7 @@ function SearchCustomer() {
               {/* Register Customer Button */}
               <div className="text-right">
                 <button
-              className="flex items-center px-6 py-2.5 bg-[#FF9900] text-white rounded hover:bg-[#FF8800] transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="hover:cursor-pointer flex items-center px-6 py-2.5 bg-[#FF9900] text-white rounded hover:bg-[#FF8800] transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   onClick={() => setShowForm(true)}
                 >
                   Register Customer

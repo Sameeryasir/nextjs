@@ -24,6 +24,9 @@ import {
   MessageCircle,
   ChevronDown,
   ChevronRight,
+  GlassesIcon,
+  Search,
+  Eye,
 } from "lucide-react";
 
 const SidebarSection = ({
@@ -121,6 +124,18 @@ export default function Sidebar() {
       icon: <StoreIcon className="w-4 h-4" />,
       route: "/stocktransfer",
     },
+    {
+      id:"meterviewer",
+      name:"Meter Viewer",
+      icon:<Eye className="w-4 h-4"/>,
+      route:"/meterviewer"
+    },
+    {
+      id:"warhouseviewer",
+      name:"Warehouse Viewer",
+      icon:<Eye className="w-4 h-4 "/>,
+      route:"/warehouseviewer"
+    }
   ];
 
   const securityItems = [

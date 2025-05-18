@@ -11,14 +11,14 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Stockindialogue from "./Stockindialogue";
-function Stocktransfer() {
+function WarehouseViewer() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const tableData = Array(6).fill({
     code: "0004100166",
-    regDate: "2025-02014", // Fixed date format (should probably be "2025-02-14")
+    regDate: "2025-02014",
     accountNo: "31125296",
     fullName: "Aaaaaa Aaaaaaa",
-    triff: "11", // Fixed typo (should be "tariff" if that's what you meant)
+    triff: "11",
     meterNum: "25120400129",
     installed: true,
     callCenter: true,
@@ -34,13 +34,13 @@ function Stocktransfer() {
       operator: "1450",
     },
   ];
-  const handleReload=()=>{
-    window.location.reload()
-  }
+  const handleReload = () => {
+    window.location.reload();
+  };
   return (
     <div className="w-full bg-white p-2 md:p-6">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-semibold text-gray-800">Transfer List</h1>
+        <h1 className="text-2xl font-semibold text-gray-800">Meter List</h1>
         <div className="flex gap-4">
           <button
             onClick={() => handleReload()}
@@ -48,142 +48,57 @@ function Stocktransfer() {
           >
             Refresh
           </button>
-          <Link href={"/newtransfer"}>
-            <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-              New
-            </button>
-          </Link>
         </div>
       </div>
       <div className="bg-white max-w-7xl mx-6 py-8 px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="flex flex-col sm:flex-row items-center gap-4">
           {/* Left Column */}
           <div className="space-y-4">
             {/* Starting Date */}
             <div className="flex items-center gap-4">
-              <label className="w-32 text-sm font-medium text-gray-700">
+              <label className="w-40 text-sm font-medium text-gray-700">
                 Starting Date
               </label>
               <input
-                type="date"
-                defaultValue="2025-02-14"
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                type="text"
+                className=" min-w-[400px] p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
-            </div>
-
-            {/* End Date */}
-            <div className="flex items-center gap-4">
-              <label className="w-32 text-sm font-medium text-gray-700">
-                End Date
-              </label>
               <input
-                type="date"
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                type="text"
+                className=" min-w-[400px] p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
+              <div className="gap-2 flex flex-col-1">
+                <button
+                  type="button"
+                  className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105 hover:cursor-pointer"
+                >
+                  ...
+                </button>
+                <button
+                  type="button"
+                  className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105 hover:cursor-pointer"
+                >
+                  <X size={16} />
+                </button>
+              </div>
             </div>
 
             {/* Meter No */}
             <div className="flex items-center gap-4">
-              <label className="w-32 text-sm font-medium text-gray-700">
-                Meter No
+              <label className="w-40 text-sm font-medium text-gray-700">
+                Meter Model
               </label>
               <input
                 type="text"
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="min-w-[400px] p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
-            </div>
-          </div>
-
-          {/* Right Column */}
-          <div className="space-y-4">
-            {/* Source */}
-            <div className="flex items-center gap-4">
-              <label className="w-32 text-sm font-medium text-gray-700">
-                Source
-              </label>
-              <div className="flex w-full gap-2">
-                <input
-                  type="text"
-                  className="w-1/2 h-10 px-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <input
-                  type="text"
-                  className="w-1/2 h-10 px-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <div className="flex gap-1">
-                  <button
-                    type="button"
-                    className="w-10 h-10 bg-[#FF9900] text-white rounded-md  transition flex items-center justify-center"
-                    onClick={() => setIsDialogOpen(true)}
-                  >
-                    ...
-                  </button>
-                  {isDialogOpen && (
-                    <Stockindialogue
-                      heading="Please Chose One Record"
-                      onClose={() => setIsDialogOpen(false)}
-                    />
-                  )}
-                  <button
-                    type="button"
-                    className="w-10 h-10 bg-[#FF9900] text-white rounded-md  transition flex items-center justify-center"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              </div>
-            </div>{" "}
-            {/* Destination */}
-            <div className="flex items-center gap-4">
-              <label className="w-32 text-sm font-medium text-gray-700">
-                Destination
-              </label>
-              <div className="flex w-full gap-2">
-                <input
-                  type="text"
-                  className="w-1/2 h-10 px-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <input
-                  type="text"
-                  className="w-1/2 h-10 px-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <div className="flex gap-1">
-                  <button
-                    type="button"
-                    className="w-10 h-10 bg-[#FF9900] text-white rounded-md hover:bg-orange-600 transition flex items-center justify-center"
-                    onClick={() => setIsDialogOpen(true)}
-                  >
-                    ...
-                  </button>
-                  {isDialogOpen && (
-                    <Stockindialogue onClose={() => setIsDialogOpen(false)} />
-                  )}
-                  <button
-                    type="button"
-                    className="w-10 h-10 bg-[#FF9900] text-white rounded-md hover:bg-orange-600 transition flex items-center justify-center"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              </div>
-            </div>
-            {/* Type */}
-            <div className="flex items-center gap-4">
-              <label className="w-32 text-sm font-medium text-gray-700">
-                Type
-              </label>
-              <select className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <option value="">Select Type</option>
-                <option value="New">Stockin</option>
-                <option value="Used">Others</option>
-              </select>
             </div>
           </div>
         </div>
 
         {/* Button */}
-        <div className="flex justify-center md:justify-start md:pl-40">
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+        <div className="flex justify-center md:justify-start md:pl-44 mt-10">
+          <button className="px-6 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-48">
             Search
           </button>
         </div>
@@ -212,7 +127,7 @@ function Stocktransfer() {
               </span>
               <input
                 type="text"
-                className="w-8 sm:w-12 border rounded px-1 sm:px-2 py-1 text-center text-xs sm:text-sm"
+                className="w-16 sm:w-20 border rounded px-2 sm:px-3 py-1 text-center text-xs sm:text-sm"
                 value="1"
               />
               <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 hover:text-green-600 cursor-pointer" />
@@ -277,4 +192,4 @@ function Stocktransfer() {
   );
 }
 
-export default Stocktransfer;
+export default WarehouseViewer;
