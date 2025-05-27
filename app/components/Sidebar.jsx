@@ -27,6 +27,8 @@ import {
   GlassesIcon,
   Search,
   Eye,
+  InfoIcon,
+  Book,
 } from "lucide-react";
 
 const SidebarSection = ({
@@ -89,7 +91,20 @@ const SidebarSection = ({
 
 export default function Sidebar() {
   const pathname = usePathname();
-
+  const baseinformationitems = [
+    {
+      id: "parameters",
+      name: "Parameters",
+      icon: <InfoIcon className="w-4 h-4 text-white" />,
+      route: "parameter",
+    },
+    {
+      id:"dictionary",
+      name:"Dictionary",
+      icon:<Book className='w-4 h-4 text-white'/>,
+      route:"/dictionary"
+    }
+  ];
   const arrearProject = [
     {
       id: "project",
@@ -125,17 +140,17 @@ export default function Sidebar() {
       route: "/stocktransfer",
     },
     {
-      id:"meterviewer",
-      name:"Meter Viewer",
-      icon:<Eye className="w-4 h-4"/>,
-      route:"/meterviewer"
+      id: "meterviewer",
+      name: "Meter Viewer",
+      icon: <Eye className="w-4 h-4" />,
+      route: "/meterviewer",
     },
     {
-      id:"warhouseviewer",
-      name:"Warehouse Viewer",
-      icon:<Eye className="w-4 h-4 "/>,
-      route:"/warehouseviewer"
-    }
+      id: "warhouseviewer",
+      name: "Warehouse Viewer",
+      icon: <Eye className="w-4 h-4 " />,
+      route: "/warehouseviewer",
+    },
   ];
 
   const securityItems = [
@@ -247,6 +262,7 @@ export default function Sidebar() {
     ...warehouseItems,
     ...arrearProject,
     ...messageItems,
+    ...baseinformationitems,
   ];
 
   const getInitialOption = () => {
@@ -262,6 +278,7 @@ export default function Sidebar() {
     if (warehouseItems.some((i) => i.id === id)) return "warehouse";
     if (arrearProject.some((i) => i.id === id)) return "project";
     if (messageItems.some((i) => i.id === id)) return "message";
+    if (baseinformationitems.some((i) => i.id === id)) return "baseinformation";
     return "business";
   };
 
@@ -283,6 +300,8 @@ export default function Sidebar() {
         setActiveMenu("project");
       else if (messageItems.some((i) => i.id === current.id))
         setActiveMenu("message");
+      else if(baseinformationitems.some((i)=> i.id === current.id))
+        setActiveMenu("baseinformation");
     }
   }, [pathname]);
 
@@ -350,6 +369,24 @@ export default function Sidebar() {
           setSelectedOption={setSelectedOption}
         />
 
+        <SidebarSection
+          title="Arrear"
+          icon={<MonitorDot className="w-5 h-5" />}
+          items={arrearProject}
+          activeMenu={activeMenu === "project"}
+          onToggle={() => toggleMenu("project")}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+        />
+        <SidebarSection
+          title="Base Information"
+          icon={<InfoIcon className="w-5 h-5" />}
+          items={baseinformationitems}
+          activeMenu={activeMenu === "baseinformation"}
+          onToggle={() => toggleMenu("baseinformation")}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+        />
         <SidebarSection
           title="Arrear"
           icon={<MonitorDot className="w-5 h-5" />}

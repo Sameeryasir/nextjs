@@ -37,7 +37,7 @@ function Stockindialogue({onClose}) {
   return (
     <div className="fixed inset-0 bg-transparent  flex items-center justify-center p-2 sm:p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-2 sm:mx-4 p-4 sm:p-6 relative max-h-[90vh] overflow-y-auto">
-        <button className="absolute right-2 sm:right-4 top-2 sm:top-4 text-gray-500 hover:text-gray-700"
+        <button className="hover:cursor-pointer absolute right-2 sm:right-4 top-2 sm:top-4 text-gray-500 hover:text-gray-700"
         onClick={onClose}>
           <X size={20} className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
@@ -194,13 +194,13 @@ function Stockindialogue({onClose}) {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 sm:px-6 py-2 text-sm sm:text-base border border-gray-300 rounded-md hover:bg-gray-50"
+              className="hover:cursor-pointer px-4 sm:px-6 py-2 text-sm sm:text-base border border-gray-300 rounded-md hover:bg-gray-50"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-gray-800 text-white rounded-md hover:bg-gray-700"
+              className="cursor-pointer px-4 sm:px-6 py-2 text-sm sm:text-base bg-gray-800 text-white rounded-md hover:bg-gray-700"
             >
               OK
             </button>

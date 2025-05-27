@@ -70,10 +70,17 @@ function WarehouseViewer() {
               <div className="gap-2 flex flex-col-1">
                 <button
                   type="button"
+                  onClick={()=>setIsDialogOpen(true)}
                   className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105 hover:cursor-pointer"
                 >
                   ...
                 </button>
+                {isDialogOpen && (
+                  <Stockindialogue
+                    heading="Please Chose One Record"
+                    onClose={() => setIsDialogOpen(false)}
+                  />
+                )}
                 <button
                   type="button"
                   className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105 hover:cursor-pointer"
