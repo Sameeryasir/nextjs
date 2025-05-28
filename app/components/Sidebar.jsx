@@ -29,6 +29,15 @@ import {
   Eye,
   InfoIcon,
   Book,
+  LocateIcon,
+  ParkingMeter,
+  Gauge,
+  Feather,
+  CreditCardIcon,
+  IndentIncreaseIcon,
+  Scale,
+  LineChart,
+  PersonStanding,
 } from "lucide-react";
 
 const SidebarSection = ({
@@ -103,6 +112,32 @@ export default function Sidebar() {
       name:"Dictionary",
       icon:<Book className='w-4 h-4 text-white'/>,
       route:"/dictionary"
+    },
+    {
+      id:'region',
+      name:"Region",
+      icon:<LocateIcon className="w-4 h-4 text-white"/>,
+      route:'/region'
+    },{
+      id:'metermodel',
+      name:"Meter Model",
+      icon:<Gauge className="w-4 h-4 text-white"/>,
+      route:'/metermodel'
+    },{
+      id:"definefee",
+      name:"Define Fee",
+      icon:<CreditCardIcon className='w-4 h-4 text-white'/>,
+      route:"/definefee"
+    },{
+      id:"Tariff index",
+      name:"Tariff Index",
+      icon:<LineChart className="w-4 h-4 text-white"/>,
+      route:'/tariff'
+    },{
+      id:"customertype",
+      name:'Cusotmer Type',
+      icon:<PersonStanding className=" w-4 h-4 text-white"/>,
+      route:'/customertype'
     }
   ];
   const arrearProject = [
