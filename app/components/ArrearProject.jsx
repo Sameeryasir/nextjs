@@ -103,9 +103,11 @@ export default function ArrearProject() {
             <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
               Refresh
             </button>
-            <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-              New
-            </button>
+             <Link href="/baseInformation">
+          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+            New
+          </button>
+        </Link>
           </div>
         </div>
 
