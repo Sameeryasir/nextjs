@@ -21,9 +21,29 @@ const dataItems = [
   "Cancel Customer Reason",
   "Vending Refunded Reason",
   "Vending Cancellation Reason",
-  "Repairing Type For Warehouse",
+  "Billing Mode",
+  "Bussiness Type for Stock",
+  "Declaration Type for Warehouse",
+  "Repairing Type for Warehouse",
+  "Connection Code",
+  "Reason of Free Issue",
+  "Reason of Arrearing Reverse",
+  "Reason of Installing Meter",
+  "Reason of Uninstalling Meter",
   "Account Type Of Arrear",
+  "Sponsor Group",
+  "Sponsor Sector",
+  "Restor Reason for Customer",
+  "Sources Type",
+  "Bank Information",
+  "Recharge Reverse",
+  "Project Type",
+  "Auth Key",
+  "Tariff Type",
   "House Type",
+  "Room",
+  "Credentials",
+ 
 ];
 
 export default function Dictionary() {
@@ -31,7 +51,7 @@ export default function Dictionary() {
 
   return (
     <div className="flex justify-between w-full">
-      <div className="h-screen w-full bg-white p-4">
+      <div className=" w-full bg-white p-4">
         {/* Header */}
         <div className="flex justify-between items-start mb-4">
           <h2 className="text-lg font-semibold">Data List</h2>
@@ -52,7 +72,7 @@ export default function Dictionary() {
             {dataItems.map((item, index) => (
               <div
                 key={index}
-                className={`flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-200 ${
+                className={`flex items-center gap-2 px-4 py-1 cursor-pointer hover:bg-gray-200 ${
                   selectedItem === item ? " font-bold" : ""
                 }`}
                 onClick={() => setSelectedItem(item)}
