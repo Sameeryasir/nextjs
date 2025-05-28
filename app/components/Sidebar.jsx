@@ -108,6 +108,13 @@ export default function Sidebar() {
       route: "parameter",
     },
     {
+<<<<<<< HEAD
+      id: "dictionary",
+      name: "Dictionary",
+      icon: <Book className="w-4 h-4 text-white" />,
+      route: "/dictionary",
+    },
+=======
       id:"dictionary",
       name:"Dictionary",
       icon:<Book className='w-4 h-4 text-white'/>,
@@ -139,13 +146,33 @@ export default function Sidebar() {
       icon:<PersonStanding className=" w-4 h-4 text-white"/>,
       route:'/customertype'
     }
+>>>>>>> 9a3b097df5e7680a7342bc1f2c20e4db7741415e
   ];
-  const arrearProject = [
+
+  const arrearItems = [
     {
       id: "project",
       name: "Project",
       icon: <FileText className="w-4 h-4" />,
       route: "/arrearproject",
+    },
+    {
+      id: "customercontract",
+      name: "CustomerContract",
+      icon: <FileText className="w-4 h-4" />,
+      route: "/arrearcustomercontract",
+    },
+    {
+      id: "payarrear",
+      name: "PayArrear",
+      icon: <FileText className="w-4 h-4" />,
+      route: "/payarrear",
+    },
+    {
+      id: "adjustments",
+      name: "Adjustments",
+      icon: <FileText className="w-4 h-4" />,
+      route: "/adjustments",
     },
   ];
 
@@ -295,7 +322,7 @@ export default function Sidebar() {
     ...financeItems,
     ...securityItems,
     ...warehouseItems,
-    ...arrearProject,
+    ...arrearItems,
     ...messageItems,
     ...baseinformationitems,
   ];
@@ -311,7 +338,7 @@ export default function Sidebar() {
     if (financeItems.some((i) => i.id === id)) return "finance";
     if (securityItems.some((i) => i.id === id)) return "security";
     if (warehouseItems.some((i) => i.id === id)) return "warehouse";
-    if (arrearProject.some((i) => i.id === id)) return "project";
+    if (arrearItems.some((i) => i.id === id)) return "arrear";
     if (messageItems.some((i) => i.id === id)) return "message";
     if (baseinformationitems.some((i) => i.id === id)) return "baseinformation";
     return "business";
@@ -331,11 +358,11 @@ export default function Sidebar() {
         setActiveMenu("security");
       else if (warehouseItems.some((i) => i.id === current.id))
         setActiveMenu("warehouse");
-      else if (arrearProject.some((i) => i.id === current.id))
-        setActiveMenu("project");
+      else if (arrearItems.some((i) => i.id === current.id))
+        setActiveMenu("arrear");
       else if (messageItems.some((i) => i.id === current.id))
         setActiveMenu("message");
-      else if(baseinformationitems.some((i)=> i.id === current.id))
+      else if (baseinformationitems.some((i) => i.id === current.id))
         setActiveMenu("baseinformation");
     }
   }, [pathname]);
@@ -407,27 +434,19 @@ export default function Sidebar() {
         <SidebarSection
           title="Arrear"
           icon={<MonitorDot className="w-5 h-5" />}
-          items={arrearProject}
-          activeMenu={activeMenu === "project"}
-          onToggle={() => toggleMenu("project")}
+          items={arrearItems}
+          activeMenu={activeMenu === "arrear"}
+          onToggle={() => toggleMenu("arrear")}
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
         />
+
         <SidebarSection
           title="Base Information"
           icon={<InfoIcon className="w-5 h-5" />}
           items={baseinformationitems}
           activeMenu={activeMenu === "baseinformation"}
           onToggle={() => toggleMenu("baseinformation")}
-          selectedOption={selectedOption}
-          setSelectedOption={setSelectedOption}
-        />
-        <SidebarSection
-          title="Arrear"
-          icon={<MonitorDot className="w-5 h-5" />}
-          items={arrearProject}
-          activeMenu={activeMenu === "project"}
-          onToggle={() => toggleMenu("project")}
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
         />
