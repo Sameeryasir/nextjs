@@ -82,7 +82,7 @@ const reload=()=>{
                   <RefreshCw size={18} />
                   Refresh
                 </button>
-                <Link href={'/freeissuenewbutton'}>
+                <Link href={'/bussiness/freetoken/information'}>
                   <button className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md hover:cursor-pointer transition w-[110px]">
                     <Plus size={18} />
                     New

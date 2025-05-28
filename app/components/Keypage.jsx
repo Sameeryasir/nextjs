@@ -85,9 +85,9 @@ const handleReload=()=>{
                 className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
                   Refresh
                 </button>
-                <Link href={'/keytokenpage'}>
+                <Link href={'/bussiness/keytoken/information'}>
                   <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-                    Search
+                    New
                   </button>
                 </Link>
               </div>

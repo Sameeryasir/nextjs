@@ -20,7 +20,7 @@ function page() {
           className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
             Refresh
           </button>
-          <Link href={'/newwarehouse'}>
+          <Link href={'/meterwarehouse/warehouse/newwarehouse'}>
             <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
               New
             </button>

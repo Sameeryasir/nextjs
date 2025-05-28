@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Stockindialogue from "./Stockindialogue";
 import Link from "next/link";
+import Newstockindailogue from "./Newstockindailogue";
 function Newstockin() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -85,7 +86,7 @@ function Newstockin() {
                   ...
                 </button>
                 {isDialogOpen && (
-                  <Stockindialogue onClose={() => setIsDialogOpen(false)} />
+                  <Newstockindailogue onClose={() => setIsDialogOpen(false)} />
                 )}
                 <button
                   type="button"
@@ -223,7 +224,7 @@ function Newstockin() {
         >
           <span>Refresh</span>
         </button>
-        <Link href={"/stockin"}>
+        <Link href={"/meterwarehouse/stockin"}>
           <button className="bg-[#FF9900] text-white px-3 py-2 rounded-md flex items-center gap-2 shadow-md transition w-full sm:w-[120px] justify-center hover:cursor-pointer">
             <span>Return</span>
           </button>

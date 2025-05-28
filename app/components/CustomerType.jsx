@@ -77,7 +77,7 @@ function CustomerType() {
               <RefreshCw size={16} />
               <span className="hidden sm:inline">Refresh</span>
             </button>
-            <Link href={"/newtariff"}>
+            <Link href={"/newcustomertype"}>
               <button className="hover:cursor-pointer bg-[#FF9900] text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 shadow-md hover:bg-[#FF9900] transition w-auto sm:w-[110px]">
                 <Plus size={16} />
                 <span className="hidden sm:inline">New</span>

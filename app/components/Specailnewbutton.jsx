@@ -52,7 +52,7 @@ function Specailnewbutton() {
           className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-30">
             Refresh
           </button>
-          <Link href={"/specialtoken"}>
+          <Link href={"/security/specialtoken"}>
             <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-30">
               Return
             </button>

@@ -154,37 +154,37 @@ export default function Sidebar() {
       id: "warehouse",
       name: "Warehouse",
       icon: <HomeIcon className="w-4 h-4" />,
-      route: "/warehouse",
+      route: "/meterwarehouse/warehouse",
     },
     {
       id: "stockin",
       name: "Stock In",
       icon: <StoreIcon className="w-4 h-4" />,
-      route: "/stockin",
+      route: "/meterwarehouse/stockin",
     },
     {
       id: "stockout",
       name: "Stock Out",
       icon: <StoreIcon className="w-4 h-4" />,
-      route: "/stockout",
+      route: "/meterwarehouse/stockout",
     },
     {
       id: "stocktransfer",
       name: "Stock Transfer",
       icon: <StoreIcon className="w-4 h-4" />,
-      route: "/stocktransfer",
+      route: "/meterwarehouse/stocktransfer",
     },
     {
       id: "meterviewer",
       name: "Meter Viewer",
       icon: <Eye className="w-4 h-4" />,
-      route: "/meterviewer",
+      route: "/meterwarehouse/meterviewer",
     },
     {
       id: "warhouseviewer",
       name: "Warehouse Viewer",
       icon: <Eye className="w-4 h-4 " />,
-      route: "/warehouseviewer",
+      route: "/meterwarehouse/warehouseviewer",
     },
   ];
 
@@ -193,37 +193,37 @@ export default function Sidebar() {
       id: "securitymodule",
       name: "Security Module",
       icon: <Shield className="w-4 h-4" />,
-      route: "/security_module",
+      route: "/security/security_module",
     },
     {
       id: "Balencermanagement",
       name: "Balancer Management",
       icon: <Layers className="w-4 h-4" />,
-      route: "/balencer_management",
+      route: "/security/balencer_management",
     },
     {
       id: "creditbalence",
       name: "Credit Balance",
       icon: <Wallet className="w-4 h-4" />,
-      route: "/credit_balence",
+      route: "/security/credit_balence",
     },
     {
       id: "tokenavailability",
       name: "Token Availability",
       icon: <Ticket className="w-4 h-4" />,
-      route: "/token_availability",
+      route: "/security/token_availability",
     },
     {
       id: "transactionviewer",
       name: "Transaction Viewer",
       icon: <ListOrdered className="w-4 h-4" />,
-      route: "/transaction_viewer",
+      route: "/security/transaction_viewer",
     },
     {
       id: "specialtoken",
       name: "Special Token",
       icon: <KeyIcon className="w-4 h-4" />,
-      route: "/specialtoken",
+      route: "/security/specialtoken",
     },
   ];
 
@@ -232,13 +232,13 @@ export default function Sidebar() {
       id: "venderaccount",
       name: "Vendor Account",
       icon: <FileText className="w-4 h-4" />,
-      route: "/venderaccount",
+      route: "/finance/venderaccount",
     },
     {
       id: "vendersession",
       name: "Vendor Session",
       icon: <FileText className="w-4 h-4" />,
-      route: "/vendorsession",
+      route: "/finance/vendorsession",
     },
   ];
 
@@ -247,7 +247,7 @@ export default function Sidebar() {
       id: "messegesubscription",
       name: "Message Subscription",
       icon: <MessageCircle className="w-4 h-4" />,
-      route: "/messegesubscription",
+      route: "/messege/messegesubscription",
     },
   ];
 
@@ -262,31 +262,31 @@ export default function Sidebar() {
       id: "compensating",
       name: "Compensating",
       icon: <Database className="w-4 h-4" />,
-      route: "/compensation",
+      route: "/bussiness/compensation",
     },
     {
       id: "vending",
       name: "Vending",
       icon: <Package className="w-4 h-4" />,
-      route: "/vending",
+      route: "/bussiness/vending",
     },
     {
       id: "maintenance",
       name: "Maintenance Token",
       icon: <Key className="w-4 h-4" />,
-      route: "/tokenpage",
+      route: "/bussiness/maintenancetoken",
     },
     {
       id: "key-issue",
       name: "Key Issue Token",
       icon: <Shield className="w-4 h-4" />,
-      route: "/keytoken",
+      route: "/bussiness/keytoken",
     },
     {
       id: "free-issue",
       name: "Free Issue Token",
       icon: <Key className="w-4 h-4" />,
-      route: "/freetoken",
+      route: "/bussiness/freetoken",
     },
   ];
 

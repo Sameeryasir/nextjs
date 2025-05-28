@@ -224,7 +224,7 @@ const handleRefresh=()=>{
         >
           <span>Refresh</span>
         </button>
-        <Link href={"/messegesubscription"}>
+        <Link href={"/messege/messegesubscription"}>
           <button className="bg-[#FF9900] text-white px-3 py-2 rounded-md flex items-center gap-2 shadow-md transition w-full sm:w-[120px] justify-center hover:cursor-pointer">
             <span>Return</span>
           </button>

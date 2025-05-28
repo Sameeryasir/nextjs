@@ -27,7 +27,7 @@ const SearchForm = () => {
         <h2 className="text-2xl font-semibold text-gray-800">
           Search Subscription
         </h2>
-        <Link href={"/new_subscription"}>
+        <Link href={"/messege/messegesubscription/new_subscription"}>
           <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
             New
           </button>
