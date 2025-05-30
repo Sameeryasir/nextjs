@@ -11,8 +11,7 @@ import {
   Plus,
 } from "lucide-react";
 import Link from "next/link";
-import SearchProjectModel from "./SearchProjectModel"; // Assuming this is the path to the SearchProjectModel component
-
+import SearchProjectModel from "./SearchProjectmodel";
 export default function CustomerContract() {
   const [currentPage, setCurrentPage] = useState(1);
   const [status, setStatus] = useState(""); // Fixed typo: usestatus -> setStatus

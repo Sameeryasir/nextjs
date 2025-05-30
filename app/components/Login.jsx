@@ -1,77 +1,73 @@
-"use client";
-import { useState } from "react";
-
+import React from "react";
+import Image from "next/image";
 const LoginPage = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle login logic here
-    console.log("Logging in with:", { username, password });
-  };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Header matching your business app style */}
-        <div className="bg-gray-800 text-white p-4 rounded-t-lg">
-          <h1 className="text-xl font-bold">System Login</h1>
-        </div>
+    <div className="mt-10 flex items-center justify-center ">
+      <div className="flex w-full max-w-5xl h-full md:h-[80vh]  overflow-hidden">
+        {/* Left Side - Form */}
+        <div className="w-full md:w-1/2 p-8 md:p-12 bg-white flex flex-col justify-center">
+          <h2 className="text-3xl font-bold text-blue-900 mb-2">SECDAIS</h2>
+          <p className="text-gray-500 mb-6">Create your free account</p>
 
-        {/* Login Form */}
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white shadow-md rounded-b-lg p-6"
-        >
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="username"
-            >
-              Username
-            </label>
-            <input
-              id="username"
-              type="text"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your username"
-            />
-          </div>
-
-          <div className="mb-6">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="password"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
+          <form className="space-y-4">
+            <div>
+              <label className="text-gray-700 font-medium text-sm">Email</label>
+              <input
+                type="email"
+                placeholder="Ruben@gmail.com"
+                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="text-gray-700 font-medium text-sm">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type="password"
+                  placeholder="****************"
+                  className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                {/* Airplane icon placeholder */}
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  ✈️
+                </span>
+              </div>
+              <div className="text-right mt-1">
+                <a href="#" className="text-blue-600 text-sm hover:underline">
+                  forgot password
+                </a>
+              </div>
+            </div>
             <button
               type="submit"
-              className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+              className="w-full bg-blue-900 text-white font-semibold py-2 rounded-md hover:bg-blue-800 transition"
             >
-              Sign In
+              Login
             </button>
-          </div>
+          </form>
 
-          {/* Footer similar to your app's pagination style */}
-          <div className="mt-4 pt-4 border-t border-gray-200 text-sm text-gray-600 text-center">
-            <p>Need help? Contact your system administrator</p>
-          </div>
-        </form>
+          <p className="text-sm text-center mt-4 text-gray-600">
+            Don’t have an account?{" "}
+            <a href="#" className="text-blue-600 hover:underline">
+              Sign Up
+            </a>
+          </p>
+        </div>
+
+        {/* Right Side - Image */}
+        <div className="mt-20 relative hidden md:block md:w-1/2 h-[600px]">
+          <Image
+            src="/images/tower.jpg"
+            alt="Signup illustration"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+            unoptimized
+          />
+        </div>
       </div>
     </div>
   );
