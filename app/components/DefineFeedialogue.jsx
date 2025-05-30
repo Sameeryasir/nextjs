@@ -6,7 +6,7 @@ function DefineFeedialogue() {
   const router = useRouter();
 
   const handleSubmit = () => {
-    router.push("/warehouse");
+    router.push("/base_information/definefee");
   };
   const handleReload = () => {
     window.location.reload();
@@ -93,7 +93,7 @@ function DefineFeedialogue() {
         >
           <span>Refresh</span>
         </button>
-        <Link href={"/definefee"}>
+        <Link href={"/base_information/definefee"}>
           {" "}
           <button className="bg-[#FF9900] text-white px-3 py-2 rounded-md flex items-center gap-2 shadow-md transition w-full sm:w-[120px] justify-center hover:cursor-pointer">
             <span>Return</span>

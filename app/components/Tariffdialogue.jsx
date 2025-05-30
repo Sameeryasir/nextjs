@@ -183,7 +183,7 @@ function Tariffdialogue() {
           >
             Refresh
           </button>
-          <Link href="/tariff">
+          <Link href="/base_information/tariff">
             <button className="bg-[#FF9900] text-white px-5 py-2  rounded-md shadow-md transition hover:opacity-90 w-full sm:w-[120px]">
               Return
             </button>

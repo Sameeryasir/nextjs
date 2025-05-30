@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Stockindialogue from "@/app/components/Stockindialogue";
 import Link from "next/link";
+import Newtransferdialogue from "@/app/components/Newtransferdialoguesource";
+import Newtransferdialoguedestination from "@/app/components/Newtransferdialoguedestination";
 function Page() {
 const [isDialogOpen,setIsDialogOpen]=useState(false);
   const router = useRouter();
@@ -77,7 +79,7 @@ const [isDialogOpen,setIsDialogOpen]=useState(false);
                   ...
                 </button>
                 {isDialogOpen && (
-                  <Stockindialogue onClose={() => setIsDialogOpen(false)} />
+                  <Newtransferdialogue onClose={() => setIsDialogOpen(false)} />
                 )}
                 <button
                   type="button"
@@ -108,7 +110,7 @@ const [isDialogOpen,setIsDialogOpen]=useState(false);
                   ...
                 </button>
                 {isDialogOpen && (
-                  <Stockindialogue onClose={() => setIsDialogOpen(false)} />
+                  <Newtransferdialoguedestination onClose={() => setIsDialogOpen(false)} />
                 )}
                 <button
                   type="button"
@@ -211,7 +213,7 @@ const [isDialogOpen,setIsDialogOpen]=useState(false);
         >
           <span>Refresh</span>
         </button>
-        <Link href={"/stocktransfer"}>
+        <Link href={"/meterwarehouse/stocktransfer"}>
           <button className="bg-[#FF9900] text-white px-3 py-2 rounded-md flex items-center gap-2 shadow-md transition w-full sm:w-[120px] justify-center hover:cursor-pointer">
             <span>Return</span>
           </button>
