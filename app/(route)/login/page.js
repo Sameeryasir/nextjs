@@ -1,11 +1,11 @@
 import React from 'react'
-
+import Image from 'next/image'
 function Page() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="flex w-full max-w-5xl shadow-lg rounded-lg overflow-hidden">
+    <div className="mt-10 flex items-center justify-center ">
+      <div className="flex w-full max-w-5xl h-full md:h-[80vh]  overflow-hidden">
         {/* Left Side - Form */}
-        <div className="w-full md:w-1/2 p-8 md:p-12 bg-white">
+        <div className="w-full md:w-1/2 p-8 md:p-12 bg-white flex flex-col justify-center">
           <h2 className="text-3xl font-bold text-blue-900 mb-2">SECDAIS</h2>
           <p className="text-gray-500 mb-6">Create your free account</p>
 
@@ -56,12 +56,19 @@ function Page() {
         </div>
 
         {/* Right Side - Image */}
-        <div className="hidden md:block md:w-1/2">
-        
+        <div className="mt-20 relative hidden md:block md:w-1/2 h-[600px]">
+          <Image
+            src="/images/tower.jpg"
+            alt="Signup illustration"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+            unoptimized
+          />
         </div>
       </div>
     </div>
   );
 }
 
-export default Page
+export default Page;
