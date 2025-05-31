@@ -12,13 +12,9 @@ import {
   Plus,
 } from "lucide-react";
 import Link from "next/link";
-<<<<<<< HEAD
-import SearchProjectModel from "./SearchProjectModel"; // Assuming this is the path to the SearchProjectModel component
 import * as XLSX from "xlsx"; // Import xlsx library
 
-=======
 import SearchProjectModel from "./SearchProjectmodel";
->>>>>>> e2753206875c3a37d3cbc604bde226f420b83bd5
 export default function CustomerContract() {
   const [currentPage, setCurrentPage] = useState(1);
   const [status, setStatus] = useState("");
