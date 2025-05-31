@@ -4,27 +4,38 @@ import {
   ChevronLast,
   ChevronLeft,
   ChevronRight,
+  RefreshCw,
+  Plus,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 export default function ArrearProject() {
 
+
+  const handleReload=()=>{
+    window.location.reload();
+  }
   return (
     <div className="p-6 bg-white-100">
       {/* Top Action Buttons - Replaced Search Buttons */}
       <div className="flex gap-4 mb-6 justify-end">
-        <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+        <button className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md hover:cursor-pointer transition w-[110px]">
           Modify
         </button>
-        <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+        <button className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md hover:cursor-pointer transition w-[110px]">
           Inactive
         </button>
-        <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+        <button onClick={()=>handleReload()} 
+         className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md transition hover:cursor-pointer">
+
           Refresh
+          <RefreshCw size={25}/>
         </button>
         <Link href="/baseInformation">
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-            New
+          <button className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md hover:cursor-pointer transition w-[110px]">
+              <Plus size={25}
+               />
+               NEW
           </button>
         </Link>
      
@@ -100,12 +111,17 @@ export default function ArrearProject() {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Version List</h2>
           <div className="flex gap-4">
-            <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-              Refresh
-            </button>
+             <button onClick={()=>handleReload()} 
+         className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md transition hover:cursor-pointer">
+
+          Refresh
+          <RefreshCw size={25}/>
+        </button>
              <Link href="/baseInformation">
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-            New
+           <button className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md hover:cursor-pointer transition w-[110px]">
+              <Plus size={25}
+               />
+               NEW
           </button>
         </Link>
           </div>

@@ -162,13 +162,13 @@ export default function Sidebar() {
       id: "payarrear",
       name: "PayArrear",
       icon: <FileText className="w-4 h-4" />,
-      route: "/payarrear",
+      route: "/arrearpayarrear",
     },
     {
       id: "adjustments",
       name: "Adjustments",
       icon: <FileText className="w-4 h-4" />,
-      route: "/adjustments",
+      route: "/arrearpayadjustments",
     },
   ];
 
