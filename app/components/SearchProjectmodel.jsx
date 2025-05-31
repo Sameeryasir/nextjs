@@ -1,6 +1,4 @@
 import React from "react";
-import { RefreshCw } from "lucide-react";
-
 export default function SearchProjectModel({ isOpen, onClose }) {
   if (!isOpen) return null;
 
@@ -38,7 +36,9 @@ export default function SearchProjectModel({ isOpen, onClose }) {
             />
           </div>
           <div>
-            <label className="block text-gray-500 text-sm mb-1">Description</label>
+            <label className="block text-gray-500 text-sm mb-1">
+              Description
+            </label>
             <input
               type="text"
               className="border border-gray-300 rounded p-2 w-full"
@@ -105,7 +105,9 @@ export default function SearchProjectModel({ isOpen, onClose }) {
 
         {/* Footer Buttons */}
         <div className="mt-4 flex justify-end gap-2">
-          <button className="px-4 py-2 bg-green-500 text-white rounded [w-120px]">OK</button>
+          <button className="px-4 py-2 bg-green-500 text-white rounded [w-120px]">
+            OK
+          </button>
           <button
             onClick={onClose}
             className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md transition w-[120px]"
