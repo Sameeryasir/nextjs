@@ -1,30 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import {
-  RefreshCw,
-  ChevronFirst,
-  ChevronLast,
-  ChevronLeft,
-  ChevronRight,
-  Plus,
-  ListOrdered,
-  FileText,
-} from "lucide-react";
 
 function Customerdialogue() {
-  const [showDropdown, setShowDropdown] = useState(false);
-
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-  };
+  const [vendingDropdowns, setVendingDropdowns] = useState([]);
+  const [powerDropdowns, setPowerDropdowns] = useState([]);
 
   return (
     <>
       <div className="max-w-3xl px-4 py-6 sm:px-6">
-        {/* Header */}
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Base info</h1>
 
-        {/* Form */}
         <form className="space-y-5">
           {/* Code */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
@@ -77,12 +62,9 @@ function Customerdialogue() {
               className="flex-1 w-full px-3 py-2 border border-gray-300 rounded-md"
             >
               <option>Select Tariff</option>
-              <option>01 00001 - SONELEC NGAZIDJA</option>
-              <option>01 00001 - SONELEC NGAZIDJA</option>
-              <option>01 00001 - SONELEC NGAZIDJA</option>
-              <option>01 00001 - SONELEC NGAZIDJA</option>
-              <option>01 00001 - SONELEC NGAZIDJA</option>
-              <option>01 00001 - SONELEC NGAZIDJA</option>
+              {[...Array(6)].map((_, i) => (
+                <option key={i}>01 00001 - SONELEC NGAZIDJA</option>
+              ))}
             </select>
           </div>
 
@@ -101,7 +83,7 @@ function Customerdialogue() {
             />
           </div>
 
-          {/* Maximum Load Threshold */}
+          {/* Max Load */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
             <label
               htmlFor="maxLoad"
@@ -133,87 +115,115 @@ function Customerdialogue() {
         </form>
       </div>
 
-      <div className="mt-10   ">
-        {/* First Table Section */}
+      <div className="mt-10">
+        {/* Vending Section */}
         <h1 className="text-gray-400 ml-3">Vending</h1>
-
         <div
           className="w-6 h-6 flex items-center justify-center rounded-full border-2 border-[#001F4D] ml-5 mt-1 hover:cursor-pointer"
-          onClick={toggleDropdown}
+          onClick={() =>
+            setVendingDropdowns([
+              ...vendingDropdowns,
+              Date.now() + Math.random(),
+            ])
+          }
         >
           <span className="text-[#001F4D] text-xl font-bold leading-none">
             +
           </span>
         </div>
 
-        <div className="  mb-4 mt-5 sm:mb-6 overflow-x-auto">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[800px] sm:min-w-0">
-              <thead className="bg-[#FF9900] text-white">
-                <tr>
-                  <th className="p-2 sm:p-3 text-left">Fee</th>
-                  <th className="p-2 sm:p-3 text-left">Fee</th>
-                  <th className="p-2 sm:p-3 text-left">TaxIncluded</th>
-                  <th className="p-2 sm:p-3 text-left">Def.Tax Rate</th>
-                  <th className="p-2 sm:p-3 text-left">Tax(%)</th>
-                  <th className="p-2 sm:p-3 text-left">Payement Type</th>
-                </tr>
-              </thead>
-              {/* Dropdown appears after click */}
-              {showDropdown && (
-                <div className="w-64 ml-5 mt-2">
-                  <select className="w-full px-4 py-2 border  rounded-md text-black">
-                    <option>TVA</option>
-                    <option>RDV</option>
-                    <option>Partie Fixe Mono</option>
-                    <option>Partie Fixe TRI</option>
-                    <option>Partie Fixe</option>
-                    <option>Partie Fix TRI</option>
-                    <option>Testee</option>
-                  </select>
-                </div>
-              )}
-            </table>
-          </div>
+        <div className="mb-4 mt-5 sm:mb-6 overflow-x-auto">
+          <table className="w-full min-w-[800px] sm:min-w-0">
+            <thead className="bg-[#FF9900] text-white">
+              <tr>
+                <th className="p-2 sm:p-3 text-left">Fee</th>
+                <th className="p-2 sm:p-3 text-left">Fee</th>
+                <th className="p-2 sm:p-3 text-left">TaxIncluded</th>
+                <th className="p-2 sm:p-3 text-left">Def.Tax Rate</th>
+                <th className="p-2 sm:p-3 text-left">Tax(%)</th>
+                <th className="p-2 sm:p-3 text-left">Payement Type</th>
+              </tr>
+            </thead>
+          </table>
         </div>
 
-        {/* Second Table Section */}
-        <h1 className="text-gray-400 ml-3">Replace Max.Power</h1>
-        <div className="w-6 h-6 flex items-center justify-center rounded-full border-2 border-[#001F4D] ml-5 mt-1 hover:cursor-pointer">
+        {/* Render Vending Dropdowns */}
+        {vendingDropdowns.map((id) => (
+          <div key={id} className="flex items-center gap-2 ml-5 mt-2 w-64">
+            <select className="flex-1 px-4 py-2 border rounded-md text-black">
+              <option>TVA</option>
+              <option>RDV</option>
+              <option>Partie Fixe Mono</option>
+              <option>Partie Fixe TRI</option>
+              <option>Partie Fixe</option>
+              <option>Partie Fix TRI</option>
+              <option>Testee</option>
+            </select>
+            <button
+              type="button"
+              className="w-6 h-6 flex items-center justify-center rounded-full bg-red-600 text-white font-bold text-lg hover:bg-red-700 transition hover:cursor-pointer"
+              onClick={() =>
+                setVendingDropdowns((prev) =>
+                  prev.filter((item) => item !== id)
+                )
+              }
+            >
+              ×
+            </button>
+          </div>
+        ))}
+
+        {/* Replace Max.Power Section */}
+        <h1 className="text-gray-400 ml-3 mt-8">Replace Max.Power</h1>
+        <div
+          className="w-6 h-6 flex items-center justify-center rounded-full border-2 border-[#001F4D] ml-5 mt-1 hover:cursor-pointer"
+          onClick={() =>
+            setPowerDropdowns([...powerDropdowns, Date.now() + Math.random()])
+          }
+        >
           <span className="text-[#001F4D] text-xl font-bold leading-none">
             +
           </span>
         </div>
-        <div className=" mb-4 sm:mb-6 overflow-x-auto mt-6">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[800px] sm:min-w-0">
-              <thead className="bg-[#FF9900] text-white">
-                <tr>
-                  <th className="p-2 sm:p-3 text-left">Fee</th>
-                  <th className="p-2 sm:p-3 text-left">Fee</th>
-                  <th className="p-2 sm:p-3 text-left">TaxIncluded</th>
-                  <th className="p-2 sm:p-3 text-left">Def.Tax Rate</th>
-                  <th className="p-2 sm:p-3 text-left">Tax(%)</th>
-                  <th className="p-2 sm:p-3 text-left">Payement Type</th>
-                </tr>
-              </thead>
-              {/* Dropdown appears after click */}
-              {showDropdown && (
-                <div className=" w-64 ml-5 mt-2">
-                  <select className="w-full px-4 py-2 border  rounded-md text-black">
-                    <option>TVA</option>
-                    <option>RDV</option>
-                    <option>Partie Fixe Mono</option>
-                    <option>Partie Fixe TRI</option>
-                    <option>Partie Fixe</option>
-                    <option>Partie Fix TRI</option>
-                    <option>Testee</option>
-                  </select>
-                </div>
-              )}
-            </table>
-          </div>
+
+        <div className="mb-4 sm:mb-6 overflow-x-auto mt-6">
+          <table className="w-full min-w-[800px] sm:min-w-0">
+            <thead className="bg-[#FF9900] text-white">
+              <tr>
+                <th className="p-2 sm:p-3 text-left">Fee</th>
+                <th className="p-2 sm:p-3 text-left">Fee</th>
+                <th className="p-2 sm:p-3 text-left">TaxIncluded</th>
+                <th className="p-2 sm:p-3 text-left">Def.Tax Rate</th>
+                <th className="p-2 sm:p-3 text-left">Tax(%)</th>
+                <th className="p-2 sm:p-3 text-left">Payement Type</th>
+              </tr>
+            </thead>
+          </table>
         </div>
+
+        {/* Render Power Dropdowns */}
+        {powerDropdowns.map((id) => (
+          <div key={id} className="flex items-center gap-2 ml-5 mt-2 w-64">
+            <select className="flex-1 px-4 py-2 border rounded-md text-black">
+              <option>TVA</option>
+              <option>RDV</option>
+              <option>Partie Fixe Mono</option>
+              <option>Partie Fixe TRI</option>
+              <option>Partie Fixe</option>
+              <option>Partie Fix TRI</option>
+              <option>Testee</option>
+            </select>
+            <button
+              type="button"
+              className="w-6 h-6 flex items-center justify-center rounded-full bg-red-600 text-white font-bold text-lg hover:bg-red-700 transition hover:cursor-pointer"
+              onClick={() =>
+                setPowerDropdowns((prev) => prev.filter((item) => item !== id))
+              }
+            >
+              ×
+            </button>
+          </div>
+        ))}
       </div>
     </>
   );

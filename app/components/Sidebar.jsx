@@ -38,6 +38,16 @@ import {
   Scale,
   LineChart,
   PersonStanding,
+  Stamp,
+  Settings,
+  Server,
+  Network,
+  Cpu,
+  HardDrive,
+  Terminal,
+  Users,
+  Bell,
+  Calendar,
 } from "lucide-react";
 
 const SidebarSection = ({
@@ -142,6 +152,69 @@ export default function Sidebar() {
       name: "Cusotmer Type",
       icon: <PersonStanding className=" w-4 h-4 text-white" />,
       route: "/base_information/customertype",
+    },
+    {
+      id: "stamptax",
+      name: "StampTax",
+      icon: <Stamp className="w-4 h-4 text-white" />,
+      route: "/base_information/stamptax",
+    },
+  ];
+
+  const systemInformationItems = [
+    {
+      id: "system-settings",
+      name: "System Settings",
+      icon: <Settings className="w-4 h-4 text-white" />,
+      route: "/system_information/settings",
+    },
+    {
+      id: "server-status",
+      name: "Server Status",
+      icon: <Server className="w-4 h-4 text-white" />,
+      route: "/system_information/server_status",
+    },
+    {
+      id: "network-config",
+      name: "Network Config",
+      icon: <Network className="w-4 h-4 text-white" />,
+      route: "/system_information/network_config",
+    },
+    {
+      id: "system-logs",
+      name: "System Logs",
+      icon: <Terminal className="w-4 h-4 text-white" />,
+      route: "/system_information/system_logs",
+    },
+    {
+      id: "hardware-monitor",
+      name: "Hardware Monitor",
+      icon: <Cpu className="w-4 h-4 text-white" />,
+      route: "/system_information/hardware_monitor",
+    },
+    {
+      id: "storage-status",
+      name: "Storage Status",
+      icon: <HardDrive className="w-4 h-4 text-white" />,
+      route: "/system_information/storage_status",
+    },
+    {
+      id: "user-activity",
+      name: "User Activity",
+      icon: <Users className="w-4 h-4 text-white" />,
+      route: "/system_information/user_activity",
+    },
+    {
+      id: "notifications",
+      name: "Notifications",
+      icon: <Bell className="w-4 h-4 text-white" />,
+      route: "/system_information/notifications",
+    },
+    {
+      id: "scheduled-tasks",
+      name: "Scheduled Tasks",
+      icon: <Calendar className="w-4 h-4 text-white" />,
+      route: "/system_information/scheduled_tasks",
     },
   ];
 
@@ -321,6 +394,7 @@ export default function Sidebar() {
     ...arrearItems,
     ...messageItems,
     ...baseinformationitems,
+    ...systemInformationItems,
   ];
 
   const getInitialOption = () => {
@@ -337,6 +411,8 @@ export default function Sidebar() {
     if (arrearItems.some((i) => i.id === id)) return "arrear";
     if (messageItems.some((i) => i.id === id)) return "message";
     if (baseinformationitems.some((i) => i.id === id)) return "baseinformation";
+    if (systemInformationItems.some((i) => i.id === id))
+      return "systeminformation";
     return "business";
   };
 
@@ -360,6 +436,8 @@ export default function Sidebar() {
         setActiveMenu("message");
       else if (baseinformationitems.some((i) => i.id === current.id))
         setActiveMenu("baseinformation");
+      else if (systemInformationItems.some((i) => i.id === current.id))
+        setActiveMenu("systeminformation");
     }
   }, [pathname]);
 
@@ -443,6 +521,16 @@ export default function Sidebar() {
           items={baseinformationitems}
           activeMenu={activeMenu === "baseinformation"}
           onToggle={() => toggleMenu("baseinformation")}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+        />
+
+        <SidebarSection
+          title="System Information"
+          icon={<Settings className="w-5 h-5" />}
+          items={systemInformationItems}
+          activeMenu={activeMenu === "systeminformation"}
+          onToggle={() => toggleMenu("systeminformation")}
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
         />
