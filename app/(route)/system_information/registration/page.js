@@ -1,7 +1,8 @@
 "use client";
 import React from 'react'
 import { useState } from 'react';
-function page() {
+function Page() {
+
  const [isLoading, setIsLoading] = useState(false);
  const [isFading, setIsFading] = useState(false);
 
@@ -113,4 +114,4 @@ function page() {
  );
 }
 
-export default page
+export default Page

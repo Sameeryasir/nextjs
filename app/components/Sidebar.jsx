@@ -263,14 +263,20 @@ export default function Sidebar() {
           id: "screen",
           name: "Screen",
           icon: <MonitorDot className="w-4 h-4 text-white" />,
-          route: "/system_information/interface_definition/screen",
+          route: "/system_information/screen",
         },
         {
           id: "language",
           name: "Language",
           icon: <MessageCircle className="w-4 h-4 text-white" />,
-          route: "/system_information/interface_definition/language",
+          route: "/system_information/language",
         },
+        {
+          id:'languagepackage',
+          name:"Language Package",
+          icon:<MessageCircle className="w=4 h-4 text-white"/>,
+          route:"/system_information/language_package"
+        }
       ],
     },
   ];
