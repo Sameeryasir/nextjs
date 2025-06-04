@@ -38,7 +38,7 @@ function Operator() {
   return (
     <>
       {/* Tabs */}
-      <div className="flex gap-4 border-b border-gray-200 mb-4">
+      <div className="flex gap-4 border-b border-gray-200 mb-4 mt-10">
         <button
           className={`px-4 py-2 text-sm font-medium ${
             activeTab === "operator"
@@ -117,13 +117,13 @@ function Operator() {
                     <td className="p-2 sm:p-3 text-sm text-gray-800">
                       {user.description}
                     </td>
-                    <td className="p-2 sm:p-3 text-sm text-gray-800 flex items-center gap-2">
-                      {user.role}
-                      <button
-                        className="text-xs bg-[#FF9900] text-white px-2 py-1 rounded hover:bg-[#e88c00]"
-                      >
-                        Details
-                      </button>
+                    <td className="p-2 sm:p-3 text-sm text-gray-800">
+                      <div className="flex justify-between items-center w-full">
+                        <span>{user.role}</span>
+                        <button className="text-sm bg-[#FF9900] text-white px-4 py-2 rounded hover:bg-[#e88c00] hover:cursor-pointer">
+                          Details
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

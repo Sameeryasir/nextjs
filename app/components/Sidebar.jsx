@@ -249,7 +249,7 @@ export default function Sidebar() {
           id: "operation",
           name: "Operation",
           icon: <Settings className="w-4 h-4 text-white" />,
-          route: "/system_information/organization/operation",
+          route: "/system_information/operation",
         },
       ],
     },
