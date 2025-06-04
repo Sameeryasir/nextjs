@@ -9,8 +9,11 @@ import {
   Plus,
 } from "lucide-react";
 import Operator from "./Operator";
+import Dialogue from "./dialogue";
 
 function Page() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const [roles, setRoles] = useState([
     {
       code: "ADMIN001",
@@ -68,12 +71,22 @@ function Page() {
                   className="bg-[#FF9900] text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 shadow-md transition text-sm sm:text-base"
                 >
                   <RefreshCw size={16} />
-                  <span className="hidden sm:inline hover:cursor-pointer">Refresh</span>
+                  <span className="hidden sm:inline hover:cursor-pointer">
+                    Refresh
+                  </span>
                 </button>
-                <button className="bg-[#FF9900] text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 shadow-md transition w-auto sm:w-[110px]">
+                <button
+                  onClick={() => setIsDialogOpen(true)}
+                  className="bg-[#FF9900] text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 shadow-md transition w-auto sm:w-[110px]"
+                >
                   <Plus size={16} />
-                  <span className="hidden sm:inline hover:cursor-pointer">New</span>
+                  <span className="hidden sm:inline hover:cursor-pointer">
+                    New
+                  </span>
                 </button>
+                {isDialogOpen && (
+                  <Dialogue onClose={() => setIsDialogOpen(false)} />
+                )}
               </div>
             </div>
           </div>
