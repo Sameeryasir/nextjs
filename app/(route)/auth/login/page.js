@@ -1,9 +1,10 @@
+import LoginPage from '@/app/components/Login'
 import React from 'react'
-import LoginPage from '@/app/components/Login';
-function Page() {
+
+function page() {
   return (
-   <LoginPage/>
-  );
+    <div><LoginPage/></div>
+  )
 }
 
-export default Page;
+export default page

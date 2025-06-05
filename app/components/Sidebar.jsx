@@ -38,6 +38,16 @@ import {
   Scale,
   LineChart,
   PersonStanding,
+  Stamp,
+  Settings,
+  Server,
+  Network,
+  Cpu,
+  HardDrive,
+  Terminal,
+  Users,
+  Bell,
+  Calendar,
 } from "lucide-react";
 
 const SidebarSection = ({
@@ -48,6 +58,8 @@ const SidebarSection = ({
   onToggle,
   selectedOption,
   setSelectedOption,
+  selectedSubOption,
+  setSelectedSubOption,
 }) => {
   return (
     <div className="mb-1">
@@ -69,28 +81,85 @@ const SidebarSection = ({
       {activeMenu && (
         <div className="mt-1 mb-3 ml-4 pl-2 border-l border-gray-700">
           {items.map((item) => (
-            <Link href={item.route} key={item.id}>
-              <div
-                onClick={() => setSelectedOption(item.id)}
-                className={`flex items-center px-4 py-2 gap-3 cursor-pointer transition-colors rounded-md mx-2 ${
-                  selectedOption === item.id
-                    ? "border-l-2 border-orange-500 bg-gray-800/80"
-                    : "hover:bg-gray-700/60"
-                }`}
-              >
-                <div className="flex items-center gap-3 flex-grow">
-                  <div
-                    className={`w-2 h-2 rounded-full ${
-                      selectedOption === item.id
-                        ? "bg-orange-500"
-                        : "bg-gray-500"
-                    }`}
-                  ></div>
-                  <span className="text-gray-300">{item.icon}</span>
-                  <span className="text-sm text-gray-200">{item.name}</span>
+            <div key={item.id}>
+              <Link href={item.route} passHref>
+                <div
+                  onClick={(e) => {
+                    if (!item.subItems) {
+                      setSelectedOption(item.id);
+                      setSelectedSubOption(null);
+                    } else {
+                      e.preventDefault();
+                      setSelectedOption(
+                        selectedOption === item.id ? null : item.id
+                      );
+                      setSelectedSubOption(null);
+                    }
+                  }}
+                  className={`flex items-center px-4 py-2 gap-3 cursor-pointer transition-colors rounded-md mx-2 ${
+                    selectedOption === item.id || selectedSubOption === item.id
+                      ? "border-l-2 border-orange-500 bg-gray-800/80"
+                      : "hover:bg-gray-700/60"
+                  }`}
+                >
+                  <div className="flex items-center gap-3 flex-grow">
+                    <div
+                      className={`w-2 h-2 rounded-full ${
+                        selectedOption === item.id ||
+                        selectedSubOption === item.id
+                          ? "bg-orange-500"
+                          : "bg-gray-500"
+                      }`}
+                    ></div>
+                    <span className="text-gray-300">{item.icon}</span>
+                    <span className="text-sm text-gray-200">{item.name}</span>
+                    {item.subItems && (
+                      <div className="ml-auto">
+                        {selectedOption === item.id ? (
+                          <ChevronDown className="w-4 h-4 text-gray-300" />
+                        ) : (
+                          <ChevronRight className="w-4 h-4 text-gray-300" />
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+
+              {item.subItems && selectedOption === item.id && (
+                <div className="ml-4 pl-2 border-l border-gray-600">
+                  {item.subItems.map((subItem) => (
+                    <Link href={subItem.route} key={subItem.id} passHref>
+                      <div
+                        onClick={() => {
+                          setSelectedOption(item.id);
+                          setSelectedSubOption(subItem.id);
+                        }}
+                        className={`flex items-center px-4 py-2 gap-3 cursor-pointer transition-colors rounded-md mx-2 ${
+                          selectedSubOption === subItem.id
+                            ? "border-l-2 border-orange-400 bg-gray-800/60"
+                            : "hover:bg-gray-700/40"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 flex-grow">
+                          <div
+                            className={`w-2 h-2 rounded-full ${
+                              selectedSubOption === subItem.id
+                                ? "bg-orange-400"
+                                : "bg-gray-400"
+                            }`}
+                          ></div>
+                          <span className="text-gray-300">{subItem.icon}</span>
+                          <span className="text-sm text-gray-200">
+                            {subItem.name}
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
         </div>
       )}
@@ -142,6 +211,73 @@ export default function Sidebar() {
       name: "Cusotmer Type",
       icon: <PersonStanding className=" w-4 h-4 text-white" />,
       route: "/base_information/customertype",
+    },
+    {
+      id: "stamptax",
+      name: "StampTax",
+      icon: <Stamp className="w-4 h-4 text-white" />,
+      route: "/base_information/stamptax",
+    },
+  ];
+
+  const systemInformationItems = [
+    {
+      id: "organization",
+      name: "Organization",
+      icon: <Users className="w-4 h-4 text-white" />,
+      route: "/system_information/organization",
+      subItems: [
+        {
+          id: "registration",
+          name: "Registration",
+          icon: <FileText className="w-4 h-4 text-white" />,
+          route: "/system_information/registration",
+        },
+        {
+          id: "department",
+          name: "Department",
+          icon: <Building2 className="w-4 h-4 text-white" />,
+          route: "/system_information/department",
+        },
+        {
+          id: "roles-permissions",
+          name: "Roles/Permissions",
+          icon: <Key className="w-4 h-4 text-white" />,
+          route: "/system_information/role_permission",
+        },
+        {
+          id: "operation",
+          name: "Operation",
+          icon: <Settings className="w-4 h-4 text-white" />,
+          route: "/system_information/operation",
+        },
+      ],
+    },
+    {
+      id: "interface-definition",
+      name: "Interface Definition",
+      icon: <MonitorDot className="w-4 h-4 text-white" />,
+      route: "/system_information/interface_definition",
+      subItems: [
+        {
+          id: "screen",
+          name: "Screen",
+          icon: <MonitorDot className="w-4 h-4 text-white" />,
+          route: "/system_information/screen",
+        },
+        {
+          id: "language",
+          name: "Language",
+          icon: <MessageCircle className="w-4 h-4 text-white" />,
+          route: "/system_information/language",
+        },
+        {
+          id:'languagepackage',
+          name:"Language Package",
+          icon:<MessageCircle className="w=4 h-4 text-white"/>,
+          route:"/system_information/language_package"
+        }
+      ],
     },
   ];
 
@@ -313,53 +449,69 @@ export default function Sidebar() {
     },
   ];
 
-  const allItems = [
-    ...menuItems,
-    ...financeItems,
-    ...securityItems,
-    ...warehouseItems,
-    ...arrearItems,
-    ...messageItems,
-    ...baseinformationitems,
-  ];
-
-  const getInitialOption = () => {
-    const current = allItems.find((item) => item.route === pathname);
-    return current?.id || "contract";
-  };
-
-  const getInitialMenu = () => {
-    const id = getInitialOption();
-    if (menuItems.some((i) => i.id === id)) return "business";
-    if (financeItems.some((i) => i.id === id)) return "finance";
-    if (securityItems.some((i) => i.id === id)) return "security";
-    if (warehouseItems.some((i) => i.id === id)) return "warehouse";
-    if (arrearItems.some((i) => i.id === id)) return "arrear";
-    if (messageItems.some((i) => i.id === id)) return "message";
-    if (baseinformationitems.some((i) => i.id === id)) return "baseinformation";
-    return "business";
-  };
-
-  const [selectedOption, setSelectedOption] = useState(getInitialOption);
-  const [activeMenu, setActiveMenu] = useState(getInitialMenu);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedSubOption, setSelectedSubOption] = useState(null);
+  const [activeMenu, setActiveMenu] = useState(null);
 
   useEffect(() => {
-    const current = allItems.find((item) => item.route === pathname);
-    if (current) {
-      setSelectedOption(current.id);
-      if (menuItems.some((i) => i.id === current.id)) setActiveMenu("business");
-      else if (financeItems.some((i) => i.id === current.id))
+    // Find the current item based on pathname
+    let currentItem = null;
+    let currentSubItem = null;
+
+    // Check all items and sub-items
+    const allItems = [
+      ...menuItems,
+      ...financeItems,
+      ...securityItems,
+      ...warehouseItems,
+      ...arrearItems,
+      ...messageItems,
+      ...baseinformationitems,
+      ...systemInformationItems,
+    ];
+
+    for (const item of allItems) {
+      if (item.route === pathname) {
+        currentItem = item;
+        break;
+      }
+      if (item.subItems) {
+        for (const subItem of item.subItems) {
+          if (subItem.route === pathname) {
+            currentItem = item;
+            currentSubItem = subItem;
+            break;
+          }
+        }
+        if (currentItem) break;
+      }
+    }
+
+    if (currentItem) {
+      setSelectedOption(currentItem.id);
+      if (currentSubItem) {
+        setSelectedSubOption(currentSubItem.id);
+      } else {
+        setSelectedSubOption(null);
+      }
+
+      // Determine which menu section to open
+      if (menuItems.some((i) => i.id === currentItem.id))
+        setActiveMenu("business");
+      else if (financeItems.some((i) => i.id === currentItem.id))
         setActiveMenu("finance");
-      else if (securityItems.some((i) => i.id === current.id))
+      else if (securityItems.some((i) => i.id === currentItem.id))
         setActiveMenu("security");
-      else if (warehouseItems.some((i) => i.id === current.id))
+      else if (warehouseItems.some((i) => i.id === currentItem.id))
         setActiveMenu("warehouse");
-      else if (arrearItems.some((i) => i.id === current.id))
+      else if (arrearItems.some((i) => i.id === currentItem.id))
         setActiveMenu("arrear");
-      else if (messageItems.some((i) => i.id === current.id))
+      else if (messageItems.some((i) => i.id === currentItem.id))
         setActiveMenu("message");
-      else if (baseinformationitems.some((i) => i.id === current.id))
+      else if (baseinformationitems.some((i) => i.id === currentItem.id))
         setActiveMenu("baseinformation");
+      else if (systemInformationItems.some((i) => i.id === currentItem.id))
+        setActiveMenu("systeminformation");
     }
   }, [pathname]);
 
@@ -385,6 +537,8 @@ export default function Sidebar() {
           onToggle={() => toggleMenu("business")}
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
+          selectedSubOption={selectedSubOption}
+          setSelectedSubOption={setSelectedSubOption}
         />
 
         <SidebarSection
@@ -395,6 +549,8 @@ export default function Sidebar() {
           onToggle={() => toggleMenu("finance")}
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
+          selectedSubOption={selectedSubOption}
+          setSelectedSubOption={setSelectedSubOption}
         />
 
         <SidebarSection
@@ -405,6 +561,8 @@ export default function Sidebar() {
           onToggle={() => toggleMenu("message")}
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
+          selectedSubOption={selectedSubOption}
+          setSelectedSubOption={setSelectedSubOption}
         />
 
         <SidebarSection
@@ -415,6 +573,8 @@ export default function Sidebar() {
           onToggle={() => toggleMenu("security")}
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
+          selectedSubOption={selectedSubOption}
+          setSelectedSubOption={setSelectedSubOption}
         />
 
         <SidebarSection
@@ -425,6 +585,8 @@ export default function Sidebar() {
           onToggle={() => toggleMenu("warehouse")}
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
+          selectedSubOption={selectedSubOption}
+          setSelectedSubOption={setSelectedSubOption}
         />
 
         <SidebarSection
@@ -435,6 +597,8 @@ export default function Sidebar() {
           onToggle={() => toggleMenu("arrear")}
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
+          selectedSubOption={selectedSubOption}
+          setSelectedSubOption={setSelectedSubOption}
         />
 
         <SidebarSection
@@ -445,6 +609,20 @@ export default function Sidebar() {
           onToggle={() => toggleMenu("baseinformation")}
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
+          selectedSubOption={selectedSubOption}
+          setSelectedSubOption={setSelectedSubOption}
+        />
+
+        <SidebarSection
+          title="System Information"
+          icon={<Settings className="w-5 h-5" />}
+          items={systemInformationItems}
+          activeMenu={activeMenu === "systeminformation"}
+          onToggle={() => toggleMenu("systeminformation")}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+          selectedSubOption={selectedSubOption}
+          setSelectedSubOption={setSelectedSubOption}
         />
       </nav>
     </aside>
