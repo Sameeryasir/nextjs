@@ -118,7 +118,7 @@ export default function Dashboard() {
     <div className="flex gap-4">
       <div className="flex flex-col gap-4">
         {/* Top Stats */}
-        <div className="flex flex-wrap gap-4 h-[250px] max-w-[1090px]">
+        <div className="flex flex-wrap gap-4 h-[200px] max-w-[1090px]">
           <div className="bg-[#000D35] text-white p-6 rounded-xl shadow-md w-[350px]">
             <h2 className="text-sm uppercase">Total Expenses</h2>
             <p className="text-2xl font-bold mt-2">$95.595</p>

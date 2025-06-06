@@ -11,21 +11,20 @@ function page() {
     <div className="bg-white p-6">
       {/* Header Row with Title and Action Buttons */}
       <div className="flex justify-between items-center gap-4">
-        <h1 className="text-xl font-medium text-gray-900 mb-4">
-          Warehouse List
-        </h1>
+        <h1 className="text-2xl font-semibold text-gray-800">Warehouse List</h1>
+
         <div className="flex gap-4">
-          <button 
-          onClick={()=>handleReload()}
-          className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+          <button
+            onClick={() => handleReload()}
+            className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40"
+          >
             Refresh
           </button>
-          <Link href={'/meterwarehouse/warehouse/newwarehouse'}>
+          <Link href={"/meterwarehouse/warehouse/newwarehouse"}>
             <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
               New
             </button>
           </Link>
-       
         </div>
       </div>
 

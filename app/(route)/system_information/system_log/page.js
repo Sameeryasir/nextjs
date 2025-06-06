@@ -1,9 +1,133 @@
-import React from 'react'
+"use client";
+import React, { useState } from "react";
+import {
+  RefreshCw,
+  Plus,
+  ChevronFirst,
+  ChevronLeft,
+  ChevronRight,
+  ChevronLast,
+  X,
+} from "lucide-react";
+import Link from "next/link";
+function Page() {
+ 
 
-function page() {
+
+  const handleReload = () => {
+    window.location.reload();
+  };
   return (
-    <div>page</div>
-  )
+    <div className="min-h-screen bg-white p-6">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-2xl font-semibold text-gray-800">System Log</h1>
+        <div className="flex gap-4">
+          <button
+            onClick={() => handleReload()}
+            className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40"
+          >
+            Refresh
+          </button>
+        </div>
+      </div>
+      <div className="max-w-7xl text-left mb-14 space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <label className="w-32 text-sm font-medium text-gray-700">
+                Starting Date
+              </label>
+              <input
+                type="date"
+                defaultValue="2025-02-14"
+                className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="flex items-center gap-4">
+              <label className="w-32 text-sm font-medium text-gray-700">
+                Code
+              </label>
+              <input
+                type="text"
+                className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="flex items-center gap-4">
+              <label className="w-32 text-sm font-medium text-gray-700">
+                Type
+              </label>
+              <select className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="">Select an option</option>
+                <option value="login">Login</option>
+                <option value="modify_ref">Modify REF Code</option>
+                <option value="register">REGISTER</option>
+                <option value="install">INSTALL</option>
+                <option value="uninstall">Uninstall</option>
+                <option value="add_contract">Add Contract</option>
+                <option value="caisse_principale">CAISSE PRINCIPALE</option>
+                <option value="modify_customer_name">
+                  Modify Customer Name
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div className="pl-40">
+          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+            Search
+          </button>
+        </div>
+      </div>
+      <div className="bg-white rounded-lg shadow mb-4 sm:mb-6 overflow-x-auto">
+        <div className="p-2 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex gap-1 sm:gap-2">
+              <ChevronFirst className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer hover:text-[#FF9900]" />
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer hover:text-[#FF9900]" />
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF9900] cursor-pointer" />
+              <ChevronLast className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF9900] cursor-pointer" />
+            </div>
+            <div className="flex items-center gap-1 sm:gap-2 bg-gray-100 px-2 sm:px-3 py-1 rounded text-xs sm:text-sm">
+              <span className="text-gray-600 whitespace-nowrap">
+                Total 1 Records
+              </span>
+              <span className="text-gray-600 hidden sm:inline">|</span>
+              <span className="text-gray-600 whitespace-nowrap">
+                Record 1-1, Page 1/1
+              </span>
+              <span className="text-gray-600">|</span>
+              <span className="text-gray-600 whitespace-nowrap">
+                Turn To Page
+              </span>
+              <input
+                type="text"
+                className="w-8 sm:w-12 border rounded px-1 sm:px-2 py-1 text-center text-xs sm:text-sm"
+                value="1"
+              />
+              <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 hover:text-green-600 cursor-pointer" />
+            </div>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[800px] sm:min-w-0">
+            <thead className="bg-[#FF9900] text-white">
+              <tr>
+                <th className="p-2 sm:p-3 text-left">User Code</th>
+                <th className="p-2 sm:p-3 text-left">Time</th>
+                <th className="p-2 sm:p-3 text-left">IP Address</th>
+                <th className="p-2 sm:p-3 text-left">Type</th>
+                <th className="p-2 sm:p-3 text-left">Remark</th>
+              </tr>
+            </thead>
+         
+          </table>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-export default page
+export default Page;

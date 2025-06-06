@@ -38,7 +38,7 @@ function WarehouseViewer() {
     window.location.reload();
   };
   return (
-    <div className="w-full bg-white p-2 md:p-6">
+    <div className="min-h-screen bg-white p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-semibold text-gray-800">Meter List</h1>
         <div className="flex gap-4">
@@ -50,7 +50,7 @@ function WarehouseViewer() {
           </button>
         </div>
       </div>
-      <div className="bg-white max-w-7xl mx-6 py-8 px-6">
+      <div className="max-w-7xl text-left mb-14 space-y-8">
         <div className="flex flex-col sm:flex-row items-center gap-4">
           {/* Left Column */}
           <div className="space-y-4">
@@ -61,16 +61,16 @@ function WarehouseViewer() {
               </label>
               <input
                 type="text"
-                className=" min-w-[400px] p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className=" min-w-[400px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
               <input
                 type="text"
-                className=" min-w-[400px] p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className=" min-w-[400px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
               <div className="gap-2 flex flex-col-1">
                 <button
                   type="button"
-                  onClick={()=>setIsDialogOpen(true)}
+                  onClick={() => setIsDialogOpen(true)}
                   className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105 hover:cursor-pointer"
                 >
                   ...
@@ -97,7 +97,7 @@ function WarehouseViewer() {
               </label>
               <input
                 type="text"
-                className="min-w-[400px] p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="min-w-[400px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>

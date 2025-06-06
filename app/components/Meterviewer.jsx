@@ -86,7 +86,7 @@ const [isDialogOpen, setIsDialogOpen] = useState(false);
   };
 
   return (
-    <div className="w-full bg-white p-2 md:p-6">
+    <div className="min-h-screen bg-white p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-semibold text-gray-800">Meter List</h1>
@@ -111,9 +111,8 @@ const [isDialogOpen, setIsDialogOpen] = useState(false);
           </button>
         </div>
       </div>
-      {/* ...rest of your component stays unchanged */}
-      {/* Filter/Search Form */}
-      <div className="bg-white py-8 px-6 space-y-6">
+
+      <div className="max-w-7xl text-left mb-14 space-y-8">
         {/* Warehouse Row */}
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <label className="w-32 text-sm font-medium text-gray-700">
@@ -122,15 +121,15 @@ const [isDialogOpen, setIsDialogOpen] = useState(false);
           <div className="flex gap-2 flex-wrap w-full max-w-4xl">
             <input
               type="text"
-              className="flex-1 min-w-[150px] p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             <input
               type="text"
-              className="flex-1 min-w-[150px] p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             <button
               type="button"
-              onClick={()=>setIsDialogOpen(true)}
+              onClick={() => setIsDialogOpen(true)}
               className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105 hover:cursor-pointer"
             >
               ...
@@ -154,7 +153,7 @@ const [isDialogOpen, setIsDialogOpen] = useState(false);
           </label>
           <input
             type="text"
-            className="w-[375px] p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
@@ -165,7 +164,7 @@ const [isDialogOpen, setIsDialogOpen] = useState(false);
           </label>
           <input
             type="text"
-            className="w-[375px] p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
@@ -175,7 +174,7 @@ const [isDialogOpen, setIsDialogOpen] = useState(false);
           </label>
           <input
             type="text"
-            className="w-[375px] p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
         {/* Search Button */}
