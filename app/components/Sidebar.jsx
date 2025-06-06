@@ -48,6 +48,8 @@ import {
   Users,
   Bell,
   Calendar,
+  File,
+  Logs,
 } from "lucide-react";
 
 const SidebarSection = ({
@@ -169,6 +171,15 @@ const SidebarSection = ({
 
 export default function Sidebar() {
   const pathname = usePathname();
+
+  // Dashboard item
+  const dashboardItem = {
+    id: "dashboard",
+    name: "Dashboard",
+    icon: <Gauge className="w-4 h-4 text-white" />,
+    route: "/",
+  };
+
   const baseinformationitems = [
     {
       id: "parameters",
@@ -272,12 +283,24 @@ export default function Sidebar() {
           route: "/system_information/language",
         },
         {
-          id:'languagepackage',
-          name:"Language Package",
-          icon:<MessageCircle className="w=4 h-4 text-white"/>,
-          route:"/system_information/language_package"
-        }
+          id: "languagepackage",
+          name: "Language Package",
+          icon: <MessageCircle className="w=4 h-4 text-white" />,
+          route: "/system_information/language_package",
+        },
+        {
+          id: "importfile",
+          name: "Import File",
+          icon: <File className="w=4 h-4 text-white" />,
+          route: "/system_information/import_file",
+        },
       ],
+    },
+    {
+      id: "system",
+      name: "System Log",
+      icon: <Logs className="w-4 h-4 text-white" />,
+      route: "/system_information/system_log",
     },
   ];
 
@@ -411,11 +434,12 @@ export default function Sidebar() {
   ];
 
   const menuItems = [
+    dashboardItem, // Added dashboard as the first item
     {
       id: "contract",
       name: "Contract Management",
       icon: <FileText className="w-4 h-4" />,
-      route: "/",
+      route: "/bussiness/contract",
     },
     {
       id: "compensating",
@@ -449,11 +473,18 @@ export default function Sidebar() {
     },
   ];
 
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState("dashboard");
   const [selectedSubOption, setSelectedSubOption] = useState(null);
   const [activeMenu, setActiveMenu] = useState(null);
 
   useEffect(() => {
+    // If we're at the root path, set dashboard as selected
+    if (pathname === "/") {
+      setSelectedOption("dashboard");
+      setSelectedSubOption(null);
+      return;
+    }
+
     // Find the current item based on pathname
     let currentItem = null;
     let currentSubItem = null;
@@ -529,10 +560,29 @@ export default function Sidebar() {
       </div>
 
       <nav className="mt-4 pb-6">
+        {/* Dashboard Link - Added at the top */}
+        <Link href="/" passHref>
+          <div
+            onClick={() => {
+              setSelectedOption("dashboard");
+              setSelectedSubOption(null);
+              setActiveMenu(null); // This will close all dropdown menus
+            }}
+            className={`flex items-center px-5 py-3 gap-3 cursor-pointer transition-colors rounded-md mx-2 mb-2 ${
+              selectedOption === "dashboard"
+                ? "bg-gray-800/80 border-l-2 border-orange-500"
+                : "hover:bg-orange-500/90"
+            }`}
+          >
+            <Gauge className="w-5 h-5 text-orange-400" />
+            <span className="font-medium text-gray-100">Dashboard</span>
+          </div>
+        </Link>
+
         <SidebarSection
           title="Business"
           icon={<Building2 className="w-5 h-5" />}
-          items={menuItems}
+          items={menuItems.filter((item) => item.id !== "dashboard")} // Exclude dashboard from business section
           activeMenu={activeMenu === "business"}
           onToggle={() => toggleMenu("business")}
           selectedOption={selectedOption}

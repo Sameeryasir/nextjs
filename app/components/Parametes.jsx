@@ -16,7 +16,7 @@ function Parametes() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white p-6">
       <div className="max-w-1xl mx-auto space-y-8 ml-8">
         {/* Main Header */}
         <h1 className="text-2xl font-bold text-gray-900 mb-8">Parameters</h1>

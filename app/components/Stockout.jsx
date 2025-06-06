@@ -43,19 +43,20 @@ const handleReload=()=>{
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-semibold text-gray-800">Stock-Out List</h1>
         <div className="flex gap-4">
-          <button 
-          onClick={()=>handleReload()}
-          className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+          <button
+            onClick={() => handleReload()}
+            className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40"
+          >
             Refresh
           </button>
-          <Link href={'/meterwarehouse/stockout/newstockout'}>
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
-            New
-          </button>
+          <Link href={"/meterwarehouse/stockout/newstockout"}>
+            <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
+              New
+            </button>
           </Link>
         </div>
       </div>
-      <div className="bg-white max-w-7xl mx-6 py-8 px-6">
+      <div className="max-w-7xl text-left mb-14 space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="space-y-4">
             <div className="flex items-center gap-4">
@@ -65,7 +66,7 @@ const handleReload=()=>{
               <input
                 type="date"
                 defaultValue="2025-02-14"
-                className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
@@ -75,7 +76,7 @@ const handleReload=()=>{
               </label>
               <input
                 type="text"
-                className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
@@ -85,7 +86,7 @@ const handleReload=()=>{
               </label>
               <input
                 type="text"
-                className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
@@ -98,7 +99,7 @@ const handleReload=()=>{
               <input
                 type="date"
                 defaultValue="2025-02-14"
-                className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
@@ -106,7 +107,7 @@ const handleReload=()=>{
               <label className="w-32 text-sm font-medium text-gray-700">
                 Type
               </label>
-              <select className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              <select className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="">Select Type</option>
                 <option value="New">Stockin</option>
                 <option value="Used">Others</option>
@@ -120,16 +121,16 @@ const handleReload=()=>{
               <div className="flex-1 flex gap-4">
                 <input
                   type="text"
-                  className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <input
                   type="text"
-                  className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <button
                   type="button"
-                  onClick={()=>setIsDialogOpen(true)}
                   className="bg-[#FF9900] text-white px-2 sm:px-3 py-2 rounded-md hover:bg-[#FF9900] transition flex items-center justify-center text-sm sm:text-lg w-[50px] hover:cursor-pointer"
+                  onClick={() => setIsDialogOpen(true)}
                 >
                   ...
                 </button>

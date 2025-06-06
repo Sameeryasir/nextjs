@@ -38,7 +38,7 @@ function Stocktransfer() {
     window.location.reload()
   }
   return (
-    <div className="w-full bg-white p-2 md:p-6">
+    <div className="min-h-screen bg-white p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-semibold text-gray-800">Transfer List</h1>
         <div className="flex gap-4">
@@ -55,7 +55,7 @@ function Stocktransfer() {
           </Link>
         </div>
       </div>
-      <div className="bg-white max-w-7xl mx-6 py-8 px-6">
+      <div className="max-w-7xl text-left mb-14 space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Left Column */}
           <div className="space-y-4">
@@ -67,7 +67,7 @@ function Stocktransfer() {
               <input
                 type="date"
                 defaultValue="2025-02-14"
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
@@ -78,7 +78,7 @@ function Stocktransfer() {
               </label>
               <input
                 type="date"
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
@@ -89,7 +89,7 @@ function Stocktransfer() {
               </label>
               <input
                 type="text"
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
@@ -97,74 +97,67 @@ function Stocktransfer() {
           {/* Right Column */}
           <div className="space-y-4">
             {/* Source */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-18">
               <label className="w-32 text-sm font-medium text-gray-700">
-                Source
+              Source
               </label>
-              <div className="flex w-full gap-2">
+              <div className="flex-1 flex gap-4 ml-6.5">
                 <input
                   type="text"
-                  className="w-1/2 h-10 px-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <input
                   type="text"
-                  className="w-1/2 h-10 px-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
-                <div className="flex gap-1">
-                  <button
-                    type="button"
-                    className="w-10 h-10 bg-[#FF9900] text-white rounded-md  transition flex items-center justify-center"
-                    onClick={() => setIsDialogOpen(true)}
-                  >
-                    ...
-                  </button>
-                  {isDialogOpen && (
-                    <Stockindialogue
-                      heading="Please Chose One Record"
-                      onClose={() => setIsDialogOpen(false)}
-                    />
-                  )}
-                  <button
-                    type="button"
-                    className="w-10 h-10 bg-[#FF9900] text-white rounded-md  transition flex items-center justify-center"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  className="bg-[#FF9900] text-white px-2 sm:px-3 py-2 rounded-md hover:bg-[#FF9900] transition flex items-center justify-center text-sm sm:text-lg w-[50px] hover:cursor-pointer"
+                  onClick={() => setIsDialogOpen(true)}
+                >
+                  ...
+                </button>
+                {isDialogOpen && (
+                  <Stockindialogue onClose={() => setIsDialogOpen(false)} />
+                )}
+                <button
+                  type="button"
+                  className="bg-[#FF9900] text-white px-2 sm:px-3 py-2 rounded-md hover:bg-[#FF9900] transition flex items-center justify-center w-[50px] hover:cursor-pointer"
+                >
+                  <X size={16} />
+                </button>
               </div>
-            </div>{" "}
+            </div>
             {/* Destination */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-18">
               <label className="w-32 text-sm font-medium text-gray-700">
                 Destination
               </label>
-              <div className="flex w-full gap-2">
+              <div className="flex-1 flex gap-4">
                 <input
                   type="text"
-                  className="w-1/2 h-10 px-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <input
                   type="text"
-                  className="w-1/2 h-10 px-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
-                <div className="flex gap-1">
-                  <button
-                    type="button"
-                    className="w-10 h-10 bg-[#FF9900] text-white rounded-md hover:bg-orange-600 transition flex items-center justify-center"
-                    onClick={() => setIsDialogOpen(true)}
-                  >
-                    ...
-                  </button>
-                  {isDialogOpen && (
-                    <Stockindialogue onClose={() => setIsDialogOpen(false)} />
-                  )}
-                  <button
-                    type="button"
-                    className="w-10 h-10 bg-[#FF9900] text-white rounded-md hover:bg-orange-600 transition flex items-center justify-center"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  className="bg-[#FF9900] text-white px-2 sm:px-3 py-2 rounded-md hover:bg-[#FF9900] transition flex items-center justify-center text-sm sm:text-lg w-[50px] hover:cursor-pointer"
+                  onClick={() => setIsDialogOpen(true)}
+                >
+                  ...
+                </button>
+                {isDialogOpen && (
+                  <Stockindialogue onClose={() => setIsDialogOpen(false)} />
+                )}
+                <button
+                  type="button"
+                  className="bg-[#FF9900] text-white px-2 sm:px-3 py-2 rounded-md hover:bg-[#FF9900] transition flex items-center justify-center w-[50px] hover:cursor-pointer"
+                >
+                  <X size={16} />
+                </button>
               </div>
             </div>
             {/* Type */}
@@ -172,7 +165,7 @@ function Stocktransfer() {
               <label className="w-32 text-sm font-medium text-gray-700">
                 Type
               </label>
-              <select className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              <select className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="">Select Type</option>
                 <option value="New">Stockin</option>
                 <option value="Used">Others</option>
