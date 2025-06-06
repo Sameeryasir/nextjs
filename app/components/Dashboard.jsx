@@ -308,7 +308,7 @@ export default function Dashboard() {
         </div>
 
         {/* Top Companies */}
-        <div className="bg-white p-6 rounded-xl shadow-md w-sm min-w-[240px] h-[618px]">
+        <div className="bg-white p-6 rounded-xl shadow-md w-sm min-w-[240px] h-[570px]">
           <h2 className="font-semibold mb-2">Top Companies</h2>
           <ul className="space-y-2 text-sm text-gray-700">
             {[...Array(8)].map((_, i) => (
