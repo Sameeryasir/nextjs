@@ -50,6 +50,7 @@ import {
   Calendar,
   File,
   Logs,
+  Monitor,
 } from "lucide-react";
 
 const SidebarSection = ({
@@ -302,6 +303,12 @@ export default function Sidebar() {
       icon: <Logs className="w-4 h-4 text-white" />,
       route: "/system_information/system_log",
     },
+    {
+      id:'systeminformation',
+      name:'System Information',
+      icon:<Monitor className="w-4 h-4 text-white"/>,
+      route:'/system_information/systeminformation'
+    }
   ];
 
   const arrearItems = [
