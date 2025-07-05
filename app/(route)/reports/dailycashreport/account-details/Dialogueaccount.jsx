@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import {
   X,
@@ -8,15 +7,63 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-function Stockindialogue({onClose}) {
+function Dialogueaccount({ onClose }) {
   const [formData, setFormData] = useState({
     fullName: "",
     code: "",
     accountNo: "",
     meterNum: "",
   });
+
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 10;
+  const itemsPerPage = 5;
+
+  const tableData = [
+    {
+      code: "A001",
+      date: "2023-01-01",
+      projectType: "Solar",
+      payMethod: "Cash",
+    },
+    {
+      code: "A002",
+      date: "2023-01-02",
+      projectType: "Wind",
+      payMethod: "Bank Transfer",
+    },
+    {
+      code: "A003",
+      date: "2023-01-03",
+      projectType: "Hydro",
+      payMethod: "Credit Card",
+    },
+    {
+      code: "A004",
+      date: "2023-01-04",
+      projectType: "Solar",
+      payMethod: "Mobile Payment",
+    },
+    {
+      code: "A005",
+      date: "2023-01-05",
+      projectType: "Wind",
+      payMethod: "Cash",
+    },
+    {
+      code: "A006",
+      date: "2023-01-06",
+      projectType: "Solar",
+      payMethod: "Bank Transfer",
+    },
+    {
+      code: "A007",
+      date: "2023-01-07",
+      projectType: "Hydro",
+      payMethod: "Cash",
+    },
+  ];
+
+  const totalPages = Math.ceil(tableData.length / itemsPerPage);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -32,43 +79,56 @@ function Stockindialogue({onClose}) {
     onClose();
   };
 
-  const tableData = [];
+  const paginatedData = tableData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
-    <div className="fixed inset-0 bg-transparent  flex items-center justify-center p-2 sm:p-4 z-50">
+    <div className="fixed inset-0 bg-transparent flex items-center justify-center p-2 sm:p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-2 sm:mx-4 p-4 sm:p-6 relative max-h-[90vh] overflow-y-auto">
-        <button className="hover:cursor-pointer absolute right-2 sm:right-4 top-2 sm:top-4 text-gray-500 hover:text-gray-700"
-        onClick={onClose}>
+        <button
+          onClick={onClose}
+          className="absolute right-2 sm:right-4 top-2 sm:top-4 text-gray-500 hover:text-gray-700"
+        >
           <X size={20} className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
 
         <h2 className="text-xl font-semibold mb-4">Add New Record</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <label className="w-32 text-sm sm:text-base font-medium text-gray-700">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <label
+                className="text-gray-700 text-sm sm:text-base font-medium whitespace-nowrap"
+                htmlFor="fullName"
+              >
                 Code
               </label>
               <input
+                id="fullName"
                 type="text"
                 name="fullName"
                 value={formData.fullName}
                 onChange={handleInputChange}
-                className="w-80 px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="flex-1 px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
-            <div className="flex items-center gap-4">
-              <label className="w-32 text-sm sm:text-base font-medium text-gray-700">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <label
+                htmlFor="meterNum"
+                className="text-gray-700 text-sm sm:text-base font-medium whitespace-nowrap"
+              >
                 Name
               </label>
               <input
+                id="meterNum"
                 type="text"
-                name="accountNo"
-                value={formData.accountNo}
+                name="meterNum"
+                value={formData.meterNum}
                 onChange={handleInputChange}
-                className="w-80 px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="flex-1 px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -112,8 +172,8 @@ function Stockindialogue({onClose}) {
                 </button>
               </div>
               <span className="text-xs sm:text-sm text-gray-600 text-center sm:text-left whitespace-nowrap">
-                Total 0 Records, Record 0, Page {currentPage}/{totalPages}, Turn
-                To Page
+                Total {tableData.length} Records, Page {currentPage}/
+                {totalPages}, Turn To Page
               </span>
               <div className="flex items-center gap-1">
                 <input
@@ -147,44 +207,26 @@ function Stockindialogue({onClose}) {
                       Date
                     </th>
                     <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
-                      Description
+                      Project Type
                     </th>
                     <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
-                      Department
+                      Pay Method
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {tableData.length > 0 ? (
-                    tableData.map((row, index) => (
-                      <tr
-                        key={index}
-                        className=" hover:bg-gray-50 text-xs sm:text-sm"
-                      >
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.date}
-                        </td>
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.type}
-                        </td>
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.remark}
-                        </td>
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.operator}
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan="4"
-                        className="px-2 sm:px-4 py-2 sm:py-4 text-center text-xs sm:text-sm text-gray-500"
-                      >
-                        No records found
+                  {paginatedData.map((item, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="px-2 sm:px-4 py-1 sm:py-2">{item.code}</td>
+                      <td className="px-2 sm:px-4 py-1 sm:py-2">{item.date}</td>
+                      <td className="px-2 sm:px-4 py-1 sm:py-2">
+                        {item.projectType}
+                      </td>
+                      <td className="px-2 sm:px-4 py-1 sm:py-2">
+                        {item.payMethod}
                       </td>
                     </tr>
-                  )}
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -194,13 +236,13 @@ function Stockindialogue({onClose}) {
             <button
               type="button"
               onClick={onClose}
-              className="hover:cursor-pointer px-4 sm:px-6 py-2 text-sm sm:text-base border border-gray-300 rounded-md hover:bg-gray-50"
+              className="px-4 sm:px-6 py-2 text-sm sm:text-base border border-gray-300 rounded-md hover:bg-gray-50"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="cursor-pointer px-4 sm:px-6 py-2 text-sm sm:text-base bg-gray-800 text-white rounded-md hover:bg-gray-700"
+              className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-gray-800 text-white rounded-md hover:bg-gray-700"
             >
               OK
             </button>
@@ -211,4 +253,4 @@ function Stockindialogue({onClose}) {
   );
 }
 
-export default Stockindialogue;
+export default Dialogueaccount;

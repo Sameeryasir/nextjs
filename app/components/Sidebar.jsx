@@ -2,8 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
+  Calculator,
+  UserCheck,
+  ListChecks,
+  ClipboardList,
+  ShoppingCart,
+  AlertCircle,
+  ClipboardCheck,
+  User,
   Building2,
   FileText,
   Database,
@@ -17,24 +25,23 @@ import {
   Layers,
   Ticket,
   ListOrdered,
-  KeyIcon,
-  House,
-  HomeIcon,
-  StoreIcon,
+  Key as KeyIcon,
+  Home as HomeIcon,
+  Store as StoreIcon,
   MessageCircle,
   ChevronDown,
   ChevronRight,
-  GlassesIcon,
+  Glasses as GlassesIcon,
   Search,
   Eye,
-  InfoIcon,
+  Info as InfoIcon,
   Book,
-  LocateIcon,
+  Locate as LocateIcon,
   ParkingMeter,
   Gauge,
   Feather,
-  CreditCardIcon,
-  IndentIncreaseIcon,
+  CreditCard as CreditCardIcon,
+  IndentIncrease as IndentIncreaseIcon,
   Scale,
   LineChart,
   PersonStanding,
@@ -49,7 +56,6 @@ import {
   Bell,
   Calendar,
   File,
-  Logs,
   Monitor,
 } from "lucide-react";
 
@@ -64,6 +70,8 @@ const SidebarSection = ({
   selectedSubOption,
   setSelectedSubOption,
 }) => {
+  const router = useRouter();
+
   return (
     <div className="mb-1">
       <div
@@ -85,14 +93,16 @@ const SidebarSection = ({
         <div className="mt-1 mb-3 ml-4 pl-2 border-l border-gray-700">
           {items.map((item) => (
             <div key={item.id}>
-              <Link href={item.route} passHref>
+              <Link href={item.route} passHref legacyBehavior>
                 <div
                   onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
                     if (!item.subItems) {
                       setSelectedOption(item.id);
                       setSelectedSubOption(null);
+                      router.push(item.route);
                     } else {
-                      e.preventDefault();
                       setSelectedOption(
                         selectedOption === item.id ? null : item.id
                       );
@@ -132,11 +142,19 @@ const SidebarSection = ({
               {item.subItems && selectedOption === item.id && (
                 <div className="ml-4 pl-2 border-l border-gray-600">
                   {item.subItems.map((subItem) => (
-                    <Link href={subItem.route} key={subItem.id} passHref>
+                    <Link
+                      href={subItem.route}
+                      key={subItem.id}
+                      passHref
+                      legacyBehavior
+                    >
                       <div
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
                           setSelectedOption(item.id);
                           setSelectedSubOption(subItem.id);
+                          router.push(subItem.route);
                         }}
                         className={`flex items-center px-4 py-2 gap-3 cursor-pointer transition-colors rounded-md mx-2 ${
                           selectedSubOption === subItem.id
@@ -172,6 +190,7 @@ const SidebarSection = ({
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
 
   // Dashboard item
   const dashboardItem = {
@@ -181,7 +200,7 @@ export default function Sidebar() {
     route: "/",
   };
 
-  const baseinformationitems = [
+  const baseInformationItems = [
     {
       id: "parameters",
       name: "Parameters",
@@ -213,20 +232,20 @@ export default function Sidebar() {
       route: "/base_information/definefee",
     },
     {
-      id: "Tariff index",
+      id: "tariff",
       name: "Tariff Index",
       icon: <LineChart className="w-4 h-4 text-white" />,
       route: "/base_information/tariff",
     },
     {
       id: "customertype",
-      name: "Cusotmer Type",
-      icon: <PersonStanding className=" w-4 h-4 text-white" />,
+      name: "Customer Type",
+      icon: <PersonStanding className="w-4 h-4 text-white" />,
       route: "/base_information/customertype",
     },
     {
       id: "stamptax",
-      name: "StampTax",
+      name: "Stamp Tax",
       icon: <Stamp className="w-4 h-4 text-white" />,
       route: "/base_information/stamptax",
     },
@@ -286,13 +305,13 @@ export default function Sidebar() {
         {
           id: "languagepackage",
           name: "Language Package",
-          icon: <MessageCircle className="w=4 h-4 text-white" />,
+          icon: <MessageCircle className="w-4 h-4 text-white" />,
           route: "/system_information/language_package",
         },
         {
           id: "importfile",
           name: "Import File",
-          icon: <File className="w=4 h-4 text-white" />,
+          icon: <File className="w-4 h-4 text-white" />,
           route: "/system_information/import_file",
         },
       ],
@@ -300,15 +319,15 @@ export default function Sidebar() {
     {
       id: "system",
       name: "System Log",
-      icon: <Logs className="w-4 h-4 text-white" />,
+      icon: <FileText className="w-4 h-4 text-white" />,
       route: "/system_information/system_log",
     },
     {
-      id:'systeminformation',
-      name:'System Information',
-      icon:<Monitor className="w-4 h-4 text-white"/>,
-      route:'/system_information/systeminformation'
-    }
+      id: "systeminformation",
+      name: "System Information",
+      icon: <Monitor className="w-4 h-4 text-white" />,
+      route: "/system_information/systeminformation",
+    },
   ];
 
   const arrearItems = [
@@ -320,13 +339,13 @@ export default function Sidebar() {
     },
     {
       id: "customercontract",
-      name: "CustomerContract",
+      name: "Customer Contract",
       icon: <FileText className="w-4 h-4" />,
       route: "/arrearcustomercontract",
     },
     {
       id: "payarrear",
-      name: "PayArrear",
+      name: "Pay Arrear",
       icon: <FileText className="w-4 h-4" />,
       route: "/arrearpayarrear",
     },
@@ -335,6 +354,109 @@ export default function Sidebar() {
       name: "Adjustments",
       icon: <FileText className="w-4 h-4" />,
       route: "/arrearpayadjustments",
+    },
+  ];
+
+  const reportItems = [
+    {
+      id: "orientee-client",
+      name: "Orientee Client BCHTS",
+      icon: <Users className="w-4 h-4 text-gray-300" />,
+      route: "/reports/orientee-client",
+    },
+    {
+      id: "daily-cash-report",
+      name: "Daily Cash Report",
+      icon: <Banknote className="w-4 h-4 text-gray-300" />,
+      route: "/reports/daily-cash",
+      subItems: [
+        {
+          id: "vs-sales-summary",
+          name: "VS Sales Summary",
+          icon: <FileText className="w-4 h-4 text-gray-300" />,
+          route: "/reports/dailycashreport",
+        },
+        {
+          id: "vs-cash-kwh-total",
+          name: "VS Cash & kWh Total",
+          icon: <Calculator className="w-4 h-4 text-gray-300" />,
+          route: "/reports/dailycashreport/cash-kwh-total",
+        },
+        {
+          id: "operator-trans-count",
+          name: "Operator Trans Count",
+          icon: <UserCheck className="w-4 h-4 text-gray-300" />,
+          route: "/reports/dailycashreport/operator-trans-count",
+        },
+        {
+          id: "unit-costs-by-tariff",
+          name: "Unit Costs By Tariff",
+          icon: <ListChecks className="w-4 h-4 text-gray-300" />,
+          route: "/reports/dailycashreport/unit-costs-by-tariff",
+        },
+        {
+          id: "account-details",
+          name: "Account & Details",
+          icon: <ClipboardList className="w-4 h-4 text-gray-300" />,
+          route: "/reports/dailycashreport/account-details",
+        },
+      ],
+    },
+    {
+      id: "vending-reports", // Changed from "vending" to avoid confusion
+      name: "Vending Reports",
+      icon: <ClipboardList className="w-4 h-4 text-gray-300" />, // Different icon from business vending
+      route: "/reports/Vending",
+      subItems: [
+        {
+          id: "purchase-by-zone",
+          name: "Purchase(Kwh) By Zone",
+          icon: <GlassesIcon className="w-4 h-4 text-gray-300" />,
+          route: "/reports/Vending/purchase-by-zone",
+        },
+        {
+          id: "operator-vending-report",
+          name: "Operator Vending Report",
+          icon: <UserCheck className="w-4 h-4 text-gray-300" />,
+          route: "/reports/Vending/operator-vending-report",
+        },
+        {
+          id: "fee-report",
+          name: "Fee Report",
+          icon: <CreditCardIcon className="w-4 h-4 text-gray-300" />,
+          route: "/reports/Vending/fee-report",
+        },
+        {
+          id: "daily-subaccount-by-project",
+          name: "Daily SubAccount By Project",
+          icon: <Database className="w-4 h-4 text-gray-300" />,
+          route: "/reports/vending/daily-subaccount-by-project",
+        },
+        {
+          id: "purchase-chart",
+          name: "Purchase Chart",
+          icon: <LineChart className="w-4 h-4 text-gray-300" />,
+          route: "/reports/vending/purchase-chart",
+        },
+      ],
+    },
+    {
+      id: "arrear-report",
+      name: "Arrear Report",
+      icon: <AlertCircle className="w-4 h-4 text-gray-300" />,
+      route: "/reports/arrear",
+    },
+    {
+      id: "needs-report",
+      name: "Needs Report",
+      icon: <ClipboardCheck className="w-4 h-4 text-gray-300" />,
+      route: "/reports/needs",
+    },
+    {
+      id: "customer-report",
+      name: "Customer Report",
+      icon: <User className="w-4 h-4 text-gray-300" />,
+      route: "/reports/customer",
     },
   ];
 
@@ -372,7 +494,7 @@ export default function Sidebar() {
     {
       id: "warhouseviewer",
       name: "Warehouse Viewer",
-      icon: <Eye className="w-4 h-4 " />,
+      icon: <Eye className="w-4 h-4" />,
       route: "/meterwarehouse/warehouseviewer",
     },
   ];
@@ -385,7 +507,7 @@ export default function Sidebar() {
       route: "/security/security_module",
     },
     {
-      id: "Balencermanagement",
+      id: "balencermanagement",
       name: "Balancer Management",
       icon: <Layers className="w-4 h-4" />,
       route: "/security/balencer_management",
@@ -436,47 +558,47 @@ export default function Sidebar() {
       id: "messegesubscription",
       name: "Message Subscription",
       icon: <MessageCircle className="w-4 h-4" />,
-      route: "/messege/messegesubscription",
+      route: "/message/messagesubscription",
     },
   ];
 
   const menuItems = [
-    dashboardItem, // Added dashboard as the first item
+    dashboardItem,
     {
       id: "contract",
       name: "Contract Management",
       icon: <FileText className="w-4 h-4" />,
-      route: "/bussiness/contract",
+      route: "/business/contract", // Fixed typo from "bussiness" to "business"
     },
     {
       id: "compensating",
       name: "Compensating",
       icon: <Database className="w-4 h-4" />,
-      route: "/bussiness/compensation",
+      route: "/business/compensation",
     },
     {
-      id: "vending",
-      name: "Vending",
-      icon: <Package className="w-4 h-4" />,
-      route: "/bussiness/vending",
+      id: "vending-operations", // Changed from "vending" to avoid confusion
+      name: "Vending Operations", // Changed from just "Vending"
+      icon: <ShoppingCart className="w-4 h-4" />, // Different icon from reports
+      route: "/business/vending", // Fixed typo in path
     },
     {
       id: "maintenance",
       name: "Maintenance Token",
       icon: <Key className="w-4 h-4" />,
-      route: "/bussiness/maintenancetoken",
+      route: "/business/maintenancetoken",
     },
     {
       id: "key-issue",
       name: "Key Issue Token",
       icon: <Shield className="w-4 h-4" />,
-      route: "/bussiness/keytoken",
+      route: "/business/keytoken",
     },
     {
       id: "free-issue",
       name: "Free Issue Token",
       icon: <Key className="w-4 h-4" />,
-      route: "/bussiness/freetoken",
+      route: "/business/freetoken",
     },
   ];
 
@@ -485,18 +607,15 @@ export default function Sidebar() {
   const [activeMenu, setActiveMenu] = useState(null);
 
   useEffect(() => {
-    // If we're at the root path, set dashboard as selected
     if (pathname === "/") {
       setSelectedOption("dashboard");
       setSelectedSubOption(null);
       return;
     }
 
-    // Find the current item based on pathname
     let currentItem = null;
     let currentSubItem = null;
 
-    // Check all items and sub-items
     const allItems = [
       ...menuItems,
       ...financeItems,
@@ -504,8 +623,9 @@ export default function Sidebar() {
       ...warehouseItems,
       ...arrearItems,
       ...messageItems,
-      ...baseinformationitems,
+      ...baseInformationItems,
       ...systemInformationItems,
+      ...reportItems,
     ];
 
     for (const item of allItems) {
@@ -533,7 +653,6 @@ export default function Sidebar() {
         setSelectedSubOption(null);
       }
 
-      // Determine which menu section to open
       if (menuItems.some((i) => i.id === currentItem.id))
         setActiveMenu("business");
       else if (financeItems.some((i) => i.id === currentItem.id))
@@ -546,10 +665,12 @@ export default function Sidebar() {
         setActiveMenu("arrear");
       else if (messageItems.some((i) => i.id === currentItem.id))
         setActiveMenu("message");
-      else if (baseinformationitems.some((i) => i.id === currentItem.id))
+      else if (baseInformationItems.some((i) => i.id === currentItem.id))
         setActiveMenu("baseinformation");
       else if (systemInformationItems.some((i) => i.id === currentItem.id))
         setActiveMenu("systeminformation");
+      else if (reportItems.some((i) => i.id === currentItem.id))
+        setActiveMenu("reports");
     }
   }, [pathname]);
 
@@ -567,13 +688,12 @@ export default function Sidebar() {
       </div>
 
       <nav className="mt-4 pb-6">
-        {/* Dashboard Link - Added at the top */}
-        <Link href="/" passHref>
+        <Link href="/" passHref legacyBehavior>
           <div
             onClick={() => {
               setSelectedOption("dashboard");
               setSelectedSubOption(null);
-              setActiveMenu(null); // This will close all dropdown menus
+              setActiveMenu(null);
             }}
             className={`flex items-center px-5 py-3 gap-3 cursor-pointer transition-colors rounded-md mx-2 mb-2 ${
               selectedOption === "dashboard"
@@ -589,7 +709,7 @@ export default function Sidebar() {
         <SidebarSection
           title="Business"
           icon={<Building2 className="w-5 h-5" />}
-          items={menuItems.filter((item) => item.id !== "dashboard")} // Exclude dashboard from business section
+          items={menuItems.filter((item) => item.id !== "dashboard")}
           activeMenu={activeMenu === "business"}
           onToggle={() => toggleMenu("business")}
           selectedOption={selectedOption}
@@ -636,7 +756,7 @@ export default function Sidebar() {
 
         <SidebarSection
           title="Meter Warehouse"
-          icon={<House className="w-5 h-5" />}
+          icon={<HomeIcon className="w-5 h-5" />}
           items={warehouseItems}
           activeMenu={activeMenu === "warehouse"}
           onToggle={() => toggleMenu("warehouse")}
@@ -661,7 +781,7 @@ export default function Sidebar() {
         <SidebarSection
           title="Base Information"
           icon={<InfoIcon className="w-5 h-5" />}
-          items={baseinformationitems}
+          items={baseInformationItems}
           activeMenu={activeMenu === "baseinformation"}
           onToggle={() => toggleMenu("baseinformation")}
           selectedOption={selectedOption}
@@ -676,6 +796,18 @@ export default function Sidebar() {
           items={systemInformationItems}
           activeMenu={activeMenu === "systeminformation"}
           onToggle={() => toggleMenu("systeminformation")}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+          selectedSubOption={selectedSubOption}
+          setSelectedSubOption={setSelectedSubOption}
+        />
+
+        <SidebarSection
+          title="Reports"
+          icon={<FileText className="w-5 h-5" />}
+          items={reportItems}
+          activeMenu={activeMenu === "reports"}
+          onToggle={() => toggleMenu("reports")}
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
           selectedSubOption={selectedSubOption}
