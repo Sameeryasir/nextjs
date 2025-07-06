@@ -10,7 +10,7 @@ function page() {
   return (
     <div className="bg-white p-6">
       {/* Header Row with Title and Action Buttons */}
-      <div className="flex justify-between items-center gap-4">
+      {/* <div className="flex justify-between items-center gap-4">
         <h1 className="text-2xl font-semibold text-gray-800">Warehouse List</h1>
 
         <div className="flex gap-4">
@@ -26,12 +26,12 @@ function page() {
             </button>
           </Link>
         </div>
-      </div>
+      </div> */}
 
       <div className="max-w-2xl text-left mb-14 space-y-8">
         {/* Customer Information Section */}
 
-        <section className="mt-6">
+        {/* <section className="mt-6">
           <div className="space-y-4">
             <div className="flex items-center gap-4">
               <label className="w-32 text-sm text-gray-500">Meter Num</label>
@@ -56,12 +56,12 @@ function page() {
               />
             </div>
           </div>
-        </section>
-        <div className="ml-40">
+        </section> */}
+        {/* <div className="ml-40">
           <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40">
             Search
           </button>
-        </div>
+        </div> */}
       </div>
       <Warehousetable />
     </div>
