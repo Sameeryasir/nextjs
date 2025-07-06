@@ -9,9 +9,16 @@ import {
 } from "lucide-react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import Customerarreardialogue1 from "./customerarreardialogue1";
+import Customerarreardialogue2 from "./customerarreardialogue2";
+import Customerdialgoue3 from "./customerdialgoue3";
 
 function Page() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isDialogOpen1, setIsDialogOpen1] = useState(false);
+        const [isDialogOpen2, setIsDialogOpen2] = useState(false);
+
+
 
   const tableData = [
     {
@@ -105,9 +112,18 @@ function Page() {
                   type="text"
                   className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50"
                 />
-                <button className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center">
+                <button
+                  onClick={() => setIsDialogOpen(true)}
+                  className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center hover:cursor-pointer"
+                >
                   ...
                 </button>
+                {isDialogOpen && (
+                  <Customerarreardialogue1
+                    onClose={() => setIsDialogOpen(false)}
+                  />
+                )}
+
                 <button className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center">
                   <X size={16} />
                 </button>
@@ -127,9 +143,17 @@ function Page() {
                   type="text"
                   className="flex-1 min-w-[150px] p-2 border border-gray-200  rounded-md bg-gray-50"
                 />
-                <button className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center">
+                <button
+                  onClick={() => setIsDialogOpen1(true)}
+                  className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center hover:cursor-pointer"
+                >
                   ...
                 </button>
+                {isDialogOpen1 && (
+                  <Customerarreardialogue2
+                    onClose={() => setIsDialogOpen1(false)}
+                  />
+                )}
                 <button className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center">
                   <X size={16} />
                 </button>
@@ -175,9 +199,16 @@ function Page() {
                   type="text"
                   className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50"
                 />
-                <button className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center">
+                <button
+                  onClick={() => setIsDialogOpen2(true)}
+                  className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center hover:cursor-pointer"
+                >
                   ...
                 </button>
+                {isDialogOpen2 && (
+                  <Customerdialgoue3 onClose={() => setIsDialogOpen2(false)} />
+                )}
+
                 <button className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center">
                   <X size={16} />
                 </button>
@@ -188,22 +219,12 @@ function Page() {
               <label className="w-32 text-sm font-medium text-gray-700">
                 Project
               </label>
-              <div className="flex-1 flex flex-wrap gap-2">
-                <input
-                  type="text"
-                  className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50"
-                />
-                <input
-                  type="text"
-                  className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50"
-                />
-                <button className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center">
-                  ...
-                </button>
-                <button className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center">
-                  <X size={16} />
-                </button>
-              </div>
+              <select className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50">
+                <option value="">Select Type</option>
+                <option value="New">ORDINAIRE</option>
+                <option value="Used">PDCEL</option>
+                <option value="Used">BCHTS</option>
+              </select>
             </div>
 
             <div className="flex items-center gap-4">
@@ -212,9 +233,8 @@ function Page() {
               </label>
               <select className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50">
                 <option value="">Select Type</option>
-                <option value="New">ORDINAIRE</option>
-                <option value="Used">PDCEL</option>
-                <option value="Used">BCHTS</option>
+                <option value="New">is null</option>
+                <option value="Used">is not null</option>
               </select>
             </div>
           </div>
