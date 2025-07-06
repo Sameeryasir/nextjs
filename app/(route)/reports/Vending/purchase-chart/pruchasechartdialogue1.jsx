@@ -6,11 +6,10 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-
-function Dialogue({ onClose }) {
+function Pruchasechartdialogue1({ onClose }) {
   const [formData, setFormData] = useState({
-    fullName: "",
     code: "",
+    name: "",
     accountNo: "",
     meterNum: "",
   });
@@ -34,20 +33,13 @@ function Dialogue({ onClose }) {
   const tableData = [
     {
       code: "EM100001",
-      name: "ameer",
       description: "Installed new energy meter",
-      department: "Electrical",
-      role: "safdsa",
     },
     {
-      code: "EM100001",
-      name: "ameer",
-      description: "Installed new energy meter",
-      department: "Electrical",
-      role: "safdsa",
+      code: "WM200101",
+      description: "Transferred from East warehouse",
     },
   ];
-
   return (
     <div className="fixed inset-0 bg-transparent flex items-center justify-center p-2 sm:p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-2 sm:mx-4 p-4 sm:p-6 relative max-h-[90vh] overflow-y-auto">
@@ -58,22 +50,22 @@ function Dialogue({ onClose }) {
           <X size={20} className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">Select The Branch</h2>
+        <h2 className="text-xl font-semibold mb-4">Select Region</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div className="flex items-center gap-2 sm:gap-4">
               <label
-                className="text-gray-700 text-sm sm:text-base font-medium whitespace-nowrap"
-                htmlFor="fullName"
+                className="text-gray-700 text-sm sm:text-base font-medium whitespace-nowrap w-24"
+                htmlFor="code"
               >
                 Code
               </label>
               <input
-                id="fullName"
+                id="code"
                 type="text"
-                name="fullName"
-                value={formData.fullName}
+                name="code"
+                value={formData.code}
                 onChange={handleInputChange}
                 className="flex-1 px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
@@ -81,16 +73,16 @@ function Dialogue({ onClose }) {
 
             <div className="flex items-center gap-2 sm:gap-4">
               <label
-                htmlFor="meterNum"
-                className="text-gray-700 text-sm sm:text-base font-medium whitespace-nowrap"
+                htmlFor="name"
+                className="text-gray-700 text-sm sm:text-base font-medium whitespace-nowrap w-24"
               >
                 Name
               </label>
               <input
-                id="meterNum"
+                id="name"
                 type="text"
-                name="meterNum"
-                value={formData.meterNum}
+                name="name"
+                value={formData.name}
                 onChange={handleInputChange}
                 className="flex-1 px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
@@ -161,24 +153,15 @@ function Dialogue({ onClose }) {
             </div>
 
             <div className="overflow-x-auto mt-2 sm:mt-4">
-              <table className="w-full min-w-[500px] sm:min-w-full border-collapse">
+              <table className="w-full sm:min-w-full border-collapse">
                 <thead>
                   <tr className="bg-gray-800 text-white">
                     <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
                       Code
                     </th>
-                    <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
-                      Name
-                    </th>
 
                     <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
                       Description
-                    </th>
-                    <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
-                      Department
-                    </th>
-                    <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
-                      Role
                     </th>
                   </tr>
                 </thead>
@@ -192,17 +175,10 @@ function Dialogue({ onClose }) {
                         <td className="px-2 sm:px-4 py-1 sm:py-2">
                           {row.code}
                         </td>
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.name}
-                        </td>
 
                         <td className="px-2 sm:px-4 py-1 sm:py-2">
                           {row.description}
                         </td>
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.department}
-                        </td>
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">{row.role}</td>
                       </tr>
                     ))
                   ) : (
@@ -241,4 +217,4 @@ function Dialogue({ onClose }) {
   );
 }
 
-export default Dialogue;
+export default Pruchasechartdialogue1;

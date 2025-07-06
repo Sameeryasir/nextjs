@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   RefreshCw,
   ChevronFirst,
@@ -8,82 +8,77 @@ import {
   ChevronRight,
   Gauge,
   Plus,
+  Search,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import AllocateInformationdialog from "./AllocateInformationdialog";
+import { apiFetcher } from "../utils/apiFetcher"; // Import the new reusable function
 
 function MeterModel() {
+  const router = useRouter();
+
+  // State for search form inputs
+  const [type, setType] = useState("");
+  const [phase, setPhase] = useState("");
+  const [code, setCode] = useState("");
+  const [description, setDescription] = useState("");
+
+  // State for fetched table data
+  const [meterModelRecords, setMeterModelRecords] = useState([]);
+  const [totalRecords, setTotalRecords] = useState(0);
+
+  // State for the "New" dialog (AllocateInformationdialog)
   const [showAllocateDialog, setshowAllocateDialog] = useState(false);
 
-  const meterModelData = [
-    {
-      code: "MM-001",
-      description: "Single Phase Smart Meter",
-      meterType: "Electronic",
-      phase: "1",
-      voltage: "220V",
-      current: "10A",
-      maxCurrent: "60A",
-      usageAgeLimit: "10 years",
-      ti: "1.0",
-      initValue: "0.0 kWh",
-      maxPower: "13.2 kW",
-    },
-    {
-      code: "MM-002",
-      description: "Three Phase Industrial Meter",
-      meterType: "Electronic",
-      phase: "3",
-      voltage: "400V",
-      current: "100A",
-      maxCurrent: "600A",
-      usageAgeLimit: "15 years",
-      ti: "0.5",
-      initValue: "0.0 kWh",
-      maxPower: "240 kW",
-    },
-    {
-      code: "MM-003",
-      description: "Single Phase Basic Meter",
-      meterType: "Electromechanical",
-      phase: "1",
-      voltage: "220V",
-      current: "5A",
-      maxCurrent: "30A",
-      usageAgeLimit: "7 years",
-      ti: "1.5",
-      initValue: "0.0 kWh",
-      maxPower: "6.6 kW",
-    },
-    {
-      code: "MM-004",
-      description: "Three Phase Commercial Meter",
-      meterType: "Electronic",
-      phase: "3",
-      voltage: "400V",
-      current: "50A",
-      maxCurrent: "300A",
-      usageAgeLimit: "12 years",
-      ti: "0.2",
-      initValue: "0.0 kWh",
-      maxPower: "120 kW",
-    },
-    {
-      code: "MM-005",
-      description: "Prepaid Smart Meter",
-      meterType: "Electronic",
-      phase: "1",
-      voltage: "220V",
-      current: "15A",
-      maxCurrent: "90A",
-      usageAgeLimit: "10 years",
-      ti: "1.0",
-      initValue: "0.0 kWh",
-      maxPower: "19.8 kW",
-    },
-  ];
+  console.log("MeterModel: Component rendered.");
 
-  const handleReload = () => {
-    window.location.reload();
+  useEffect(() => {
+    console.log("MeterModel: useEffect triggered.");
+    fetchMeterModelData();
+  }, []); // Empty dependency array means it runs once on mount. Search triggered by button.
+
+  const fetchMeterModelData = async () => {
+    console.log("MeterModel: fetchMeterModelData called.");
+
+    const formData = new URLSearchParams();
+    formData.append("ACTION", "1");
+    if (type) formData.append("type", type);
+    if (phase) formData.append("phase", phase);
+    if (code) formData.append("code", code);
+    if (description) formData.append("description", description);
+    formData.append("PAGE_INDEX", "-1"); // As per API payload for fetching all records
+
+    const payloadObject = {};
+    for (const pair of formData.entries()) {
+      payloadObject[pair[0]] = pair[1];
+    }
+    console.log("MeterModel: Prepared payload (object for clarity):", payloadObject);
+
+    try {
+      // Use the reusable apiFetcher function
+      const data = await apiFetcher("/api/meter-model", "POST", formData, router);
+      
+      setMeterModelRecords(data.rows || []);
+      setTotalRecords(data.rows?.length || 0);
+      console.log("MeterModel: Data fetched successfully. Records received:", data.rows?.length);
+
+    } catch (error) {
+      console.error("MeterModel: Error fetching data via apiFetcher:", error);
+      setMeterModelRecords([]);
+      setTotalRecords(0);
+      // The apiFetcher already handles redirection if cookies are missing.
+      // Other errors will just result in an empty table and console error.
+    }
+  };
+
+  const handleRefresh = () => {
+    console.log("MeterModel: Refresh button clicked. Fetching data.");
+    fetchMeterModelData();
+  };
+
+  const handleSearch = () => {
+    console.log("MeterModel: Search button clicked. Fetching data with current filters.");
+    fetchMeterModelData();
   };
 
   return (
@@ -95,7 +90,7 @@ function MeterModel() {
           </h1>
           <div className="flex space-x-2 sm:space-x-3 w-full sm:w-auto">
             <button
-              onClick={() => handleReload()}
+              onClick={handleRefresh}
               className="bg-[#FF9900] hover:cursor-pointer text-white px-3 py-1 sm:px-4 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 shadow-md transition text-sm sm:text-base"
             >
               <RefreshCw size={16} />
@@ -106,7 +101,6 @@ function MeterModel() {
               onClick={() => setshowAllocateDialog(true)}
             >
               <Plus size={16} />
-
               <span className="hidden sm:inline ">New</span>
             </button>
             {showAllocateDialog && (
@@ -116,23 +110,87 @@ function MeterModel() {
             )}
           </div>
         </div>
+
+        {/* Search Conditions */}
+        <div className="flex flex-wrap items-center gap-4 mb-4">
+          <div className="flex items-center gap-2">
+            <label htmlFor="type" className="text-sm text-gray-500">
+              Meter Type:
+            </label>
+            <input
+              type="text"
+              id="type"
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-500"
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              onKeyPress={(e) => { if (e.key === 'Enter') handleSearch(); }}
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <label htmlFor="phase" className="text-sm text-gray-500">
+              Phase:
+            </label>
+            <input
+              type="text"
+              id="phase"
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-500"
+              value={phase}
+              onChange={(e) => setPhase(e.target.value)}
+              onKeyPress={(e) => { if (e.key === 'Enter') handleSearch(); }}
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <label htmlFor="code" className="text-sm text-gray-500">
+              Code:
+            </label>
+            <input
+              type="text"
+              id="code"
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-500"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              onKeyPress={(e) => { if (e.key === 'Enter') handleSearch(); }}
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <label htmlFor="description" className="text-sm text-gray-500">
+              Description:
+            </label>
+            <input
+              type="text"
+              id="description"
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-500"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              onKeyPress={(e) => { if (e.key === 'Enter') handleSearch(); }}
+            />
+          </div>
+          <button
+            onClick={handleSearch}
+            className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md transition"
+          >
+            <Search size={16} />
+            <span>Search</span>
+          </button>
+        </div>
       </div>
+
       <div className="bg-white rounded-lg shadow mb-4 sm:mb-6 overflow-x-auto">
         <div className="p-2 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2 sm:gap-4">
             <div className="flex gap-1 sm:gap-2">
-              <ChevronFirst className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer hover:text-[#FF9900]" />
-              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer hover:text-[#FF9900]" />
-              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF9900] cursor-pointer" />
-              <ChevronLast className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF9900] cursor-pointer" />
+              <ChevronFirst className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 cursor-not-allowed" />
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 cursor-not-allowed" />
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 cursor-not-allowed" />
+              <ChevronLast className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 cursor-not-allowed" />
             </div>
             <div className="flex items-center gap-1 sm:gap-2 bg-gray-100 px-2 sm:px-3 py-1 rounded text-xs sm:text-sm">
               <span className="text-gray-600 whitespace-nowrap">
-                Total {meterModelData.length} Records
+                Total {totalRecords} Records
               </span>
               <span className="text-gray-600 hidden sm:inline">|</span>
               <span className="text-gray-600 whitespace-nowrap">
-                Record 1-{meterModelData.length}, Page 1/1
+                Record 1-{totalRecords}
               </span>
               <span className="text-gray-600">|</span>
               <span className="text-gray-600 whitespace-nowrap">
@@ -142,8 +200,10 @@ function MeterModel() {
                 type="text"
                 className="w-8 sm:w-12 border rounded px-1 sm:px-2 py-1 text-center text-xs sm:text-sm"
                 value="1"
+                readOnly
+                disabled
               />
-              <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 hover:text-green-600 cursor-pointer" />
+              <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 cursor-not-allowed" />
             </div>
           </div>
         </div>
@@ -166,24 +226,39 @@ function MeterModel() {
               </tr>
             </thead>
             <tbody>
-              {meterModelData.map((row, index) => (
-                <tr
-                  key={index}
-                  className="hover:bg-[#FFE2B7] cursor-pointer  border-gray-200"
-                >
-                  <td className="p-2 sm:p-3">{row.code}</td>
-                  <td className="p-2 sm:p-3">{row.description}</td>
-                  <td className="p-2 sm:p-3">{row.meterType}</td>
-                  <td className="p-2 sm:p-3">{row.phase}</td>
-                  <td className="p-2 sm:p-3">{row.voltage}</td>
-                  <td className="p-2 sm:p-3">{row.current}</td>
-                  <td className="p-2 sm:p-3">{row.maxCurrent}</td>
-                  <td className="p-2 sm:p-3">{row.usageAgeLimit}</td>
-                  <td className="p-2 sm:p-3">{row.ti}</td>
-                  <td className="p-2 sm:p-3">{row.initValue}</td>
-                  <td className="p-2 sm:p-3">{row.maxPower}</td>
+              {meterModelRecords.length > 0 ? (
+                meterModelRecords.map((row, index) => {
+                  const amrParts = row.AMRModel ? row.AMRModel.split('|') : [];
+                  const ti = amrParts[0] || '-';
+                  const initValue = amrParts[1] || '-';
+                  const maxPower = amrParts[2] || '-';
+
+                  return (
+                    <tr
+                      key={index}
+                      className="hover:bg-[#FFE2B7] cursor-pointer border-gray-200"
+                    >
+                      <td className="p-2 sm:p-3">{row.Code || "-"}</td>
+                      <td className="p-2 sm:p-3">{row.Description || "-"}</td>
+                      <td className="p-2 sm:p-3">{row.MeterType || "-"}</td>
+                      <td className="p-2 sm:p-3">{row.Phase || "-"}</td>
+                      <td className="p-2 sm:p-3">{row.Ub || "-"}</td>
+                      <td className="p-2 sm:p-3">{row.Current || "-"}</td>
+                      <td className="p-2 sm:p-3">{row.MaxCurrent || "-"}</td>
+                      <td className="p-2 sm:p-3">{row.Years || "-"}</td>
+                      <td className="p-2 sm:p-3">{ti}</td>
+                      <td className="p-2 sm:p-3">{initValue}</td>
+                      <td className="p-2 sm:p-3">{maxPower}</td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan="11" className="text-center p-4 text-gray-500">
+                    No meter models found.
+                  </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

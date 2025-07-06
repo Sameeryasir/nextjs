@@ -6,8 +6,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-
-function Dialogue({ onClose }) {
+function Dailysubaccountdialgoue1({onClose}) {
   const [formData, setFormData] = useState({
     fullName: "",
     code: "",
@@ -34,17 +33,19 @@ function Dialogue({ onClose }) {
   const tableData = [
     {
       code: "EM100001",
-      name: "ameer",
+      date: "2023-01-15",
+      type: "New",
       description: "Installed new energy meter",
       department: "Electrical",
-      role: "safdsa",
+      sgc: "SGC-001",
     },
     {
-      code: "EM100001",
-      name: "ameer",
-      description: "Installed new energy meter",
-      department: "Electrical",
-      role: "safdsa",
+      code: "WM200101",
+      date: "2022-08-10",
+      type: "Used",
+      description: "Transferred from East warehouse",
+      department: "Logistics",
+      sgc: "SGC-002",
     },
   ];
 
@@ -58,7 +59,7 @@ function Dialogue({ onClose }) {
           <X size={20} className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">Select The Branch</h2>
+        <h2 className="text-xl font-semibold mb-4">Add New Record</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -84,7 +85,7 @@ function Dialogue({ onClose }) {
                 htmlFor="meterNum"
                 className="text-gray-700 text-sm sm:text-base font-medium whitespace-nowrap"
               >
-                Name
+                Meter Num
               </label>
               <input
                 id="meterNum"
@@ -168,9 +169,11 @@ function Dialogue({ onClose }) {
                       Code
                     </th>
                     <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
-                      Name
+                      Date
                     </th>
-
+                    <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
+                      Types
+                    </th>
                     <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
                       Description
                     </th>
@@ -178,7 +181,7 @@ function Dialogue({ onClose }) {
                       Department
                     </th>
                     <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
-                      Role
+                      SGC
                     </th>
                   </tr>
                 </thead>
@@ -193,16 +196,18 @@ function Dialogue({ onClose }) {
                           {row.code}
                         </td>
                         <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.name}
+                          {row.date}
                         </td>
-
+                        <td className="px-2 sm:px-4 py-1 sm:py-2">
+                          {row.type}
+                        </td>
                         <td className="px-2 sm:px-4 py-1 sm:py-2">
                           {row.description}
                         </td>
                         <td className="px-2 sm:px-4 py-1 sm:py-2">
                           {row.department}
                         </td>
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">{row.role}</td>
+                        <td className="px-2 sm:px-4 py-1 sm:py-2">{row.sgc}</td>
                       </tr>
                     ))
                   ) : (
@@ -241,4 +246,4 @@ function Dialogue({ onClose }) {
   );
 }
 
-export default Dialogue;
+export default Dailysubaccountdialgoue1;

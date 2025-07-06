@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import {
   X,
@@ -7,14 +8,24 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-function VendorSessiondialogue({ isOpen, onClose }) {
+function VendorSessiondialogue({ isOpen, onClose, onSelect }) {
   const [formData, setFormData] = useState({
     fullName: "",
     code: "",
-    
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 10;
+  // Dummy data for the dialog's internal table (replace with actual fetch if needed)
+  const dummyTableData = [
+    { Code: "AREA001", Description: "North Region" },
+    { Code: "AREA002", Description: "South Region" },
+    { Code: "AREA003", Description: "East Region" },
+    { Code: "AREA004", Description: "West Region" },
+    { Code: "USER001", Description: "John Doe" },
+    { Code: "USER002", Description: "Jane Smith" },
+  ];
+  const totalPages = Math.ceil(dummyTableData.length / 10); // Calculate based on dummy data
+
+  console.log("VendorSessiondialogue: Component rendered. isOpen:", isOpen);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -22,20 +33,24 @@ function VendorSessiondialogue({ isOpen, onClose }) {
       ...prev,
       [name]: value,
     }));
+    console.log("VendorSessiondialogue: Dialog form input changed:", { name, value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
+  const handleSelectAndClose = (itemCode) => {
+    console.log("VendorSessiondialogue: Item selected from dialog:", itemCode);
+    if (onSelect) {
+      onSelect(itemCode);
+    }
     onClose();
   };
 
-  const tableData = [];
-
-  if (!isOpen) return null;
+  if (!isOpen) {
+    console.log("VendorSessiondialogue: Not open, returning null.");
+    return null;
+  }
 
   return (
-    <div className="fixed inset-0 bg-transparent  flex items-center justify-center p-2 sm:p-4 z-50">
+    <div className="fixed inset-0 bg-transparent flex items-center justify-center p-2 sm:p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-2 sm:mx-4 p-4 sm:p-6 relative max-h-[90vh] overflow-y-auto">
         <button
           onClick={onClose}
@@ -44,13 +59,13 @@ function VendorSessiondialogue({ isOpen, onClose }) {
           <X size={20} className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">Add New Record</h2>
+        <h2 className="text-xl font-semibold mb-4">Select Item</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
               <label className="block text-gray-700 text-sm sm:text-base font-medium mb-1">
-                 Name
+                Name
               </label>
               <input
                 type="text"
@@ -60,7 +75,7 @@ function VendorSessiondialogue({ isOpen, onClose }) {
                 className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
-           
+
             <div>
               <label className="block text-gray-700 text-sm sm:text-base font-medium mb-1">
                 Code
@@ -73,8 +88,18 @@ function VendorSessiondialogue({ isOpen, onClose }) {
                 className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
-        
           </div>
+          {/* Search button for the dialog's own search */}
+          <div className="flex justify-end">
+            <button
+              type="button"
+              // onClick={handleDialogSearch} // Uncomment and implement if you want search here
+              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+            >
+              Search
+            </button>
+          </div>
+
 
           <div className="mt-4 sm:mt-6">
             <div className="flex flex-col sm:flex-row items-center justify-between bg-gray-100 p-2 rounded gap-2 sm:gap-4">
@@ -115,8 +140,10 @@ function VendorSessiondialogue({ isOpen, onClose }) {
                 </button>
               </div>
               <span className="text-xs sm:text-sm text-gray-600 text-center sm:text-left whitespace-nowrap">
-                Total 0 Records, Record 0, Page {currentPage}/{totalPages}, Turn
-                To Page
+                Total {dummyTableData.length} Records, Record{" "}
+                {(currentPage - 1) * 10 + 1}-
+                {Math.min(currentPage * 10, dummyTableData.length)}, Page{" "}
+                {currentPage}/{totalPages}, Turn To Page
               </span>
               <div className="flex items-center gap-1">
                 <input
@@ -149,34 +176,30 @@ function VendorSessiondialogue({ isOpen, onClose }) {
                     <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
                       Description
                     </th>
-                  
                   </tr>
                 </thead>
                 <tbody>
-                  {tableData.length > 0 ? (
-                    tableData.map((row, index) => (
-                      <tr
-                        key={index}
-                        className="border-b hover:bg-gray-50 text-xs sm:text-sm"
-                      >
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.date}
-                        </td>
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.type}
-                        </td>
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.remark}
-                        </td>
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.operator}
-                        </td>
-                      </tr>
-                    ))
+                  {dummyTableData.length > 0 ? (
+                    dummyTableData
+                      .slice((currentPage - 1) * 10, currentPage * 10) // Paginate dummy data
+                      .map((row, index) => (
+                        <tr
+                          key={index}
+                          className="border-b hover:bg-gray-50 text-xs sm:text-sm cursor-pointer"
+                          onClick={() => handleSelectAndClose(row.Code)} // Select and close on row click
+                        >
+                          <td className="px-2 sm:px-4 py-1 sm:py-2">
+                            {row.Code}
+                          </td>
+                          <td className="px-2 sm:px-4 py-1 sm:py-2">
+                            {row.Description}
+                          </td>
+                        </tr>
+                      ))
                   ) : (
                     <tr>
                       <td
-                        colSpan="4"
+                        colSpan="2"
                         className="px-2 sm:px-4 py-2 sm:py-4 text-center text-xs sm:text-sm text-gray-500"
                       >
                         No records found
@@ -195,12 +218,6 @@ function VendorSessiondialogue({ isOpen, onClose }) {
               className="px-4 sm:px-6 py-2 text-sm sm:text-base border border-gray-300 rounded-md hover:bg-gray-50"
             >
               Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-gray-800 text-white rounded-md hover:bg-gray-700"
-            >
-              OK
             </button>
           </div>
         </form>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   RefreshCw,
   ChevronFirst,
@@ -9,45 +9,77 @@ import {
   Plus,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // Import useRouter for redirection
+import { apiFetcher } from "@/app/utils/apiFetcher"; // Import the reusable API fetcher
 
 function Page() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isFading, setIsFading] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const router = useRouter();
 
-  const handleRefresh = () => {
-    setIsFading(true);
-    setIsLoading(true);
+  const [isLoading, setIsLoading] = useState(true); // Loading state for the table
+  const [languages, setLanguages] = useState([]); // State to store fetched language data
+  const [totalRecords, setTotalRecords] = useState(0); // Total records will be based on array length
 
-    setTimeout(() => {
-      setIsFading(false);
-      setIsLoading(false);
-    }, 500);
+  console.log("Page (Language List): Component rendered.");
+
+  // Fetch data on component mount
+  useEffect(() => {
+    console.log("Page (Language List): useEffect triggered for initial data fetch.");
+    fetchLanguageData();
+  }, []); // Empty dependency array means it runs once on mount
+
+  const fetchLanguageData = async () => {
+    console.log("Page (Language List): fetchLanguageData called.");
+    setIsLoading(true); // Start loading
+
+    const formData = new URLSearchParams();
+    formData.append("ACTION", "1"); // As per API payload
+
+    const payloadObject = {};
+    for (const pair of formData.entries()) {
+      payloadObject[pair[0]] = pair[1];
+    }
+    console.log("Page (Language List): Sending payload (object for clarity):", payloadObject);
+
+    try {
+      // Use the reusable apiFetcher function
+      const data = await apiFetcher("/api/languages", "POST", formData, router);
+
+      setLanguages(data.rows || []);
+      setTotalRecords(data.rows?.length || 0); // Total records is the count of rows received
+      console.log("Page (Language List): Data fetched successfully. Records received:", data.rows?.length);
+
+    } catch (error) {
+      console.error("Page (Language List): Error fetching data via apiFetcher:", error);
+      setLanguages([]);
+      setTotalRecords(0);
+      // apiFetcher already handles redirection if cookies are missing.
+    } finally {
+      setIsLoading(false); // Stop loading
+    }
   };
 
-  const roles = [
-    { id: 1, name: "Admin", iosCode: "ADM01", activated: "Yes" },
-    { id: 2, name: "Editor", iosCode: "EDT02", activated: "Yes" },
-    { id: 3, name: "Viewer", iosCode: "VWR03", activated: "No" },
-  ];
+  const handleRefresh = () => {
+    console.log("Page (Language List): Refresh button clicked. Fetching data.");
+    fetchLanguageData(); // Trigger data fetch
+  };
 
   return (
     <>
       <div className="w-full bg-white mt-10">
+        {/* Loading spinner overlay */}
         {isLoading && (
           <div className="fixed inset-0 pl-40 bg-transparent bg-opacity-50 flex items-center justify-center z-50">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#FF9900]"></div>
           </div>
         )}
+        {/* Main content, with opacity based on loading state */}
         <div
-          className={`w-full bg-white mt-10 transition-opacity duration-300 ${
-            isFading ? "opacity-0" : "opacity-100"
-          }`}
+          className={`w-full bg-white mt-10 transition-opacity duration-300 ${isLoading ? "opacity-50" : "opacity-100"}`}
         >
           <div className="flex flex-col pb-4 mb-4 gap-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
               <h1 className="text-xl sm:text-2xl font-bold text-gray-800 flex items-center gap-2">
-                Role List
+                Language List {/* Changed from Role List based on context */}
               </h1>
               <div className="flex space-x-2 sm:space-x-3 w-full sm:w-auto">
                 <button
@@ -75,18 +107,19 @@ function Page() {
             <div className="p-2 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
               <div className="flex items-center gap-2 sm:gap-4">
                 <div className="flex gap-1 sm:gap-2">
-                  <ChevronFirst className="w-4 h-4 cursor-pointer hover:text-[#FF9900]" />
-                  <ChevronLeft className="w-4 h-4 cursor-pointer hover:text-[#FF9900]" />
-                  <ChevronRight className="w-4 h-4 text-[#FF9900] cursor-pointer" />
-                  <ChevronLast className="w-4 h-4 text-[#FF9900] cursor-pointer" />
+                  {/* Pagination Controls - Disabled as API doesn't provide pagination */}
+                  <ChevronFirst className="w-4 h-4 cursor-pointer text-gray-400" disabled />
+                  <ChevronLeft className="w-4 h-4 cursor-pointer text-gray-400" disabled />
+                  <ChevronRight className="w-4 h-4 text-gray-400 cursor-pointer" disabled />
+                  <ChevronLast className="w-4 h-4 text-gray-400 cursor-pointer" disabled />
                 </div>
                 <div className="flex items-center gap-1 sm:gap-2 bg-gray-100 px-2 sm:px-3 py-1 rounded text-xs sm:text-sm">
                   <span className="text-gray-600 whitespace-nowrap">
-                    Total Records
+                    Total {totalRecords} Records
                   </span>
                   <span className="text-gray-600 hidden sm:inline">|</span>
                   <span className="text-gray-600 whitespace-nowrap">
-                    Record 1-3, Page 1/1
+                    Record 1-{totalRecords} {/* Display range based on total records */}
                   </span>
                   <span className="text-gray-600">|</span>
                   <span className="text-gray-600 whitespace-nowrap">
@@ -95,37 +128,58 @@ function Page() {
                   <input
                     type="text"
                     className="w-8 sm:w-12 border rounded px-1 sm:px-2 py-1 text-center text-xs sm:text-sm"
-                    value="1"
+                    value="1" // Always 1 for non-paginated list
                     readOnly
+                    disabled
                   />
-                  <ChevronRight className="w-3 h-3 text-green-500 hover:text-green-600 cursor-pointer" />
+                  <ChevronRight className="w-3 h-3 text-gray-400 cursor-not-allowed" />
                 </div>
               </div>
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[800px] sm:min-w-0">
-                <thead className="bg-[#FF9900] text-white">
-                  <tr>
-                    <th className="p-2 sm:p-3 text-left">ID</th>
-                    <th className="p-2 sm:p-3 text-left">Name</th>
-                    <th className="p-2 sm:p-3 text-left">IOS Code</th>
-                    <th className="p-2 sm:p-3 text-left">Activated</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {roles.map((role) => (
-                    <tr key={role.id} className=" hover:bg-gray-50 transition">
-                      <td className="p-2 sm:p-3">{role.id}</td>
-                      <td className="p-2 sm:p-3">{role.name}</td>
-                      <td className="p-2 sm:p-3">{role.iosCode}</td>
-                      <td className="p-2 sm:p-3">{role.activated}</td>
+              {isLoading ? (
+                <div className="text-center p-4">Loading language data...</div>
+              ) : (
+                <table className="w-full min-w-[800px] sm:min-w-0">
+                  <thead className="bg-[#FF9900] text-white">
+                    <tr>
+                      <th className="p-2 sm:p-3 text-left">ID</th>
+                      <th className="p-2 sm:p-3 text-left">Name</th>
+                      <th className="p-2 sm:p-3 text-left">ISO Code</th>
+                      <th className="p-2 sm:p-3 text-left">Activated</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {languages.length > 0 ? (
+                      languages.map((lang, index) => (
+                        <tr key={lang.id_lang || index} className="hover:bg-gray-50 transition">
+                          <td className="p-2 sm:p-3">{lang.id_lang || "-"}</td>
+                          <td className="p-2 sm:p-3">{lang.name || "-"}</td>
+                          <td className="p-2 sm:p-3">{lang.iso_code || "-"}</td>
+                          <td className="p-2 sm:p-3">
+                            {lang.active === "1" ? (
+                              <span className="text-green-600 font-semibold">Yes</span>
+                            ) : (
+                              <span className="text-red-600 font-semibold">No</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="4" className="text-center p-4 text-gray-500">
+                          No languages found.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
+          {/* Operator component (if it was intended to be part of this page, keep it) */}
+          {/* <Operator /> */}
         </div>
       </div>
     </>

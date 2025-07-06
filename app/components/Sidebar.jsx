@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
+  UserCircle,
+  CreditCard,
+  BarChart2,
+  MapPin,
   Calculator,
   UserCheck,
   ListChecks,
@@ -79,8 +83,8 @@ const SidebarSection = ({
         onClick={onToggle}
       >
         <div className="flex items-center">
-          <span className="text-orange-400">{icon}</span>
-          <span className="ml-3 font-medium text-gray-100">{title}</span>
+          {icon && <span className="text-orange-400">{icon}</span>}
+          <span className={`font-medium text-gray-100 ${icon ? 'ml-3' : ''}`}>{title}</span>
         </div>
         {activeMenu ? (
           <ChevronDown className="w-4 h-4 text-gray-300" />
@@ -124,8 +128,8 @@ const SidebarSection = ({
                           : "bg-gray-500"
                       }`}
                     ></div>
-                    <span className="text-gray-300">{item.icon}</span>
-                    <span className="text-sm text-gray-200">{item.name}</span>
+                    {item.icon && <span className="text-gray-300">{item.icon}</span>}
+                    <span className={`text-sm text-gray-200 ${item.icon ? '' : 'ml-6'}`}>{item.name}</span>
                     {item.subItems && (
                       <div className="ml-auto">
                         {selectedOption === item.id ? (
@@ -170,8 +174,8 @@ const SidebarSection = ({
                                 : "bg-gray-400"
                             }`}
                           ></div>
-                          <span className="text-gray-300">{subItem.icon}</span>
-                          <span className="text-sm text-gray-200">
+                          {subItem.icon && <span className="text-gray-300">{subItem.icon}</span>}
+                          <span className={`text-sm text-gray-200 ${subItem.icon ? '' : 'ml-6'}`}>
                             {subItem.name}
                           </span>
                         </div>
@@ -430,22 +434,56 @@ export default function Sidebar() {
           id: "daily-subaccount-by-project",
           name: "Daily SubAccount By Project",
           icon: <Database className="w-4 h-4 text-gray-300" />,
-          route: "/reports/vending/daily-subaccount-by-project",
+          route: "/reports/Vending/daily-subaccount-by-project",
         },
         {
           id: "purchase-chart",
           name: "Purchase Chart",
-          icon: <LineChart className="w-4 h-4 text-gray-300" />,
-          route: "/reports/vending/purchase-chart",
+          icon: <LineChart className="w-4 h-4 text-gray-300" /> ,
+          route: "/reports/Vending/purchase-chart",
         },
       ],
     },
+{
+  id: "arrear-report",
+  name: "Arrear Report",
+  icon: <AlertCircle className="w-4 h-4 text-gray-300" />,
+  route: "/reports/arrear",
+  subItems: [
     {
-      id: "arrear-report",
-      name: "Arrear Report",
-      icon: <AlertCircle className="w-4 h-4 text-gray-300" />,
-      route: "/reports/arrear",
+      id: "customer-arrears",
+      name: "Customer Arrears",
+      icon: <UserCircle className="w-4 h-4 text-gray-300" />,
+      route: "/reports/arrear/customer-arrears",
     },
+    {
+      id: "account-payment",
+      name: "Account Payment",
+      icon: <CreditCard className="w-4 h-4 text-gray-300" />,
+      route: "/reports/arrear/account-payment",
+    },
+    {
+      id: "arrear-balance-by-tariff",
+      name: "Arrear Balance By Tariff",
+      icon: <BarChart2 className="w-4 h-4 text-gray-300" />,
+      route: "/reports/arrear/balance-by-tariff",
+    },
+    {
+      id: "subacc-balance-by-tariff",
+      name: "Sub Acc, Balance By Tariff",
+      icon: <Layers className="w-4 h-4 text-gray-300" />,
+      route: "/reports/arrear/subacc-balance-by-tariff",
+    },
+    {
+      id: "arrear-balance-by-zone",
+      name: "Arrear Balance By Zone",
+      icon: <MapPin className="w-4 h-4 text-gray-300" />,
+      route: "/reports/arrear/balance-by-zone",
+    },
+  ],
+},
+
+
     {
       id: "needs-report",
       name: "Needs Report",
@@ -679,14 +717,13 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="bg-gray-900 text-white shadow-lg overflow-y-auto top-0 shrink-0 left-0 w-72 h-full border-r border-gray-800">
+    <aside className="bg-gray-900 text-white shadow-lg overflow-y-auto top-0 shrink-0 left-0 w-80 h-full border-r border-gray-800">
       <div className="p-5 border-b border-gray-800">
         <h1 className="text-2xl font-bold tracking-wide text-white">
           <span className="text-orange-400">SEC</span>
           <span>DAIS</span>
         </h1>
       </div>
-
       <nav className="mt-4 pb-6">
         <Link href="/" passHref legacyBehavior>
           <div

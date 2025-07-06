@@ -7,15 +7,63 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-function Dialogue({ onClose }) {
+function Dialysubaccountdialogue3({onClose}) {
   const [formData, setFormData] = useState({
     fullName: "",
     code: "",
     accountNo: "",
     meterNum: "",
   });
+
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 10;
+  const itemsPerPage = 5;
+
+  const tableData = [
+    {
+      code: "A001",
+      date: "2023-01-01",
+      projectType: "Solar",
+      payMethod: "Cash",
+    },
+    {
+      code: "A002",
+      date: "2023-01-02",
+      projectType: "Wind",
+      payMethod: "Bank Transfer",
+    },
+    {
+      code: "A003",
+      date: "2023-01-03",
+      projectType: "Hydro",
+      payMethod: "Credit Card",
+    },
+    {
+      code: "A004",
+      date: "2023-01-04",
+      projectType: "Solar",
+      payMethod: "Mobile Payment",
+    },
+    {
+      code: "A005",
+      date: "2023-01-05",
+      projectType: "Wind",
+      payMethod: "Cash",
+    },
+    {
+      code: "A006",
+      date: "2023-01-06",
+      projectType: "Solar",
+      payMethod: "Bank Transfer",
+    },
+    {
+      code: "A007",
+      date: "2023-01-07",
+      projectType: "Hydro",
+      payMethod: "Cash",
+    },
+  ];
+
+  const totalPages = Math.ceil(tableData.length / itemsPerPage);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -31,23 +79,10 @@ function Dialogue({ onClose }) {
     onClose();
   };
 
-  const tableData = [
-    {
-      code: "EM100001",
-      name: "ameer",
-      description: "Installed new energy meter",
-      department: "Electrical",
-      role: "safdsa",
-    },
-    {
-      code: "EM100001",
-      name: "ameer",
-      description: "Installed new energy meter",
-      department: "Electrical",
-      role: "safdsa",
-    },
-  ];
-
+  const paginatedData = tableData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
   return (
     <div className="fixed inset-0 bg-transparent flex items-center justify-center p-2 sm:p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-2 sm:mx-4 p-4 sm:p-6 relative max-h-[90vh] overflow-y-auto">
@@ -58,7 +93,7 @@ function Dialogue({ onClose }) {
           <X size={20} className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">Select The Branch</h2>
+        <h2 className="text-xl font-semibold mb-4">Add New Record</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -168,53 +203,29 @@ function Dialogue({ onClose }) {
                       Code
                     </th>
                     <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
-                      Name
-                    </th>
-
-                    <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
-                      Description
+                      Date
                     </th>
                     <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
-                      Department
+                      Project Type
                     </th>
                     <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
-                      Role
+                      Pay Method
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {tableData.length > 0 ? (
-                    tableData.map((row, index) => (
-                      <tr
-                        key={index}
-                        className="border-b hover:bg-gray-50 text-xs sm:text-sm"
-                      >
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.code}
-                        </td>
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.name}
-                        </td>
-
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.description}
-                        </td>
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.department}
-                        </td>
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">{row.role}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan="6"
-                        className="px-2 sm:px-4 py-2 sm:py-4 text-center text-xs sm:text-sm text-gray-500"
-                      >
-                        No records found
+                  {paginatedData.map((item, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="px-2 sm:px-4 py-1 sm:py-2">{item.code}</td>
+                      <td className="px-2 sm:px-4 py-1 sm:py-2">{item.date}</td>
+                      <td className="px-2 sm:px-4 py-1 sm:py-2">
+                        {item.projectType}
+                      </td>
+                      <td className="px-2 sm:px-4 py-1 sm:py-2">
+                        {item.payMethod}
                       </td>
                     </tr>
-                  )}
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -241,4 +252,4 @@ function Dialogue({ onClose }) {
   );
 }
 
-export default Dialogue;
+export default Dialysubaccountdialogue3;
