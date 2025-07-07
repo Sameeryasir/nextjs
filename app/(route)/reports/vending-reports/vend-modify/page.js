@@ -1,13 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import Dialogue from "./dialogue";
-import {
-  ChevronFirst,
-  ChevronLeft,
-  ChevronRight,
-  ChevronLast,
-  X,
-} from "lucide-react";
+import Dialogue1 from "@/app/components/clientdialogue/dialogue1";
+import { RefreshCw, X } from "lucide-react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 
@@ -18,104 +12,55 @@ function Page() {
     window.location.reload();
   };
 
-  // Sample data
-  const [tableData, setTableData] = useState([
+  // ✅ Sample Table Data
+  const tableData = [
     {
-      branch: "Main Branch",
-      tariff: "T1",
-      type: "Residential",
-      totalSales: 12500,
-      charges: 2300,
-      arrear: 500,
-      unitCost: 0.12,
-      step1: 3000,
-      step2: 2500,
-      step3: 2000,
-      step4: 1500,
-      kwh: 9000,
+      date: "2024-01-01",
+      accountNo: "ACC00123",
+      fullName: "John Doe",
+      operator: "Admin",
     },
     {
-      branch: "East Branch",
-      tariff: "T2",
-      type: "Commercial",
-      totalSales: 22000,
-      charges: 4100,
-      arrear: 1500,
-      unitCost: 0.15,
-      step1: 4000,
-      step2: 3500,
-      step3: 3000,
-      step4: 2500,
-      kwh: 13000,
+      date: "2024-02-15",
+      accountNo: "ACC00456",
+      fullName: "Jane Smith",
+      operator: "Operator A",
     },
     {
-      branch: "North Branch",
-      tariff: "T3",
-      type: "Industrial",
-      totalSales: 30500,
-      charges: 5200,
-      arrear: 2000,
-      unitCost: 0.18,
-      step1: 5000,
-      step2: 4500,
-      step3: 4000,
-      step4: 3500,
-      kwh: 17000,
+      date: "2024-03-10",
+      accountNo: "ACC00789",
+      fullName: "Robert Lee",
+      operator: "Operator B",
     },
-  ]);
+  ];
 
+  // ✅ Export to Excel
   const handleExportToExcel = () => {
-    const headers = [
-      "Branch",
-      "Tariff",
-      "Type",
-      "Total Sales",
-      "Charges",
-      "Arrear",
-      "Unit Cost",
-      "Step1",
-      "Step2",
-      "Step3",
-      "Step4",
-      "kWh",
-    ];
-
-    const data = tableData.map((row) => [
-      row.branch,
-      row.tariff,
-      row.type,
-      row.totalSales,
-      row.charges,
-      row.arrear,
-      row.unitCost,
-      row.step1,
-      row.step2,
-      row.step3,
-      row.step4,
-      row.kwh,
+    const header = ["Date", "Account No.", "Full Name", "Operator"];
+    const dataRows = tableData.map((row) => [
+      row.date,
+      row.accountNo,
+      row.fullName,
+      row.operator,
     ]);
-
-    const worksheetData = [headers, ...data];
-    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+    const worksheet = XLSX.utils.aoa_to_sheet([header, ...dataRows]);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "SalesSummary");
-
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Vend Modify");
     const excelBuffer = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "array",
     });
-
-    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
-    saveAs(blob, "SalesSummary.xlsx");
+    const blob = new Blob([excelBuffer], {
+      type: "application/octet-stream",
+    });
+    saveAs(blob, "vending_modify.xlsx");
   };
 
   return (
     <div className="min-h-screen bg-white p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-semibold text-gray-800">
-          VS Sales Summary
-        </h1>
+        <h1 className="text-2xl font-semibold text-gray-800">Vending Modify</h1>
         <div className="flex gap-4">
           <button
             onClick={handleReload}
@@ -129,12 +74,18 @@ function Page() {
           >
             Excel
           </button>
+          <button
+            onClick={() => window.print()}
+            className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105 hover:cursor-pointer"
+          >
+            Print
+          </button>
         </div>
       </div>
 
       {/* Form Fields */}
       <div className="max-w-7xl w-full text-left mb-14 space-y-8 px-4">
-        {/* Branch Fields */}
+        {/* Branch */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
             Branch
@@ -156,7 +107,7 @@ function Page() {
               ...
             </button>
             {isDialogOpen && (
-              <Dialogue onClose={() => setIsDialogOpen(false)} />
+              <Dialogue1 onClose={() => setIsDialogOpen(false)} />
             )}
             <button
               type="button"
@@ -167,19 +118,44 @@ function Page() {
           </div>
         </div>
 
-        {/* Type Field */}
+        {/* Full Name */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Type
+            Full Name
           </label>
-          <select className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            <option value="no-cancel">Vending Office</option>
-            <option value="7-days">Agone</option>
-            <option value="7-days">SMS</option>
-            <option value="7-days">USSD</option>
-          </select>
+          <input
+            type="text"
+            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
         </div>
 
+        {/* Meter Model */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
+            Meter Model
+          </label>
+          <select
+            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            defaultValue=""
+          >
+            <option value="" disabled>
+              Select Model
+            </option>
+            <option value="EM-1000">General IC Meter</option>
+            <option value="WM-2000">CPU Card Meter</option>
+            <option value="SM-3000">Keypad</option>
+            <option value="HM-4000">Solar Meter</option>
+          </select>
+        </div>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
+            Code
+          </label>
+          <input
+            type="text"
+            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
         {/* Date From */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
@@ -194,7 +170,7 @@ function Page() {
         {/* Date To */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Date To
+            Date
           </label>
           <input
             type="date"
@@ -215,38 +191,19 @@ function Page() {
         <table className="w-full min-w-[800px]">
           <thead className="bg-[#FF9900] text-white text-sm font-medium tracking-wide">
             <tr>
-              <th className="p-3 text-left">Branch</th>
-              <th className="p-3 text-left">Tariff</th>
-              <th className="p-3 text-left">Type</th>
-              <th className="p-3 text-left">Total Sales</th>
-              <th className="p-3 text-left">Charges</th>
-              <th className="p-3 text-left">Arrear</th>
-              <th className="p-3 text-left">Unit Cost</th>
-              <th className="p-3 text-left">Step1</th>
-              <th className="p-3 text-left">Step2</th>
-              <th className="p-3 text-left">Step3</th>
-              <th className="p-3 text-left">Step4</th>
-              <th className="p-3 text-left">kWh</th>
+              <th className="p-3 text-left">Date</th>
+              <th className="p-3 text-left">Account No.</th>
+              <th className="p-3 text-left">Full Name</th>
+              <th className="p-3 text-left">Operator</th>
             </tr>
           </thead>
-          <tbody className="text-sm text-gray-800">
-            {tableData.map((item, idx) => (
-              <tr
-                key={idx}
-                className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
-              >
-                <td className="p-3">{item.branch}</td>
-                <td className="p-3">{item.tariff}</td>
-                <td className="p-3">{item.type}</td>
-                <td className="p-3">{item.totalSales}</td>
-                <td className="p-3">{item.charges}</td>
-                <td className="p-3">{item.arrear}</td>
-                <td className="p-3">{item.unitCost}</td>
-                <td className="p-3">{item.step1}</td>
-                <td className="p-3">{item.step2}</td>
-                <td className="p-3">{item.step3}</td>
-                <td className="p-3">{item.step4}</td>
-                <td className="p-3">{item.kwh}</td>
+          <tbody className="text-sm text-gray-700 bg-white ">
+            {tableData.map((row, index) => (
+              <tr key={index}>
+                <td className="p-3">{row.date}</td>
+                <td className="p-3">{row.accountNo}</td>
+                <td className="p-3">{row.fullName}</td>
+                <td className="p-3">{row.operator}</td>
               </tr>
             ))}
           </tbody>

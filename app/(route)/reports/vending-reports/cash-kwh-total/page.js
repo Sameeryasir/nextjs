@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Dialogue from "../dialogue";
+import Dialogue1 from "@/app/components/clientdialogue/dialogue1";
 import {
   ChevronFirst,
   ChevronLeft,
@@ -10,62 +10,67 @@ import {
 } from "lucide-react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import Dialogueaccount from "./Dialogueaccount";
 
 function Page() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isDialogOpen1, setIsDialogOpen1] = useState(false);
 
   const handleReload = () => {
     window.location.reload();
   };
 
-  // ✅ Sample Data with Payment
-  const tableData = [
+  // Sample data
+  const [tableData, setTableData] = useState([
     {
-      branch: "Main Warehouse",
-      tariff: "01 00001-SONELEC NGAZIDJA",
-      project: "Solar",
-      sale: 1000,
-      payment: "Cash",
+      region: "pakistan",
+      branch: "Main Branch",
+      Date: "22-03-2022",
+      type: "Residential",
+      totalSales: 12500,
+      netkwh: 2300,
+      transcount: 500,
     },
     {
-      branch: "East Branch",
-      tariff: "01 00003-SONELEC NGAZIDJA",
-      project: "Wind",
-      sale: 1500,
-      payment: "Credit Card",
+      region: "pakistan",
+      branch: "Main Branch",
+      Date: "22-03-2022",
+      type: "Residential",
+      totalSales: 12500,
+      netkwh: 2300,
+      transcount: 500,
     },
-    {
-      branch: "North Zone",
-      tariff: "01 00004-SONELEC NGAZIDJA",
-      project: "Hydro",
-      sale: 1200,
-      payment: "Bank Transfer",
-    },
-  ];
+  ]);
 
-  // ✅ Excel Export Handler
   const handleExportToExcel = () => {
-    const header = ["Branch", "Tariff", "Project", "Sale", "Payment"];
-    const rows = tableData.map((row) => [
+    const headers = [
+      "Region",
+      "Branch",
+      "Date",
+      "Total Sales",
+      "Net Kwh",
+      "Tran Count",
+    ];
+
+    const data = tableData.map((row) => [
+      row.region,
       row.branch,
-      row.tariff,
-      row.project,
-      row.sale,
-      row.payment,
+      row.Date,
+      row.totalSales,
+      row.netkwh,
+      row.transcount,
     ]);
 
-    const worksheet = XLSX.utils.aoa_to_sheet([header, ...rows]);
+    const worksheetData = [headers, ...data];
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "VS Sales Summary");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "VS cash &  kWh total");
 
     const excelBuffer = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "array",
     });
+
     const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
-    saveAs(blob, "vs-sales-summary.xlsx");
+    saveAs(blob, "SalesSummary.xlsx");
   };
 
   return (
@@ -73,7 +78,7 @@ function Page() {
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-semibold text-gray-800">
-          Payement In Arrear Report
+          VS Cash & kWh Total
         </h1>
         <div className="flex gap-4">
           <button
@@ -87,6 +92,12 @@ function Page() {
             className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105 hover:cursor-pointer"
           >
             Excel
+          </button>
+          <button
+            onClick={() => window.print()}
+            className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105 hover:cursor-pointer"
+          >
+            Print
           </button>
         </div>
       </div>
@@ -115,7 +126,7 @@ function Page() {
               ...
             </button>
             {isDialogOpen && (
-              <Dialogue onClose={() => setIsDialogOpen(false)} />
+              <Dialogue1 onClose={() => setIsDialogOpen(false)} />
             )}
             <button
               type="button"
@@ -126,48 +137,16 @@ function Page() {
           </div>
         </div>
 
+        {/* Type Field */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Branch
-          </label>
-          <div className="flex flex-wrap gap-2 w-full max-w-4xl">
-            <input
-              type="text"
-              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-            <input
-              type="text"
-              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-            <button
-              type="button"
-              onClick={() => setIsDialogOpen1(true)}
-              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
-            >
-              ...
-            </button>
-            {isDialogOpen1 && (
-              <Dialogueaccount onClose={() => setIsDialogOpen1(false)} />
-            )}
-            <button
-              type="button"
-              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
-            >
-              <X size={16} />
-            </button>
-          </div>
-        </div>
-
-        {/* Tariff Dropdown */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Tariff
+            Type
           </label>
           <select className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            <option value="">Select Tariff</option>
-            {Array.from({ length: 10 }).map((_, i) => (
-              <option key={i}>{`01 0000${i + 1}-SONELEC NGAZIDJA`}</option>
-            ))}
+            <option value="no-cancel">Vending Office</option>
+            <option value="7-days">Agent</option>
+            <option value="7-days">SMS</option>
+            <option value="7-days">USSD</option>
           </select>
         </div>
 
@@ -206,21 +185,27 @@ function Page() {
         <table className="w-full min-w-[800px]">
           <thead className="bg-[#FF9900] text-white text-sm font-medium tracking-wide">
             <tr>
+              <th className="p-3 text-left">Region</th>
               <th className="p-3 text-left">Branch</th>
-              <th className="p-3 text-left">Tariff</th>
-              <th className="p-3 text-left">Project</th>
-              <th className="p-3 text-left">Sale</th>
-              <th className="p-3 text-left">Payment</th>
+              <th className="p-3 text-left">Date</th>
+              <th className="p-3 text-left">Total Sales</th>
+              <th className="p-3 text-left">Net Kwh</th>
+              <th className="p-3 text-left">Tran Count</th>
             </tr>
           </thead>
-          <tbody className="text-sm text-gray-700">
-            {tableData.map((item, index) => (
-              <tr key={index} className="hover:bg-gray-50">
+          <tbody className="text-sm text-gray-800">
+            {tableData.map((item, idx) => (
+              <tr
+                key={idx}
+                className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
+              >
+                <td className="p-3">{item.region}</td>
+
                 <td className="p-3">{item.branch}</td>
-                <td className="p-3">{item.tariff}</td>
-                <td className="p-3">{item.project}</td>
-                <td className="p-3">{item.sale}</td>
-                <td className="p-3">{item.payment}</td>
+                <td className="p-3">{item.Date}</td>
+                <td className="p-3">{item.totalSales}</td>
+                <td className="p-3">{item.netkwh}</td>
+                <td className="p-3">{item.transcount}</td>
               </tr>
             ))}
           </tbody>

@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import Dialogue from "../../vending-reports/operator-trans-count/dialogue";
+import Dialogue3 from "@/app/components/clientdialogue/Dialogue3";
 import {
+  RefreshCw,
   ChevronFirst,
   ChevronLeft,
   ChevronRight,
@@ -14,65 +15,39 @@ import { saveAs } from "file-saver";
 function Page() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  // ✅ Tariff Table Data
+  const tableData = [
+    { tariff: "Domestic", customerType: "Residential" },
+    { tariff: "Commercial", customerType: "Business" },
+    { tariff: "Industrial", customerType: "Factory" },
+    { tariff: "Agricultural", customerType: "Farm" },
+    { tariff: "Temporary", customerType: "Construction Site" },
+  ];
+
   const handleReload = () => {
     window.location.reload();
   };
 
-  // ✅ Sample Table Data
-  const tableData = [
-    {
-      branch: "Main Branch",
-      yearMonth: "2025-07",
-      tariff: "01 00001-SONELEC NGAZIDJA",
-      chargeCount: 25,
-      amount: 1050.75,
-    },
-    {
-      branch: "East Branch",
-      yearMonth: "2025-07",
-      tariff: "01 00003-SONELEC NGAZIDJA",
-      chargeCount: 32,
-      amount: 1420.0,
-    },
-    {
-      branch: "North Branch",
-      yearMonth: "2025-06",
-      tariff: "01 00004-SONELEC NGAZIDJA",
-      chargeCount: 28,
-      amount: 1205.5,
-    },
-  ];
-
-  // ✅ Excel Export Function
   const handleExportToExcel = () => {
-    const headers = [
-      "Branch",
-      "Year/Month",
-      "Tariff",
-      "Count Of Charges",
-      "Amount",
+    const worksheetData = [
+      ["Tariff", "Customer Type"],
+      ...tableData.map((row) => [row.tariff, row.customerType]),
     ];
 
-    const rows = tableData.map((item) => [
-      item.branch,
-      item.yearMonth,
-      item.tariff,
-      item.chargeCount,
-      item.amount,
-    ]);
-
-    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Fee Report");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Customers By Tariff");
 
     const excelBuffer = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "array",
     });
+
     const blob = new Blob([excelBuffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      type: "application/octet-stream",
     });
-    saveAs(blob, "operator-charges-report.xlsx");
+
+    saveAs(blob, "customers_by_tariff.xlsx");
   };
 
   return (
@@ -80,7 +55,7 @@ function Page() {
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-semibold text-gray-800">
-          Services Fee Report
+          Customers By Tariff
         </h1>
         <div className="flex gap-4">
           <button
@@ -106,7 +81,7 @@ function Page() {
 
       {/* Form Fields */}
       <div className="max-w-7xl w-full text-left mb-14 space-y-8 px-4">
-        {/* Branch Fields */}
+        {/* Branch */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
             Branch
@@ -128,7 +103,7 @@ function Page() {
               ...
             </button>
             {isDialogOpen && (
-              <Dialogue onClose={() => setIsDialogOpen(false)} />
+              <Dialogue3 onClose={() => setIsDialogOpen(false)} />
             )}
             <button
               type="button"
@@ -139,16 +114,22 @@ function Page() {
           </div>
         </div>
 
-        {/* Type Select */}
+        {/* Connection Code */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Type
+            Connection Code
           </label>
-          <select className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            <option value="vending-office">Vending Office</option>
-            <option value="agent">Agent</option>
-            <option value="sms">SMS</option>
-            <option value="ussd">USSD</option>
+          <select
+            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            defaultValue=""
+          >
+            <option value="" disabled>
+              Select Model
+            </option>
+            <option value="EM-1000">New Connection</option>
+            <option value="WM-2000">Replacement</option>
+            <option value="SM-3000">Temp Connection</option>
+            <option value="HM-4000">BRANCHEMENT TEMPORAIRE</option>
           </select>
         </div>
 
@@ -174,21 +155,6 @@ function Page() {
           />
         </div>
 
-        {/* Fee List */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Fee List
-          </label>
-          <select className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            <option value="tva">TVA</option>
-            <option value="rdv">RDV</option>
-            <option value="partie-fee-mono">Partie Fee MONO</option>
-            <option value="partie-fixe-tri">Partie Fixe TRI</option>
-            <option value="partie-fixe">Partie Fixe</option>
-            <option value="partie-fixe-tri-alt">Partie Fixe TRI (Alt)</option>
-          </select>
-        </div>
-
         {/* Search Button */}
         <div className="flex justify-center sm:justify-start sm:pl-40">
           <button className="w-full sm:w-40 py-2 bg-[#FF9900] text-white rounded-md transition hover:brightness-105">
@@ -199,27 +165,18 @@ function Page() {
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[1000px]">
+        <table className="w-full min-w-[800px]">
           <thead className="bg-[#FF9900] text-white text-sm font-medium tracking-wide">
             <tr>
-              <th className="p-3 text-left">Branch</th>
-              <th className="p-3 text-left">Year/Month</th>
               <th className="p-3 text-left">Tariff</th>
-              <th className="p-3 text-left">Count Of Charges</th>
-              <th className="p-3 text-left">Amount</th>
+              <th className="p-3 text-left">Customer Type</th>
             </tr>
           </thead>
-          <tbody className="text-sm text-gray-700">
-            {tableData.map((item, index) => (
-              <tr
-                key={index}
-                className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-              >
-                <td className="p-3">{item.branch}</td>
-                <td className="p-3">{item.yearMonth}</td>
-                <td className="p-3">{item.tariff}</td>
-                <td className="p-3">{item.chargeCount}</td>
-                <td className="p-3">${item.amount.toFixed(2)}</td>
+          <tbody>
+            {tableData.map((row, index) => (
+              <tr key={index} className=" hover:bg-gray-50 text-sm">
+                <td className="p-3">{row.tariff}</td>
+                <td className="p-3">{row.customerType}</td>
               </tr>
             ))}
           </tbody>

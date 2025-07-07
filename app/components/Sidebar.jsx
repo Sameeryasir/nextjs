@@ -362,127 +362,144 @@ export default function Sidebar() {
   ];
 
   const reportItems = [
+    // {
+    //   id: "orientee-client",
+    //   name: "Orientee Client BCHTS",
+    //   icon: <Users className="w-4 h-4 text-gray-300" />,
+    //   route: "/reports/orientee-client",
+    // },
     {
-      id: "orientee-client",
-      name: "Orientee Client BCHTS",
-      icon: <Users className="w-4 h-4 text-gray-300" />,
-      route: "/reports/orientee-client",
-    },
-    {
-      id: "daily-cash-report",
-      name: "Daily Cash Report",
+      id: "vending-reports",
+      name: "Vending Reports",
       icon: <Banknote className="w-4 h-4 text-gray-300" />,
-      route: "/reports/daily-cash",
+      route: "/reports/vending-reports",
       subItems: [
         {
           id: "vs-sales-summary",
           name: "VS Sales Summary",
           icon: <FileText className="w-4 h-4 text-gray-300" />,
-          route: "/reports/dailycashreport",
+          route: "/reports/vending-reports/vssales-summary",
         },
         {
           id: "vs-cash-kwh-total",
           name: "VS Cash & kWh Total",
           icon: <Calculator className="w-4 h-4 text-gray-300" />,
-          route: "/reports/dailycashreport/cash-kwh-total",
+          route: "/reports/vending-reports/cash-kwh-total",
         },
         {
-          id: "operator-trans-count",
-          name: "Operator Trans Count",
+          id: "vending-by-day",
+          name: "Vending By Day",
           icon: <UserCheck className="w-4 h-4 text-gray-300" />,
-          route: "/reports/dailycashreport/operator-trans-count",
+          route: "/reports/vending-reports/vending-by-day",
         },
         {
-          id: "unit-costs-by-tariff",
-          name: "Unit Costs By Tariff",
+          id: "vending-by-month",
+          name: "Vending By Month",
           icon: <ListChecks className="w-4 h-4 text-gray-300" />,
-          route: "/reports/dailycashreport/unit-costs-by-tariff",
+          route: "/reports/vending-reports/vending-by-month",
         },
         {
-          id: "account-details",
-          name: "Account & Details",
+          id: "vending-by-year",
+          name: "Vending By Year",
           icon: <ClipboardList className="w-4 h-4 text-gray-300" />,
-          route: "/reports/dailycashreport/account-details",
+          route: "/reports/vending-reports/vending-by-year",
+        },
+        {
+          id: "vend-modify",
+          name: "Vend Modify",
+          icon: <FileText className="w-4 h-4 text-gray-300" />,
+          route: "/reports/vending-reports/vend-modify",
+        },
+        {
+          id: "ussd-report",
+          name: "USSD Report By",
+          icon: <FileText className="w-4 h-4 text-gray-300" />,
+          route: "/reports/vending-reports/ussd-report",
+        },
+        {
+          id: "singlephase-sa",
+          name: "SINGLEPHAS SA",
+          icon: <FileText className="w-4 h-4 text-gray-300" />,
+          route: "/reports/vending-reports/singlephase-sa",
         },
       ],
     },
+    // {
+    //   id: "vending-reports", // Changed from "vending" to avoid confusion
+    //   name: "Vending Reports",
+    //   icon: <ClipboardList className="w-4 h-4 text-gray-300" />, // Different icon from business vending
+    //   route: "/reports/Vending",
+    //   subItems: [
+    //     {
+    //       id: "purchase-by-zone",
+    //       name: "Purchase(Kwh) By Zone",
+    //       icon: <GlassesIcon className="w-4 h-4 text-gray-300" />,
+    //       route: "/reports/Vending/purchase-by-zone",
+    //     },
+    //     {
+    //       id: "operator-vending-report",
+    //       name: "Operator Vending Report",
+    //       icon: <UserCheck className="w-4 h-4 text-gray-300" />,
+    //       route: "/reports/Vending/operator-vending-report",
+    //     },
+    //     {
+    //       id: "fee-report",
+    //       name: "Fee Report",
+    //       icon: <CreditCardIcon className="w-4 h-4 text-gray-300" />,
+    //       route: "/reports/Vending/fee-report",
+    //     },
+    //     {
+    //       id: "daily-subaccount-by-project",
+    //       name: "Daily SubAccount By Project",
+    //       icon: <Database className="w-4 h-4 text-gray-300" />,
+    //       route: "/reports/Vending/daily-subaccount-by-project",
+    //     },
+    //     {
+    //       id: "purchase-chart",
+    //       name: "Purchase Chart",
+    //       icon: <LineChart className="w-4 h-4 text-gray-300" />,
+    //       route: "/reports/Vending/purchase-chart",
+    //     },
+    //   ],
+    // },
     {
-      id: "vending-reports", // Changed from "vending" to avoid confusion
-      name: "Vending Reports",
-      icon: <ClipboardList className="w-4 h-4 text-gray-300" />, // Different icon from business vending
-      route: "/reports/Vending",
+      id: "arrear-report",
+      name: "Arrear Report",
+      icon: <AlertCircle className="w-4 h-4 text-gray-300" />,
+      route: "/reports/arrear",
       subItems: [
         {
-          id: "purchase-by-zone",
-          name: "Purchase(Kwh) By Zone",
-          icon: <GlassesIcon className="w-4 h-4 text-gray-300" />,
-          route: "/reports/Vending/purchase-by-zone",
+          id: "customer-arrears",
+          name: "Customer Arrears",
+          icon: <UserCircle className="w-4 h-4 text-gray-300" />,
+          route: "/reports/arrear/customer-arrears",
         },
         {
-          id: "operator-vending-report",
-          name: "Operator Vending Report",
-          icon: <UserCheck className="w-4 h-4 text-gray-300" />,
-          route: "/reports/Vending/operator-vending-report",
+          id: "account-payment",
+          name: "Account Payment",
+          icon: <CreditCard className="w-4 h-4 text-gray-300" />,
+          route: "/reports/arrear/account-payment",
         },
         {
-          id: "fee-report",
-          name: "Fee Report",
-          icon: <CreditCardIcon className="w-4 h-4 text-gray-300" />,
-          route: "/reports/Vending/fee-report",
+          id: "arrear-balance-by-tariff",
+          name: "Arrear Balance By Tariff",
+          icon: <BarChart2 className="w-4 h-4 text-gray-300" />,
+          route: "/reports/arrear/balance-by-tariff",
         },
         {
-          id: "daily-subaccount-by-project",
-          name: "Daily SubAccount By Project",
-          icon: <Database className="w-4 h-4 text-gray-300" />,
-          route: "/reports/Vending/daily-subaccount-by-project",
+          id: "subacc-balance-by-tariff",
+          name: "Sub Acc, Balance By Tariff",
+          icon: <Layers className="w-4 h-4 text-gray-300" />,
+          route: "/reports/arrear/subacc-balance-by-tariff",
         },
         {
-          id: "purchase-chart",
-          name: "Purchase Chart",
-          icon: <LineChart className="w-4 h-4 text-gray-300" /> ,
-          route: "/reports/Vending/purchase-chart",
+          id: "arrear-balance-by-zone",
+          name: "Arrear Balance By Zone",
+          icon: <MapPin className="w-4 h-4 text-gray-300" />,
+          route: "/reports/arrear/balance-by-zone",
         },
       ],
     },
-{
-  id: "arrear-report",
-  name: "Arrear Report",
-  icon: <AlertCircle className="w-4 h-4 text-gray-300" />,
-  route: "/reports/arrear",
-  subItems: [
-    {
-      id: "customer-arrears",
-      name: "Customer Arrears",
-      icon: <UserCircle className="w-4 h-4 text-gray-300" />,
-      route: "/reports/arrear/customer-arrears",
-    },
-    {
-      id: "account-payment",
-      name: "Account Payment",
-      icon: <CreditCard className="w-4 h-4 text-gray-300" />,
-      route: "/reports/arrear/account-payment",
-    },
-    {
-      id: "arrear-balance-by-tariff",
-      name: "Arrear Balance By Tariff",
-      icon: <BarChart2 className="w-4 h-4 text-gray-300" />,
-      route: "/reports/arrear/balance-by-tariff",
-    },
-    {
-      id: "subacc-balance-by-tariff",
-      name: "Sub Acc, Balance By Tariff",
-      icon: <Layers className="w-4 h-4 text-gray-300" />,
-      route: "/reports/arrear/subacc-balance-by-tariff",
-    },
-    {
-      id: "arrear-balance-by-zone",
-      name: "Arrear Balance By Zone",
-      icon: <MapPin className="w-4 h-4 text-gray-300" />,
-      route: "/reports/arrear/balance-by-zone",
-    },
-  ],
-},
-
 
     {
       id: "needs-report",
@@ -495,6 +512,53 @@ export default function Sidebar() {
       name: "Customer Report",
       icon: <User className="w-4 h-4 text-gray-300" />,
       route: "/reports/customer",
+      subItems: [
+        {
+          id: "customer-purchase",
+          name: "Customer Purchase",
+          route: "/reports/customer/purchase",
+        },
+        {
+          id: "customers-by-tariff",
+          name: "Customers By Tariff",
+          route: "/reports/customer/by-tariff",
+        },
+        {
+          id: "customers-by-region",
+          name: "Customers By Region",
+          route: "/reports/customer/by-region",
+        },
+        {
+          id: "meter-replace",
+          name: "Meter Replace",
+          route: "/reports/customer/meter-replace",
+        },
+        {
+          id: "meter-cancel",
+          name: "Meter Cancel",
+          route: "/reports/customer/meter-cancel",
+        },
+        {
+          id: "tamper-ms",
+          name: "Tamper MS",
+          route: "/reports/customer/tamper-ms",
+        },
+        {
+          id: "reg-customer",
+          name: "RegCustomer",
+          route: "/reports/customer/reg-customer",
+        },
+        {
+          id: "reissue-card-report",
+          name: "Reissue Card Report",
+          route: "/reports/customer/reissue-card",
+        },
+        {
+          id: "credit-gratuit-etat",
+          name: "Crédit Gratuit Etat",
+          route: "/reports/customer/credit-gratuit-etat",
+        },
+      ],
     },
   ];
 

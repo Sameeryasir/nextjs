@@ -31,24 +31,7 @@ function Dialogue1({ onClose }) {
     onClose();
   };
 
-  const tableData = [
-    {
-      code: "EM100001",
-      date: "2023-01-15",
-      type: "New",
-      description: "Installed new energy meter",
-      department: "Electrical",
-      sgc: "SGC-001",
-    },
-    {
-      code: "WM200101",
-      date: "2022-08-10",
-      type: "Used",
-      description: "Transferred from East warehouse",
-      department: "Logistics",
-      sgc: "SGC-002",
-    },
-  ];
+
 
   return (
     <div className="fixed inset-0 bg-transparent flex items-center justify-center p-2 sm:p-4 z-50">
@@ -60,7 +43,7 @@ function Dialogue1({ onClose }) {
           <X size={20} className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">Add New Record</h2>
+        <h2 className="text-xl font-semibold mb-4">Select the Project</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -86,7 +69,7 @@ function Dialogue1({ onClose }) {
                 htmlFor="meterNum"
                 className="text-gray-700 text-sm sm:text-base font-medium whitespace-nowrap"
               >
-                Meter Num
+                Name
               </label>
               <input
                 id="meterNum"
@@ -97,6 +80,14 @@ function Dialogue1({ onClose }) {
                 className="flex-1 px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
+          </div>
+          <div className="mt-4">
+            <button
+              type="submit"
+              className="px-4 py-2 bg-gray-800 text-white text-sm rounded-md hover:brightness-110"
+            >
+              Search...
+            </button>
           </div>
 
           <div className="mt-4 sm:mt-6">

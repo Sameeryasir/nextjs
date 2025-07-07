@@ -1,7 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import Dialogue from "../../vending-reports/operator-trans-count/dialogue";
+import Dialogue1 from "@/app/components/clientdialogue/dialogue1";
+import Dialogue from "./dialogue";
 import {
+  RefreshCw,
+  Plus,
   ChevronFirst,
   ChevronLeft,
   ChevronRight,
@@ -13,6 +16,7 @@ import { saveAs } from "file-saver";
 
 function Page() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogOpen1, setIsDialogOpen1] = useState(false);
 
   const handleReload = () => {
     window.location.reload();
@@ -21,67 +25,55 @@ function Page() {
   // ✅ Sample Table Data
   const tableData = [
     {
-      branch: "Main Branch",
-      yearMonth: "2025-07",
-      tariff: "01 00001-SONELEC NGAZIDJA",
-      chargeCount: 25,
-      amount: 1050.75,
+      accountNo: "ACC123456",
+      changeKwh: 120,
+      operator: "John Doe",
+      date: "2023-09-01",
+      code: "OP001",
     },
     {
-      branch: "East Branch",
-      yearMonth: "2025-07",
-      tariff: "01 00003-SONELEC NGAZIDJA",
-      chargeCount: 32,
-      amount: 1420.0,
-    },
-    {
-      branch: "North Branch",
-      yearMonth: "2025-06",
-      tariff: "01 00004-SONELEC NGAZIDJA",
-      chargeCount: 28,
-      amount: 1205.5,
+      accountNo: "ACC654321",
+      changeKwh: 90,
+      operator: "Jane Smith",
+      date: "2023-09-02",
+      code: "OP002",
     },
   ];
 
   // ✅ Excel Export Function
   const handleExportToExcel = () => {
-    const headers = [
-      "Branch",
-      "Year/Month",
-      "Tariff",
-      "Count Of Charges",
-      "Amount",
+    const worksheetData = [
+      ["Account No.", "Change KWH", "Operator", "Date", "Code"],
+      ...tableData.map((row) => [
+        row.accountNo,
+        row.changeKwh,
+        row.operator,
+        row.date,
+        row.code,
+      ]),
     ];
 
-    const rows = tableData.map((item) => [
-      item.branch,
-      item.yearMonth,
-      item.tariff,
-      item.chargeCount,
-      item.amount,
-    ]);
-
-    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Fee Report");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Vending By Day");
 
     const excelBuffer = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "array",
     });
+
     const blob = new Blob([excelBuffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      type: "application/octet-stream",
     });
-    saveAs(blob, "operator-charges-report.xlsx");
+
+    saveAs(blob, "vending_by_day.xlsx");
   };
 
   return (
     <div className="min-h-screen bg-white p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-semibold text-gray-800">
-          Services Fee Report
-        </h1>
+        <h1 className="text-2xl font-semibold text-gray-800">Vending By Day</h1>
         <div className="flex gap-4">
           <button
             onClick={handleReload}
@@ -106,7 +98,7 @@ function Page() {
 
       {/* Form Fields */}
       <div className="max-w-7xl w-full text-left mb-14 space-y-8 px-4">
-        {/* Branch Fields */}
+        {/* Branch */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
             Branch
@@ -128,7 +120,7 @@ function Page() {
               ...
             </button>
             {isDialogOpen && (
-              <Dialogue onClose={() => setIsDialogOpen(false)} />
+              <Dialogue1 onClose={() => setIsDialogOpen(false)} />
             )}
             <button
               type="button"
@@ -139,16 +131,33 @@ function Page() {
           </div>
         </div>
 
-        {/* Type Select */}
+        {/* Full Name */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Type
+            Full Name
           </label>
-          <select className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            <option value="vending-office">Vending Office</option>
-            <option value="agent">Agent</option>
-            <option value="sms">SMS</option>
-            <option value="ussd">USSD</option>
+          <input
+            type="text"
+            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Meter Model */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
+            Meter Model
+          </label>
+          <select
+            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            defaultValue=""
+          >
+            <option value="" disabled>
+              Select Model
+            </option>
+            <option value="EM-1000">General IC Meter</option>
+            <option value="WM-2000">cpu Card Meter</option>
+            <option value="SM-3000">Keypad</option>
+            <option value="HM-4000">Solar Meter</option>
           </select>
         </div>
 
@@ -166,7 +175,7 @@ function Page() {
         {/* Date To */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Date To
+            Date
           </label>
           <input
             type="date"
@@ -174,19 +183,37 @@ function Page() {
           />
         </div>
 
-        {/* Fee List */}
+        {/* Operator */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Fee List
+            Operator
           </label>
-          <select className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            <option value="tva">TVA</option>
-            <option value="rdv">RDV</option>
-            <option value="partie-fee-mono">Partie Fee MONO</option>
-            <option value="partie-fixe-tri">Partie Fixe TRI</option>
-            <option value="partie-fixe">Partie Fixe</option>
-            <option value="partie-fixe-tri-alt">Partie Fixe TRI (Alt)</option>
-          </select>
+          <div className="flex flex-wrap gap-2 w-full max-w-4xl">
+            <input
+              type="text"
+              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <input
+              type="text"
+              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            {/* <button
+              type="button"
+              onClick={() => setIsDialogOpen1(true)}
+              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
+            >
+              ...
+            </button>
+            {isDialogOpen1 && (
+              <Dialogue onClose={() => setIsDialogOpen1(false)} />
+            )}
+            <button
+              type="button"
+              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
+            >
+              <X size={16} />
+            </button> */}
+          </div>
         </div>
 
         {/* Search Button */}
@@ -199,27 +226,24 @@ function Page() {
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[1000px]">
+        <table className="w-full min-w-[800px]">
           <thead className="bg-[#FF9900] text-white text-sm font-medium tracking-wide">
             <tr>
-              <th className="p-3 text-left">Branch</th>
-              <th className="p-3 text-left">Year/Month</th>
-              <th className="p-3 text-left">Tariff</th>
-              <th className="p-3 text-left">Count Of Charges</th>
-              <th className="p-3 text-left">Amount</th>
+              <th className="p-3 text-left">Account No.</th>
+              <th className="p-3 text-left">Change KWH</th>
+              <th className="p-3 text-left">Operator</th>
+              <th className="p-3 text-left">Date</th>
+              <th className="p-3 text-left">Code</th>
             </tr>
           </thead>
-          <tbody className="text-sm text-gray-700">
+          <tbody className="text-sm text-gray-700 bg-white ">
             {tableData.map((item, index) => (
-              <tr
-                key={index}
-                className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-              >
-                <td className="p-3">{item.branch}</td>
-                <td className="p-3">{item.yearMonth}</td>
-                <td className="p-3">{item.tariff}</td>
-                <td className="p-3">{item.chargeCount}</td>
-                <td className="p-3">${item.amount.toFixed(2)}</td>
+              <tr key={index}>
+                <td className="p-3">{item.accountNo}</td>
+                <td className="p-3">{item.changeKwh}</td>
+                <td className="p-3">{item.operator}</td>
+                <td className="p-3">{item.date}</td>
+                <td className="p-3">{item.code}</td>
               </tr>
             ))}
           </tbody>

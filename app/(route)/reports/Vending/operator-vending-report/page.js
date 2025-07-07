@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Dialogue from "../../dailycashreport/operator-trans-count/dialogue";
+import Dialogue from "../../vending-reports/operator-trans-count/dialogue";
 import {
   ChevronFirst,
   ChevronLeft,

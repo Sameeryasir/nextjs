@@ -92,6 +92,14 @@ function Dialogue2({ onClose }) {
               />
             </div>
           </div>
+          <div className="mt-4">
+            <button
+              type="submit"
+              className="px-4 py-2 bg-gray-800 text-white text-sm rounded-md hover:brightness-110"
+            >
+              Search...
+            </button>
+          </div>
 
           <div className="mt-4 sm:mt-6">
             <div className="flex flex-col sm:flex-row items-center justify-between bg-gray-100 p-2 rounded gap-2 sm:gap-4">
