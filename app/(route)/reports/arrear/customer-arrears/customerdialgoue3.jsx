@@ -6,7 +6,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-function Customerdialgoue3({onClose}) {
+function Accountdialogue2({ onClose }) {
   const [formData, setFormData] = useState({
     fullName: "",
     code: "",
@@ -34,12 +34,11 @@ function Customerdialgoue3({onClose}) {
     {
       code: "EM100001",
 
-      RegDate : "Installed new energy meter",
-      AccountNo:'',
-      FullName:'',
-      MeterNum:"",
+      RegDate: "Installed new energy meter",
+      AccountNo: "",
+      FullName: "",
+      MeterNum: "",
     },
-  
   ];
 
   return (
@@ -244,4 +243,4 @@ function Customerdialgoue3({onClose}) {
   );
 }
 
-export default Customerdialgoue3;
+export default Accountdialogue2;

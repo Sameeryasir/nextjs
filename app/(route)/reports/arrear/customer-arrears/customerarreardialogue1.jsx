@@ -6,8 +6,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-
-function Customerarreardialogue1({ onClose }) {
+function Accountdialogue({onClose}) {
   const [formData, setFormData] = useState({
     fullName: "",
     code: "",
@@ -49,7 +48,6 @@ function Customerarreardialogue1({ onClose }) {
       sgc: "SGC-002",
     },
   ];
-
   return (
     <div className="fixed inset-0 bg-transparent flex items-center justify-center p-2 sm:p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-2 sm:mx-4 p-4 sm:p-6 relative max-h-[90vh] overflow-y-auto">
@@ -60,7 +58,7 @@ function Customerarreardialogue1({ onClose }) {
           <X size={20} className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">Add New Record</h2>
+        <h2 className="text-xl font-semibold mb-4">Select Branch</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -86,13 +84,13 @@ function Customerarreardialogue1({ onClose }) {
                 htmlFor="meterNum"
                 className="text-gray-700 text-sm sm:text-base font-medium whitespace-nowrap"
               >
-                Meter Num
+                Name
               </label>
               <input
                 id="meterNum"
                 type="text"
                 name="meterNum"
-                value={formData.meterNum}
+                value={formData.Name}
                 onChange={handleInputChange}
                 className="flex-1 px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
@@ -247,4 +245,4 @@ function Customerarreardialogue1({ onClose }) {
   );
 }
 
-export default Customerarreardialogue1;
+export default Accountdialogue;

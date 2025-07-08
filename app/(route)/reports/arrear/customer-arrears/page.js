@@ -6,299 +6,356 @@ import {
   ChevronRight,
   ChevronLast,
   X,
-} from "lucide-react";
+}
+from "lucide-react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import Customerarreardialogue1 from "./customerarreardialogue1";
-import Customerarreardialogue2 from "./customerarreardialogue2";
-import Customerdialgoue3 from "./customerdialgoue3";
+// Assuming these components are defined elsewhere or will be provided by the user
+// import Accountdialogue from "./customerarreardialogue1";
+// import Accountdialogue1 from "./customerarreardialogue2";
+// import Accountdialogue2 from "./customerdialgoue3";
 
-function Page() {
+// Placeholder components for the dialogues as they are not provided in the prompt
+const Accountdialogue = ({ onClose }) => (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg">
+      <h2 className="text-xl font-bold mb-4">Branch Selection Dialogue</h2>
+      <p>This is a placeholder for Accountdialogue.</p>
+      <button
+        onClick={onClose}
+        className="mt-4 px-4 py-2 bg-[#FF9900] text-white rounded-md hover:brightness-105"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+);
+
+const Accountdialogue1 = ({ onClose }) => (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg">
+      <h2 className="text-xl font-bold mb-4">Customer Info Dialogue</h2>
+      <p>This is a placeholder for Accountdialogue1.</p>
+      <button
+        onClick={onClose}
+        className="mt-4 px-4 py-2 bg-[#FF9900] text-white rounded-md hover:brightness-105"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+);
+
+const Accountdialogue2 = ({ onClose }) => (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg">
+      <h2 className="text-xl font-bold mb-4">Project Selection Dialogue</h2>
+      <p>This is a placeholder for Accountdialogue2.</p>
+      <button
+        onClick={onClose}
+        className="mt-4 px-4 py-2 bg-[#FF9900] text-white rounded-md hover:brightness-105"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+);
+
+
+function App() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [isDialogOpen1, setIsDialogOpen1] = useState(false);
-        const [isDialogOpen2, setIsDialogOpen2] = useState(false);
+  const [isDialogOpen1, setIsDialogOpen1] = useState(false);
+  const [isDialogOpen2, setIsDialogOpen2] = useState(false);
 
-
-
+  // Updated tableData to only include the requested fields
   const tableData = [
     {
-      date: "02/14/2025",
-      warehouse: "Main Warehouse",
-      model: "EM-1000",
-      startCode: "EM100001",
-      endCode: "EM100050",
-      meters: 50,
-      type: "New",
-      handler: "John Smith",
-      operator: "Admin",
+      accountNo: "ACC123456",
+      payingDate: "2025-01-10",
+      payMethod: "Credit Card",
+      periodicPayment: 100, // Renamed to Pay Value in display
+      remainBalance: 150.5, // Renamed to Current Balance in display
     },
     {
-      date: "02/14/2025",
-      warehouse: "East Warehouse",
-      model: "WM-2000",
-      startCode: "WM200101",
-      endCode: "WM200125",
-      meters: 25,
-      type: "Used",
-      handler: "Sarah Johnson",
-      operator: "Operator",
+      accountNo: "ACC789012",
+      payingDate: "2024-06-20",
+      payMethod: "Cash",
+      periodicPayment: 50, // Renamed to Pay Value in display
+      remainBalance: 75.25, // Renamed to Current Balance in display
     },
     {
-      date: "02/15/2025",
-      warehouse: "North Warehouse",
-      model: "GM-3000",
-      startCode: "GM300001",
-      endCode: "GM300010",
-      meters: 10,
-      type: "Refurbished",
-      handler: "Mike Brown",
-      operator: "Manager",
+      accountNo: "ACC345678",
+      payingDate: "2024-03-15",
+      payMethod: "Bank Transfer",
+      periodicPayment: 200,
+      remainBalance: 300.00,
+    },
+    {
+      accountNo: "ACC901234",
+      payingDate: "2025-02-01",
+      payMethod: "Debit Card",
+      periodicPayment: 75,
+      remainBalance: 90.75,
     },
   ];
 
-  const handleReload = () => window.location.reload();
+  const handleReload = () => {
+    window.location.reload();
+  };
 
   const handleExportToExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(tableData);
+    // Updated header to match the new table structure
+    const header = [
+      "Account No.",
+      "Paying Date",
+      "Pay Method",
+      "Pay Value", // Corresponds to periodicPayment
+      "Current Balance", // Corresponds to remainBalance
+    ];
+
+    // Updated rows mapping to only include the relevant data
+    const rows = tableData.map((item) => [
+      item.accountNo,
+      item.payingDate,
+      item.payMethod,
+      item.periodicPayment,
+      item.remainBalance,
+    ]);
+
+    const worksheet = XLSX.utils.aoa_to_sheet([header, ...rows]);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Transfer Report");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Account Payments");
+
     const excelBuffer = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "array",
     });
-    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
-    saveAs(blob, "transfer-report.xlsx");
+
+    const blob = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    saveAs(blob, "customer-account-payments.xlsx");
   };
 
   return (
     <div className="min-h-screen bg-white p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-semibold text-gray-800">Transfer List</h1>
-        <button
-          onClick={handleReload}
-          className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:brightness-105 transition w-40"
-        >
-          Refresh
-        </button>
+        <h1 className="text-2xl font-semibold text-gray-800">
+          Customer Account Payments
+        </h1>
+        <div className="flex gap-4">
+          <button
+            onClick={handleReload}
+            className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105 hover:cursor-pointer"
+          >
+            Refresh
+          </button>
+          <button
+            onClick={handleExportToExcel}
+            className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105 hover:cursor-pointer"
+          >
+            Excel
+          </button>
+          <button
+            onClick={() => window.print()}
+            className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105 hover:cursor-pointer"
+          >
+            Print
+          </button>
+        </div>
       </div>
 
-      {/* Form */}
+      {/* Form Fields */}
       <div className="max-w-7xl w-full text-left mb-14 space-y-8 px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Left Column */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <label className="w-32 text-sm font-medium text-gray-700">
-                Date From
-              </label>
-              <input
-                type="date"
-                defaultValue="2025-02-14"
-                className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div className="flex items-center gap-4">
-              <label className="w-32 text-sm font-medium text-gray-700">
-                Branch
-              </label>
-              <div className="flex-1 flex flex-wrap gap-2">
-                <input
-                  type="text"
-                  className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50"
-                />
-                <input
-                  type="text"
-                  className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50"
-                />
-                <button
-                  onClick={() => setIsDialogOpen(true)}
-                  className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center hover:cursor-pointer"
-                >
-                  ...
-                </button>
-                {isDialogOpen && (
-                  <Customerarreardialogue1
-                    onClose={() => setIsDialogOpen(false)}
-                  />
-                )}
-
-                <button className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center">
-                  <X size={16} />
-                </button>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <label className="w-32 text-sm font-medium text-gray-700">
-                Select Area
-              </label>
-              <div className="flex-1 flex flex-wrap gap-2">
-                <input
-                  type="text"
-                  className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50"
-                />
-                <input
-                  type="text"
-                  className="flex-1 min-w-[150px] p-2 border border-gray-200  rounded-md bg-gray-50"
-                />
-                <button
-                  onClick={() => setIsDialogOpen1(true)}
-                  className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center hover:cursor-pointer"
-                >
-                  ...
-                </button>
-                {isDialogOpen1 && (
-                  <Customerarreardialogue2
-                    onClose={() => setIsDialogOpen1(false)}
-                  />
-                )}
-                <button className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center">
-                  <X size={16} />
-                </button>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <label className="w-32 text-sm font-medium text-gray-700">
-                Tariff
-              </label>
-              <select className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50">
-                <option value="">Select Tariff</option>
-                {Array.from({ length: 10 }).map((_, i) => (
-                  <option key={i}>{`01 0000${i + 1}-SONELEC NGAZIDJA`}</option>
-                ))}
-              </select>
-            </div>
+        {/* Branch Fields */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
+            Branch
+          </label>
+          <div className="flex flex-wrap gap-2 w-full max-w-4xl">
+            <input
+              type="text"
+              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <input
+              type="text"
+              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <button
+              type="button"
+              onClick={() => setIsDialogOpen(true)}
+              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
+            >
+              ...
+            </button>
+            {isDialogOpen && (
+              <Accountdialogue onClose={() => setIsDialogOpen(false)} />
+            )}
+            <button
+              type="button"
+              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
+            >
+              <X size={16} />
+            </button>
           </div>
-
-          {/* Right Column */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <label className="w-32 text-sm font-medium text-gray-700">
-                Date To
-              </label>
-              <input
-                type="date"
-                defaultValue="2025-02-14"
-                className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div className="flex items-center gap-4">
-              <label className="w-32 text-sm font-medium text-gray-700">
-                Customer Info
-              </label>
-              <div className="flex-1 flex flex-wrap gap-2">
-                <input
-                  type="text"
-                  className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50"
-                />
-                <input
-                  type="text"
-                  className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50"
-                />
-                <button
-                  onClick={() => setIsDialogOpen2(true)}
-                  className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center hover:cursor-pointer"
-                >
-                  ...
-                </button>
-                {isDialogOpen2 && (
-                  <Customerdialgoue3 onClose={() => setIsDialogOpen2(false)} />
-                )}
-
-                <button className="w-10 h-10 bg-[#FF9900] text-white rounded-md flex justify-center items-center">
-                  <X size={16} />
-                </button>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <label className="w-32 text-sm font-medium text-gray-700">
-                Project
-              </label>
-              <select className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50">
-                <option value="">Select Type</option>
-                <option value="New">ORDINAIRE</option>
-                <option value="Used">PDCEL</option>
-                <option value="Used">BCHTS</option>
-              </select>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <label className="w-32 text-sm font-medium text-gray-700">
-                Meter Num
-              </label>
-              <select className="flex-1 p-2 border border-gray-200 rounded-md bg-gray-50">
-                <option value="">Select Type</option>
-                <option value="New">is null</option>
-                <option value="Used">is not null</option>
-              </select>
-            </div>
+        </div>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
+            Customer Info
+          </label>
+          <div className="flex flex-wrap gap-2 w-full max-w-4xl">
+            <input
+              type="text"
+              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <input
+              type="text"
+              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <button
+              type="button"
+              onClick={() => setIsDialogOpen1(true)}
+              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
+            >
+              ...
+            </button>
+            {isDialogOpen1 && (
+              <Accountdialogue1 onClose={() => setIsDialogOpen1(false)} />
+            )}
+            <button
+              type="button"
+              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
+            >
+              <X size={16} />
+            </button>
           </div>
         </div>
 
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
+            Project
+          </label>
+          <div className="flex flex-wrap gap-2 w-full max-w-4xl">
+            <input
+              type="text"
+              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <input
+              type="text"
+              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <button
+              type="button"
+              onClick={() => setIsDialogOpen2(true)}
+              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
+            >
+              ...
+            </button>
+            {isDialogOpen2 && (
+              <Accountdialogue2 onClose={() => setIsDialogOpen2(false)} />
+            )}
+            <button
+              type="button"
+              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
+            Account No.
+          </label>
+          <input
+            type="text"
+            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+        {/* Date From */}
+
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
+            Date From
+          </label>
+          <input
+            type="date"
+            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Date To */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
+            Date To
+          </label>
+          <input
+            type="date"
+            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
         {/* Search Button */}
-        <div className="flex justify-center md:justify-start md:pl-40">
-          <button className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:brightness-105 transition w-40">
+        <div className="flex justify-center sm:justify-start sm:pl-40">
+          <button className="w-full sm:w-40 py-2 bg-[#FF9900] text-white rounded-md transition hover:brightness-105">
             Search
           </button>
         </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-lg shadow mb-6 overflow-x-auto">
-        <div className="p-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <ChevronFirst className="w-5 h-5 cursor-pointer hover:text-[#FF9900]" />
-            <ChevronLeft className="w-5 h-5 cursor-pointer hover:text-[#FF9900]" />
-            <ChevronRight className="w-5 h-5 text-[#FF9900] cursor-pointer" />
-            <ChevronLast className="w-5 h-5 text-[#FF9900] cursor-pointer" />
-            <div className="flex items-center gap-2 bg-gray-100 px-3 py-1 rounded text-sm">
-              <span className="text-gray-600">Total 3 Records</span>
-              <span className="text-gray-600">| Record 1-3, Page 1/1</span>
-              <span className="text-gray-600">| Turn To Page</span>
-              <input
-                type="text"
-                value="1"
-                className="w-12 border rounded px-2 py-1 text-center"
-              />
-              <ChevronRight className="w-4 h-4 text-green-500 hover:text-green-600 cursor-pointer" />
-            </div>
-          </div>
-        </div>
 
-        <table className="w-full min-w-[900px]">
-          <thead className="bg-[#FF9900] text-white">
+      <div className="p-2 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <div className="flex gap-1 sm:gap-2">
+                    <ChevronFirst className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer hover:text-[#FF9900]" />
+                    <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer hover:text-[#FF9900]" />
+                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF9900] cursor-pointer" />
+                    <ChevronLast className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF9900] cursor-pointer" />
+                  </div>
+                  <div className="flex items-center gap-1 sm:gap-2 bg-gray-100 px-2 sm:px-3 py-1 rounded text-xs sm:text-sm">
+                    <span className="text-gray-600 whitespace-nowrap">
+                      Total 1 Records
+                    </span>
+                    <span className="text-gray-600 hidden sm:inline">|</span>
+                    <span className="text-gray-600 whitespace-nowrap">
+                      Record 1-1, Page 1/1
+                    </span>
+                    <span className="text-gray-600">|</span>
+                    <span className="text-gray-600 whitespace-nowrap">
+                      Turn To Page
+                    </span>
+                    <input
+                      type="text"
+                      className="w-8 sm:w-12 border rounded px-1 sm:px-2 py-1 text-center text-xs sm:text-sm"
+                      value="1"
+                    />
+                    <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 hover:text-green-600 cursor-pointer" />
+                  </div>
+                </div>
+              </div>
+
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[800px]">
+          <thead className="bg-[#FF9900] text-white text-sm font-medium tracking-wide">
             <tr>
-              <th className="p-3 text-left">Branch</th>
               <th className="p-3 text-left">Account No.</th>
-              <th className="p-3 text-left">Full Name</th>
-              <th className="p-3 text-left">Meter Num.</th>
-              <th className="p-3 text-left">Tariff</th>
-              <th className="p-3 text-left">Project</th>
-              <th className="p-3 text-left">Paid</th>
-              <th className="p-3 text-left">Remaining UnPaid Amount</th>
-              <th className="p-3 text-left">Initial Amount</th>
+              <th className="p-3 text-left">Paying Date</th>
+              <th className="p-3 text-left">Pay Method</th>
+              <th className="p-3 text-left">Pay Value</th>
+              <th className="p-3 text-left">Current Balance</th>
             </tr>
           </thead>
           <tbody>
-            {tableData.map((item, i) => (
-              <tr
-                key={i}
-                className="hover:bg-[#FFE2B7] cursor-pointer transition"
-              >
-                <td className="p-3">{item.date}</td>
-                <td className="p-3">{item.warehouse}</td>
-                <td className="p-3">{item.model}</td>
-                <td className="p-3">{item.startCode}</td>
-                <td className="p-3">{item.endCode}</td>
-                <td className="p-3">{item.meters}</td>
-                <td className="p-3">{item.type}</td>
-                <td className="p-3">{item.handler}</td>
-                <td className="p-3">{item.operator}</td>
+            {tableData.map((row, index) => (
+              <tr key={index} className="hover:bg-[#FFE2B7] transition text-sm">
+                <td className="p-3">{row.accountNo}</td>
+                <td className="p-3">{row.payingDate}</td>
+                <td className="p-3">{row.payMethod}</td>
+                <td className="p-3">{row.periodicPayment}</td>
+                <td className="p-3">{row.remainBalance}</td>
               </tr>
             ))}
           </tbody>
@@ -308,4 +365,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default App;

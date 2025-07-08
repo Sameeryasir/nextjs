@@ -480,33 +480,11 @@ export default function Sidebar() {
           icon: <CreditCard className="w-4 h-4 text-gray-300" />,
           route: "/reports/arrear/account-payment",
         },
-        {
-          id: "arrear-balance-by-tariff",
-          name: "Arrear Balance By Tariff",
-          icon: <BarChart2 className="w-4 h-4 text-gray-300" />,
-          route: "/reports/arrear/balance-by-tariff",
-        },
-        {
-          id: "subacc-balance-by-tariff",
-          name: "Sub Acc, Balance By Tariff",
-          icon: <Layers className="w-4 h-4 text-gray-300" />,
-          route: "/reports/arrear/subacc-balance-by-tariff",
-        },
-        {
-          id: "arrear-balance-by-zone",
-          name: "Arrear Balance By Zone",
-          icon: <MapPin className="w-4 h-4 text-gray-300" />,
-          route: "/reports/arrear/balance-by-zone",
-        },
+       
       ],
     },
 
-    {
-      id: "needs-report",
-      name: "Needs Report",
-      icon: <ClipboardCheck className="w-4 h-4 text-gray-300" />,
-      route: "/reports/needs",
-    },
+
     {
       id: "customer-report",
       name: "Customer Report",

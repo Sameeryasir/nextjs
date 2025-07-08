@@ -1,10 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Dialogue1 from "@/app/components/clientdialogue/dialogue1";
-import Dialogue from "./dialogue";
 import {
-  RefreshCw,
-  Plus,
   ChevronFirst,
   ChevronLeft,
   ChevronRight,
@@ -13,67 +10,24 @@ import {
 } from "lucide-react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import Dialogue3 from "@/app/components/clientdialogue/Dialogue3";
 
 function Page() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isDialogOpen1, setIsDialogOpen1] = useState(false);
 
   const handleReload = () => {
     window.location.reload();
   };
 
-  // ✅ Sample Table Data
-  const tableData = [
-    {
-      accountNo: "ACC123456",
-      changeKwh: 120,
-      operator: "John Doe",
-      date: "2023-09-01",
-      code: "OP001",
-    },
-    {
-      accountNo: "ACC654321",
-      changeKwh: 90,
-      operator: "Jane Smith",
-      date: "2023-09-02",
-      code: "OP002",
-    },
-  ];
 
-  // ✅ Excel Export Function
-  const handleExportToExcel = () => {
-    const worksheetData = [
-      ["Account No.", "Change KWH", "Operator", "Date", "Code"],
-      ...tableData.map((row) => [
-        row.accountNo,
-        row.changeKwh,
-        row.operator,
-        row.date,
-        row.code,
-      ]),
-    ];
-
-    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Vending By Day");
-
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "array",
-    });
-
-    const blob = new Blob([excelBuffer], {
-      type: "application/octet-stream",
-    });
-
-    saveAs(blob, "vending_by_day.xlsx");
-  };
 
   return (
     <div className="min-h-screen bg-white p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-semibold text-gray-800">Vending By Day</h1>
+        <h1 className="text-2xl font-semibold text-gray-800">
+        Credit Gratuit Etat
+        </h1>
         <div className="flex gap-4">
           <button
             onClick={handleReload}
@@ -82,23 +36,19 @@ function Page() {
             Refresh
           </button>
           <button
-            onClick={handleExportToExcel}
-            className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105 hover:cursor-pointer"
-          >
-            Excel
-          </button>
-          <button
-            onClick={() => window.print()}
+            onClick={()=>window.print()}
             className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105 hover:cursor-pointer"
           >
             Print
           </button>
+       
+       
         </div>
       </div>
 
       {/* Form Fields */}
       <div className="max-w-7xl w-full text-left mb-14 space-y-8 px-4">
-        {/* Branch */}
+        {/* Branch Fields */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
             Branch
@@ -120,7 +70,7 @@ function Page() {
               ...
             </button>
             {isDialogOpen && (
-              <Dialogue1 onClose={() => setIsDialogOpen(false)} />
+              <Dialogue3 onClose={() => setIsDialogOpen(false)} />
             )}
             <button
               type="button"
@@ -130,63 +80,9 @@ function Page() {
             </button>
           </div>
         </div>
-
-        {/* Full Name */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Full Name
-          </label>
-          <input
-            type="text"
-            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-
-        {/* Meter Model */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Meter Model
-          </label>
-          <select
-            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            defaultValue=""
-          >
-            <option value="" disabled>
-              Select Model
-            </option>
-            <option value="EM-1000">General IC Meter</option>
-            <option value="WM-2000">cpu Card Meter</option>
-            <option value="SM-3000">Keypad</option>
-            <option value="HM-4000">Solar Meter</option>
-          </select>
-        </div>
-
-        {/* Date From */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Date From
-          </label>
-          <input
-            type="date"
-            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-
-        {/* Date To */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Date
-          </label>
-          <input
-            type="date"
-            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-
-        {/* Operator */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Operator
+           Operator
           </label>
           <div className="flex flex-wrap gap-2 w-full max-w-4xl">
             <input
@@ -197,24 +93,62 @@ function Page() {
               type="text"
               className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
-            {/* <button
+            <button
               type="button"
-              onClick={() => setIsDialogOpen1(true)}
+              onClick={() => setIsDialogOpen(true)}
               className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
             >
               ...
             </button>
-            {isDialogOpen1 && (
-              <Dialogue onClose={() => setIsDialogOpen1(false)} />
+            {isDialogOpen && (
+              <Dialogue3 onClose={() => setIsDialogOpen(false)} />
             )}
             <button
               type="button"
               className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
             >
               <X size={16} />
-            </button> */}
+            </button>
           </div>
         </div>
+     
+       <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+  <label class="w-full sm:w-32 text-sm font-medium text-gray-700">
+   
+  </label>
+  <select
+    class="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+  >
+    <option value="">Select an option</option>
+    <option value="General Monophase">Free issue requested by management</option>
+    <option value="General Triphase">Replacement token </option>
+    <option value="Compteur HT">No cost transaction</option>
+     <option value="Compteur HT">Initial Free Credit</option>
+  </select>
+</div>
+
+        
+        {/* Date From */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
+            Date From 
+          </label>
+          <input
+            type="date"
+            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
+            Date To
+          </label>
+          <input
+            type="date"
+            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
 
         {/* Search Button */}
         <div className="flex justify-center sm:justify-start sm:pl-40">
@@ -223,6 +157,7 @@ function Page() {
           </button>
         </div>
       </div>
+
 
       <div className="p-2 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-2 sm:gap-4">
@@ -254,29 +189,44 @@ function Page() {
                 </div>
               </div>
 
+<div class="flex items-center justify-start py-3 gap-x-2">
+  <div class="flex items-center gap-x-1">
+    <button class="p-2 text-gray-500 hover:bg-gray-100 rounded-md cursor-not-allowed" disabled>
+      &#x226A; </button>
+    <button class="p-2 text-gray-500 hover:bg-gray-100 rounded-md cursor-not-allowed" disabled>
+      &#x2039; </button>
+    <button class="p-2 text-orange-500 hover:bg-orange-100 rounded-md">
+      &#x203A; </button>
+  </div>
+
+  <div class="flex items-center text-sm text-gray-700">
+    <span>Total 17 Records, Record 1 - 10, Page 1/2, Turn To Page</span>
+    <input
+      type="text"
+      class="w-20 p-1 ml-2 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    />
+  </div>
+
+  <button class="p-2 text-green-500 hover:bg-green-100 rounded-md">
+    &#x2192; </button>
+</div>
+
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full min-w-[800px]">
           <thead className="bg-[#FF9900] text-white text-sm font-medium tracking-wide">
             <tr>
-              <th className="p-3 text-left">Account No.</th>
-              <th className="p-3 text-left">Change KWH</th>
-              <th className="p-3 text-left">Operator</th>
+            <th className="p-3 text-left">Branch</th>
               <th className="p-3 text-left">Date</th>
-              <th className="p-3 text-left">Code</th>
+              <th className="p-3 text-left">Full Name</th>
+              <th className="p-3 text-left">kWh</th>
+              <th className="p-3 text-left">raison</th>
+              <th className="p-3 text-left">Token</th>
+               <th className="p-3 text-left">Operator</th>
+        
             </tr>
           </thead>
-          <tbody className="text-sm text-gray-700 bg-white ">
-            {tableData.map((item, index) => (
-              <tr key={index}>
-                <td className="p-3">{item.accountNo}</td>
-                <td className="p-3">{item.changeKwh}</td>
-                <td className="p-3">{item.operator}</td>
-                <td className="p-3">{item.date}</td>
-                <td className="p-3">{item.code}</td>
-              </tr>
-            ))}
-          </tbody>
+        
         </table>
       </div>
     </div>

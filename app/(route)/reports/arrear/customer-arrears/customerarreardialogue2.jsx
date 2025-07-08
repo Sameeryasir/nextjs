@@ -6,7 +6,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-function Customerarreardialogue2({onClose}) {
+function Accountdialogue1({onClose}) {
   const [formData, setFormData] = useState({
     fullName: "",
     code: "",
@@ -220,4 +220,4 @@ function Customerarreardialogue2({onClose}) {
   );
 }
 
-export default Customerarreardialogue2;
+export default Accountdialogue1;
