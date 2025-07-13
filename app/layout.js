@@ -10,11 +10,11 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body className="flex h-screen bg-gray-100">
+      <body className="flex h-screen bg-gray-100 overflow-hidden">
         {!isAuthPage && <Sidebar />}
         <div className="flex flex-col flex-1">
           {!isAuthPage && <Navigation />}
-          <main className={`flex-1 ${isAuthPage ? "" : "p-6"} overflow-y-auto`}>
+          <main className={`flex-1 ${isAuthPage ? "" : "p-6"} overflow-y-auto overflow-x-hidden`}>
             {children}
           </main>
         </div>
