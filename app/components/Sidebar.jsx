@@ -97,7 +97,7 @@ const SidebarSection = ({
         <div className="mt-1 mb-3 ml-4 pl-2 border-l border-gray-700">
           {items.map((item) => (
             <div key={item.id}>
-              <Link href={item.route} passHref legacyBehavior>
+              <Link href={item.route || "#"} passHref legacyBehavior>
                 <div
                   onClick={(e) => {
                     e.stopPropagation();
@@ -114,7 +114,7 @@ const SidebarSection = ({
                     }
                   }}
                   className={`flex items-center px-4 py-2 gap-3 cursor-pointer transition-colors rounded-md mx-2 ${
-                    selectedOption === item.id || selectedSubOption === item.id
+                    selectedOption === item.id && !item.subItems
                       ? "border-l-2 border-orange-500 bg-gray-800/80"
                       : "hover:bg-gray-700/60"
                   }`}
@@ -123,7 +123,7 @@ const SidebarSection = ({
                     <div
                       className={`w-2 h-2 rounded-full ${
                         selectedOption === item.id ||
-                        selectedSubOption === item.id
+                        selectedSubOption?.startsWith(item.id + '-')
                           ? "bg-orange-500"
                           : "bg-gray-500"
                       }`}
@@ -260,28 +260,27 @@ export default function Sidebar() {
       id: "organization",
       name: "Organization",
       icon: <Users className="w-4 h-4 text-white" />,
-      route: "/system_information/organization",
       subItems: [
         {
-          id: "registration",
+          id: "organization-registration",
           name: "Registration",
           icon: <FileText className="w-4 h-4 text-white" />,
           route: "/system_information/registration",
         },
         {
-          id: "department",
+          id: "organization-department",
           name: "Department",
           icon: <Building2 className="w-4 h-4 text-white" />,
           route: "/system_information/department",
         },
         {
-          id: "roles-permissions",
+          id: "organization-roles-permissions",
           name: "Roles/Permissions",
           icon: <Key className="w-4 h-4 text-white" />,
           route: "/system_information/role_permission",
         },
         {
-          id: "operation",
+          id: "organization-operation",
           name: "Operation",
           icon: <Settings className="w-4 h-4 text-white" />,
           route: "/system_information/operation",
@@ -292,28 +291,27 @@ export default function Sidebar() {
       id: "interface-definition",
       name: "Interface Definition",
       icon: <MonitorDot className="w-4 h-4 text-white" />,
-      route: "/system_information/interface_definition",
       subItems: [
         {
-          id: "screen",
+          id: "interface-screen",
           name: "Screen",
           icon: <MonitorDot className="w-4 h-4 text-white" />,
           route: "/system_information/screen",
         },
         {
-          id: "language",
+          id: "interface-language",
           name: "Language",
           icon: <MessageCircle className="w-4 h-4 text-white" />,
           route: "/system_information/language",
         },
         {
-          id: "languagepackage",
+          id: "interface-languagepackage",
           name: "Language Package",
           icon: <MessageCircle className="w-4 h-4 text-white" />,
           route: "/system_information/language_package",
         },
         {
-          id: "importfile",
+          id: "interface-importfile",
           name: "Import File",
           icon: <File className="w-4 h-4 text-white" />,
           route: "/system_information/import_file",
@@ -321,13 +319,13 @@ export default function Sidebar() {
       ],
     },
     {
-      id: "system",
+      id: "system-log",
       name: "System Log",
       icon: <FileText className="w-4 h-4 text-white" />,
       route: "/system_information/system_log",
     },
     {
-      id: "systeminformation",
+      id: "system-information",
       name: "System Information",
       icon: <Monitor className="w-4 h-4 text-white" />,
       route: "/system_information/systeminformation",
@@ -362,177 +360,127 @@ export default function Sidebar() {
   ];
 
   const reportItems = [
-    // {
-    //   id: "orientee-client",
-    //   name: "Orientee Client BCHTS",
-    //   icon: <Users className="w-4 h-4 text-gray-300" />,
-    //   route: "/reports/orientee-client",
-    // },
     {
       id: "vending-reports",
       name: "Vending Reports",
       icon: <Banknote className="w-4 h-4 text-gray-300" />,
-      route: "/reports/vending-reports",
       subItems: [
         {
-          id: "vs-sales-summary",
+          id: "vending-reports-vs-sales-summary",
           name: "VS Sales Summary",
           icon: <FileText className="w-4 h-4 text-gray-300" />,
           route: "/reports/vending-reports/vssales-summary",
         },
         {
-          id: "vs-cash-kwh-total",
+          id: "vending-reports-vs-cash-kwh-total",
           name: "VS Cash & kWh Total",
           icon: <Calculator className="w-4 h-4 text-gray-300" />,
           route: "/reports/vending-reports/cash-kwh-total",
         },
         {
-          id: "vending-by-day",
+          id: "vending-reports-vending-by-day",
           name: "Vending By Day",
           icon: <UserCheck className="w-4 h-4 text-gray-300" />,
           route: "/reports/vending-reports/vending-by-day",
         },
         {
-          id: "vending-by-month",
+          id: "vending-reports-vending-by-month",
           name: "Vending By Month",
           icon: <ListChecks className="w-4 h-4 text-gray-300" />,
           route: "/reports/vending-reports/vending-by-month",
         },
         {
-          id: "vending-by-year",
+          id: "vending-reports-vending-by-year",
           name: "Vending By Year",
           icon: <ClipboardList className="w-4 h-4 text-gray-300" />,
           route: "/reports/vending-reports/vending-by-year",
         },
         {
-          id: "vend-modify",
+          id: "vending-reports-vend-modify",
           name: "Vend Modify",
           icon: <FileText className="w-4 h-4 text-gray-300" />,
           route: "/reports/vending-reports/vend-modify",
         },
         {
-          id: "ussd-report",
+          id: "vending-reports-ussd-report",
           name: "USSD Report By",
           icon: <FileText className="w-4 h-4 text-gray-300" />,
           route: "/reports/vending-reports/ussd-report",
         },
         {
-          id: "singlephase-sa",
+          id: "vending-reports-singlephase-sa",
           name: "SINGLEPHAS SA",
           icon: <FileText className="w-4 h-4 text-gray-300" />,
           route: "/reports/vending-reports/singlephase-sa",
         },
       ],
     },
-    // {
-    //   id: "vending-reports", // Changed from "vending" to avoid confusion
-    //   name: "Vending Reports",
-    //   icon: <ClipboardList className="w-4 h-4 text-gray-300" />, // Different icon from business vending
-    //   route: "/reports/Vending",
-    //   subItems: [
-    //     {
-    //       id: "purchase-by-zone",
-    //       name: "Purchase(Kwh) By Zone",
-    //       icon: <GlassesIcon className="w-4 h-4 text-gray-300" />,
-    //       route: "/reports/Vending/purchase-by-zone",
-    //     },
-    //     {
-    //       id: "operator-vending-report",
-    //       name: "Operator Vending Report",
-    //       icon: <UserCheck className="w-4 h-4 text-gray-300" />,
-    //       route: "/reports/Vending/operator-vending-report",
-    //     },
-    //     {
-    //       id: "fee-report",
-    //       name: "Fee Report",
-    //       icon: <CreditCardIcon className="w-4 h-4 text-gray-300" />,
-    //       route: "/reports/Vending/fee-report",
-    //     },
-    //     {
-    //       id: "daily-subaccount-by-project",
-    //       name: "Daily SubAccount By Project",
-    //       icon: <Database className="w-4 h-4 text-gray-300" />,
-    //       route: "/reports/Vending/daily-subaccount-by-project",
-    //     },
-    //     {
-    //       id: "purchase-chart",
-    //       name: "Purchase Chart",
-    //       icon: <LineChart className="w-4 h-4 text-gray-300" />,
-    //       route: "/reports/Vending/purchase-chart",
-    //     },
-    //   ],
-    // },
     {
       id: "arrear-report",
       name: "Arrear Report",
       icon: <AlertCircle className="w-4 h-4 text-gray-300" />,
-      route: "/reports/arrear",
       subItems: [
         {
-          id: "customer-arrears",
+          id: "arrear-report-customer-arrears",
           name: "Customer Arrears",
           icon: <UserCircle className="w-4 h-4 text-gray-300" />,
           route: "/reports/arrear/customer-arrears",
         },
         {
-          id: "account-payment",
+          id: "arrear-report-account-payment",
           name: "Account Payment",
           icon: <CreditCard className="w-4 h-4 text-gray-300" />,
           route: "/reports/arrear/account-payment",
         },
-       
       ],
     },
-
-
     {
       id: "customer-report",
       name: "Customer Report",
       icon: <User className="w-4 h-4 text-gray-300" />,
-      route: "/reports/customer",
       subItems: [
         {
-          id: "customer-purchase",
+          id: "customer-report-customer-purchase",
           name: "Customer Purchase",
           route: "/reports/customer/purchase",
         },
         {
-          id: "customers-by-tariff",
+          id: "customer-report-customers-by-tariff",
           name: "Customers By Tariff",
           route: "/reports/customer/by-tariff",
         },
         {
-          id: "customers-by-region",
+          id: "customer-report-customers-by-region",
           name: "Customers By Region",
           route: "/reports/customer/by-region",
         },
         {
-          id: "meter-replace",
+          id: "customer-report-meter-replace",
           name: "Meter Replace",
           route: "/reports/customer/meter-replace",
         },
         {
-          id: "meter-cancel",
+          id: "customer-report-meter-cancel",
           name: "Meter Cancel",
           route: "/reports/customer/meter-cancel",
         },
         {
-          id: "tamper-ms",
+          id: "customer-report-tamper-ms",
           name: "Tamper MS",
           route: "/reports/customer/tamper-ms",
         },
         {
-          id: "reg-customer",
+          id: "customer-report-reg-customer",
           name: "RegCustomer",
           route: "/reports/customer/reg-customer",
         },
         {
-          id: "reissue-card-report",
+          id: "customer-report-reissue-card-report",
           name: "Reissue Card Report",
           route: "/reports/customer/reissue-card",
         },
         {
-          id: "credit-gratuit-etat",
+          id: "customer-report-credit-gratuit-etat",
           name: "Crédit Gratuit Etat",
           route: "/reports/customer/credit-gratuit-etat",
         },
@@ -635,7 +583,7 @@ export default function Sidebar() {
 
   const messageItems = [
     {
-      id: "messegesubscription",
+      id: "messagesubscription",
       name: "Message Subscription",
       icon: <MessageCircle className="w-4 h-4" />,
       route: "/message/messagesubscription",
@@ -643,115 +591,92 @@ export default function Sidebar() {
   ];
 
   const menuItems = [
-    dashboardItem,
     {
       id: "contract",
       name: "Contract Management",
       icon: <FileText className="w-4 h-4" />,
-      route: "/business/contract", // Fixed typo from "bussiness" to "business"
+      route: "/bussiness/contract",
     },
     {
       id: "compensating",
       name: "Compensating",
       icon: <Database className="w-4 h-4" />,
-      route: "/business/compensation",
+      route: "/bussiness/compensation",
     },
     {
-      id: "vending-operations", // Changed from "vending" to avoid confusion
-      name: "Vending Operations", // Changed from just "Vending"
-      icon: <ShoppingCart className="w-4 h-4" />, // Different icon from reports
-      route: "/business/vending", // Fixed typo in path
+      id: "vending-operations",
+      name: "Vending Operations",
+      icon: <ShoppingCart className="w-4 h-4" />,
+      route: "/bussiness/vending",
     },
     {
       id: "maintenance",
       name: "Maintenance Token",
       icon: <Key className="w-4 h-4" />,
-      route: "/business/maintenancetoken",
+      route: "/bussiness/maintenancetoken",
     },
     {
       id: "key-issue",
       name: "Key Issue Token",
       icon: <Shield className="w-4 h-4" />,
-      route: "/business/keytoken",
+      route: "/bussiness/keytoken",
     },
     {
       id: "free-issue",
       name: "Free Issue Token",
       icon: <Key className="w-4 h-4" />,
-      route: "/business/freetoken",
+      route: "/bussiness/freetoken",
     },
   ];
 
-  const [selectedOption, setSelectedOption] = useState("dashboard");
+  const [selectedOption, setSelectedOption] = useState(null);
   const [selectedSubOption, setSelectedSubOption] = useState(null);
   const [activeMenu, setActiveMenu] = useState(null);
 
   useEffect(() => {
-    if (pathname === "/") {
-      setSelectedOption("dashboard");
-      setSelectedSubOption(null);
-      return;
-    }
+    const allSections = {
+      dashboard: [dashboardItem],
+      business: menuItems,
+      finance: financeItems,
+      security: securityItems,
+      warehouse: warehouseItems,
+      arrear: arrearItems,
+      message: messageItems,
+      baseinformation: baseInformationItems,
+      systeminformation: systemInformationItems,
+      reports: reportItems,
+    };
 
-    let currentItem = null;
-    let currentSubItem = null;
-
-    const allItems = [
-      ...menuItems,
-      ...financeItems,
-      ...securityItems,
-      ...warehouseItems,
-      ...arrearItems,
-      ...messageItems,
-      ...baseInformationItems,
-      ...systemInformationItems,
-      ...reportItems,
-    ];
-
-    for (const item of allItems) {
-      if (item.route === pathname) {
-        currentItem = item;
-        break;
-      }
-      if (item.subItems) {
-        for (const subItem of item.subItems) {
-          if (subItem.route === pathname) {
-            currentItem = item;
-            currentSubItem = subItem;
-            break;
+    let found = false;
+    for (const sectionName in allSections) {
+      if (found) break;
+      for (const item of allSections[sectionName]) {
+        if (item.route && item.route === pathname) {
+          setActiveMenu(sectionName);
+          setSelectedOption(item.id);
+          setSelectedSubOption(null);
+          found = true;
+          break;
+        }
+        if (item.subItems) {
+          for (const subItem of item.subItems) {
+            if (subItem.route === pathname) {
+              setActiveMenu(sectionName);
+              setSelectedOption(item.id);
+              setSelectedSubOption(subItem.id);
+              found = true;
+              break;
+            }
           }
         }
-        if (currentItem) break;
       }
     }
-
-    if (currentItem) {
-      setSelectedOption(currentItem.id);
-      if (currentSubItem) {
-        setSelectedSubOption(currentSubItem.id);
-      } else {
+     if (!found) {
+        setSelectedOption(null);
         setSelectedSubOption(null);
-      }
+        setActiveMenu(null);
+     }
 
-      if (menuItems.some((i) => i.id === currentItem.id))
-        setActiveMenu("business");
-      else if (financeItems.some((i) => i.id === currentItem.id))
-        setActiveMenu("finance");
-      else if (securityItems.some((i) => i.id === currentItem.id))
-        setActiveMenu("security");
-      else if (warehouseItems.some((i) => i.id === currentItem.id))
-        setActiveMenu("warehouse");
-      else if (arrearItems.some((i) => i.id === currentItem.id))
-        setActiveMenu("arrear");
-      else if (messageItems.some((i) => i.id === currentItem.id))
-        setActiveMenu("message");
-      else if (baseInformationItems.some((i) => i.id === currentItem.id))
-        setActiveMenu("baseinformation");
-      else if (systemInformationItems.some((i) => i.id === currentItem.id))
-        setActiveMenu("systeminformation");
-      else if (reportItems.some((i) => i.id === currentItem.id))
-        setActiveMenu("reports");
-    }
   }, [pathname]);
 
   const toggleMenu = (menu) => {
@@ -769,13 +694,12 @@ export default function Sidebar() {
       <nav className="mt-4 pb-6">
         <Link href="/" passHref legacyBehavior>
           <div
-            onClick={() => {
-              setSelectedOption("dashboard");
-              setSelectedSubOption(null);
-              setActiveMenu(null);
-            }}
+             onClick={(e) => {
+                e.preventDefault();
+                router.push('/');
+              }}
             className={`flex items-center px-5 py-3 gap-3 cursor-pointer transition-colors rounded-md mx-2 mb-2 ${
-              selectedOption === "dashboard"
+              pathname === "/"
                 ? "bg-gray-800/80 border-l-2 border-orange-500"
                 : "hover:bg-orange-500/90"
             }`}
@@ -788,7 +712,7 @@ export default function Sidebar() {
         <SidebarSection
           title="Business"
           icon={<Building2 className="w-5 h-5" />}
-          items={menuItems.filter((item) => item.id !== "dashboard")}
+          items={menuItems}
           activeMenu={activeMenu === "business"}
           onToggle={() => toggleMenu("business")}
           selectedOption={selectedOption}

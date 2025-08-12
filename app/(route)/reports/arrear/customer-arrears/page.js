@@ -1,342 +1,236 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   ChevronFirst,
   ChevronLeft,
   ChevronRight,
   ChevronLast,
   X,
-}
-from "lucide-react";
+} from "lucide-react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-// Assuming these components are defined elsewhere or will be provided by the user
-// import Accountdialogue from "./customerarreardialogue1";
-// import Accountdialogue1 from "./customerarreardialogue2";
-// import Accountdialogue2 from "./customerdialgoue3";
 
-// Placeholder components for the dialogues as they are not provided in the prompt
-const Accountdialogue = ({ onClose }) => (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-white p-6 rounded-lg shadow-lg">
-      <h2 className="text-xl font-bold mb-4">Branch Selection Dialogue</h2>
-      <p>This is a placeholder for Accountdialogue.</p>
-      <button
-        onClick={onClose}
-        className="mt-4 px-4 py-2 bg-[#FF9900] text-white rounded-md hover:brightness-105"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-);
-
-const Accountdialogue1 = ({ onClose }) => (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-white p-6 rounded-lg shadow-lg">
-      <h2 className="text-xl font-bold mb-4">Customer Info Dialogue</h2>
-      <p>This is a placeholder for Accountdialogue1.</p>
-      <button
-        onClick={onClose}
-        className="mt-4 px-4 py-2 bg-[#FF9900] text-white rounded-md hover:brightness-105"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-);
-
-const Accountdialogue2 = ({ onClose }) => (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-white p-6 rounded-lg shadow-lg">
-      <h2 className="text-xl font-bold mb-4">Project Selection Dialogue</h2>
-      <p>This is a placeholder for Accountdialogue2.</p>
-      <button
-        onClick={onClose}
-        className="mt-4 px-4 py-2 bg-[#FF9900] text-white rounded-md hover:brightness-105"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-);
+// Import the functional modal components
+import BranchSelectionDialogue from "./customerarreardialogue1"; 
+import CustomerInfoDialogue from "./customerarreardialogue2";
+import ProjectSelectionDialogue from "./customerdialgoue3"; 
+// Import the apiFetcher utility
+import { apiFetcher } from "../../../../utils/apiFetcher";
 
 
 function App() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isDialogOpen1, setIsDialogOpen1] = useState(false);
-  const [isDialogOpen2, setIsDialogOpen2] = useState(false);
+  const router = useRouter();
 
-  // Updated tableData to only include the requested fields
-  const tableData = [
-    {
-      accountNo: "ACC123456",
-      payingDate: "2025-01-10",
-      payMethod: "Credit Card",
-      periodicPayment: 100, // Renamed to Pay Value in display
-      remainBalance: 150.5, // Renamed to Current Balance in display
-    },
-    {
-      accountNo: "ACC789012",
-      payingDate: "2024-06-20",
-      payMethod: "Cash",
-      periodicPayment: 50, // Renamed to Pay Value in display
-      remainBalance: 75.25, // Renamed to Current Balance in display
-    },
-    {
-      accountNo: "ACC345678",
-      payingDate: "2024-03-15",
-      payMethod: "Bank Transfer",
-      periodicPayment: 200,
-      remainBalance: 300.00,
-    },
-    {
-      accountNo: "ACC901234",
-      payingDate: "2025-02-01",
-      payMethod: "Debit Card",
-      periodicPayment: 75,
-      remainBalance: 90.75,
-    },
-  ];
+  // State for the dialogs
+  const [isBranchDialogOpen, setIsBranchDialogOpen] = useState(false);
+  const [isCustomerInfoDialogOpen, setIsCustomerInfoDialogOpen] = useState(false);
+  const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
+  
+  // State for selected data from forms
+  const [branch, setBranch] = useState({ code: "", name: "" });
+  const [project, setProject] = useState({ code: "", name: "" });
+  const [customer, setCustomer] = useState({ code: "", name: "" });
+  const [accountNo, setAccountNo] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
 
-  const handleReload = () => {
-    window.location.reload();
-  };
+  // NEW: State for the search results table
+  const [paymentsData, setPaymentsData] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState(null);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    totalPages: 1,
+    pageIndex: 1,
+  });
+
+  const handleReload = () => { window.location.reload(); };
 
   const handleExportToExcel = () => {
-    // Updated header to match the new table structure
-    const header = [
-      "Account No.",
-      "Paying Date",
-      "Pay Method",
-      "Pay Value", // Corresponds to periodicPayment
-      "Current Balance", // Corresponds to remainBalance
-    ];
-
-    // Updated rows mapping to only include the relevant data
-    const rows = tableData.map((item) => [
-      item.accountNo,
+    if (paymentsData.length === 0) {
+        alert("No data to export.");
+        return;
+    }
+    const header = ["Account No.", "Paying Date", "Pay Method", "Pay Value", "Current Balance"];
+    const rows = paymentsData.map((item) => [
+      item.accountNo, // These keys need to match the API response for payments
       item.payingDate,
       item.payMethod,
       item.periodicPayment,
       item.remainBalance,
     ]);
-
     const worksheet = XLSX.utils.aoa_to_sheet([header, ...rows]);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Account Payments");
-
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "array",
-    });
-
-    const blob = new Blob([excelBuffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
-
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    const blob = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     saveAs(blob, "customer-account-payments.xlsx");
+  };
+
+  // --- Handlers for selection modals ---
+  const handleSelectBranch = (selectedBranch) => {
+    if (selectedBranch) {
+      setBranch({ code: selectedBranch.Code, name: selectedBranch.Name });
+      setProject({ code: "", name: "" });
+      setCustomer({ code: "", name: "" });
+      setAccountNo("");
+    }
+    setIsBranchDialogOpen(false);
+  };
+
+  const handleClearBranch = () => {
+    setBranch({ code: '', name: '' });
+    setProject({ code: '', name: '' });
+    setCustomer({ code: '', name: '' });
+    setAccountNo('');
+  };
+
+  const handleSelectProject = (selectedProject) => {
+    if (selectedProject) {
+      setProject({ code: selectedProject.Code, name: selectedProject.Description });
+    }
+    setIsProjectDialogOpen(false);
+  };
+
+  const handleClearProject = () => { setProject({ code: '', name: '' }); };
+  
+  const handleSelectCustomer = (selectedCustomer) => {
+    if (selectedCustomer) {
+        setCustomer({ code: selectedCustomer.Code, name: selectedCustomer.FullName });
+        setAccountNo(selectedCustomer.RefCode || "");
+    }
+    setIsCustomerInfoDialogOpen(false);
+  };
+
+  const handleClearCustomer = () => {
+      setCustomer({ code: '', name: '' });
+      setAccountNo('');
+  };
+
+  // --- NEW: Search Handler ---
+  const handleSearch = async (page = 1) => {
+    if (!dateFrom || !dateTo) {
+      alert("Please select both 'Date From' and 'Date To'.");
+      return;
+    }
+
+    setIsSearching(true);
+    setSearchError(null);
+    setPaymentsData([]); // Clear previous results
+
+    const payload = new URLSearchParams();
+    payload.append("ACTION", "16");
+    payload.append("branchcode", branch.code);
+    payload.append("code", customer.code);
+    payload.append("datefrom", dateFrom);
+    payload.append("dateto", dateTo);
+    payload.append("projectCode", project.code);
+    payload.append("PAGE_INDEX", page);
+
+    try {
+      // NOTE: You must add a rewrite rule in `next.config.mjs` for this to work.
+      // e.g., { source: '/api/sge-reports', destination: 'http://localhost:38080/general/sge/reports/exchange.php' }
+      const response = await apiFetcher('/api/sge-reports', 'POST', payload, router);
+      if (response && response.state === "0") {
+        setPaymentsData(response.rows || []);
+        setPagination({
+          total: Number(response.total),
+          totalPages: Number(response.totalPages),
+          pageIndex: Number(response.pageIndex),
+        });
+      } else {
+        throw new Error(response.message || "API returned an error state.");
+      }
+    } catch (err) {
+      setSearchError(err.message);
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-white p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-semibold text-gray-800">
-          Customer Account Payments
-        </h1>
+        <h1 className="text-2xl font-semibold text-gray-800">Customer Account Payments</h1>
         <div className="flex gap-4">
-          <button
-            onClick={handleReload}
-            className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105 hover:cursor-pointer"
-          >
-            Refresh
-          </button>
-          <button
-            onClick={handleExportToExcel}
-            className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105 hover:cursor-pointer"
-          >
-            Excel
-          </button>
-          <button
-            onClick={() => window.print()}
-            className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105 hover:cursor-pointer"
-          >
-            Print
-          </button>
+            <button onClick={handleReload} className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105">Refresh</button>
+            <button onClick={handleExportToExcel} className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105">Excel</button>
+            <button onClick={() => window.print()} className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105">Print</button>
         </div>
       </div>
 
       {/* Form Fields */}
       <div className="max-w-7xl w-full text-left mb-14 space-y-8 px-4">
-        {/* Branch Fields */}
+        {/* Branch, Customer, Project fields remain the same */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Branch
-          </label>
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">Branch</label>
           <div className="flex flex-wrap gap-2 w-full max-w-4xl">
-            <input
-              type="text"
-              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-            <input
-              type="text"
-              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-            <button
-              type="button"
-              onClick={() => setIsDialogOpen(true)}
-              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
-            >
-              ...
-            </button>
-            {isDialogOpen && (
-              <Accountdialogue onClose={() => setIsDialogOpen(false)} />
-            )}
-            <button
-              type="button"
-              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
-            >
-              <X size={16} />
-            </button>
+            <input type="text" className="flex-1 min-w-[150px] p-2 border rounded-md bg-gray-200" value={branch.code} placeholder="Branch Code" readOnly />
+            <input type="text" className="flex-1 min-w-[150px] p-2 border rounded-md bg-gray-200" value={branch.name} placeholder="Branch Name" readOnly />
+            <button type="button" onClick={() => setIsBranchDialogOpen(true)} className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105">...</button>
+            {isBranchDialogOpen && <BranchSelectionDialogue onClose={() => setIsBranchDialogOpen(false)} onSelect={handleSelectBranch} />}
+            <button type="button" onClick={handleClearBranch} className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"><X size={16} /></button>
           </div>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Customer Info
-          </label>
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">Customer Info</label>
           <div className="flex flex-wrap gap-2 w-full max-w-4xl">
-            <input
-              type="text"
-              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-            <input
-              type="text"
-              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-            <button
-              type="button"
-              onClick={() => setIsDialogOpen1(true)}
-              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
-            >
-              ...
-            </button>
-            {isDialogOpen1 && (
-              <Accountdialogue1 onClose={() => setIsDialogOpen1(false)} />
-            )}
-            <button
-              type="button"
-              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
-            >
-              <X size={16} />
-            </button>
+            <input type="text" className="flex-1 min-w-[150px] p-2 border rounded-md bg-gray-200" value={customer.code} placeholder="Customer Code" readOnly/>
+            <input type="text" className="flex-1 min-w-[150px] p-2 border rounded-md bg-gray-200" value={customer.name} placeholder="Customer Name" readOnly/>
+            <button type="button" onClick={() => setIsCustomerInfoDialogOpen(true)} className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105">...</button>
+            {isCustomerInfoDialogOpen && <CustomerInfoDialogue onClose={() => setIsCustomerInfoDialogOpen(false)} onSelect={handleSelectCustomer} />}
+            <button type="button" onClick={handleClearCustomer} className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"><X size={16} /></button>
           </div>
         </div>
-
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Project
-          </label>
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">Project</label>
           <div className="flex flex-wrap gap-2 w-full max-w-4xl">
-            <input
-              type="text"
-              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-            <input
-              type="text"
-              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-            <button
-              type="button"
-              onClick={() => setIsDialogOpen2(true)}
-              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
-            >
-              ...
-            </button>
-            {isDialogOpen2 && (
-              <Accountdialogue2 onClose={() => setIsDialogOpen2(false)} />
-            )}
-            <button
-              type="button"
-              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
-            >
-              <X size={16} />
-            </button>
+            <input type="text" className="flex-1 min-w-[150px] p-2 border rounded-md bg-gray-200" value={project.code} placeholder="Project Code" readOnly />
+            <input type="text" className="flex-1 min-w-[150px] p-2 border rounded-md bg-gray-200" value={project.name} placeholder="Project Name" readOnly />
+            <button type="button" onClick={() => setIsProjectDialogOpen(true)} disabled={!branch.code} className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105 disabled:bg-gray-400 disabled:cursor-not-allowed">...</button>
+            {isProjectDialogOpen && <ProjectSelectionDialogue onClose={() => setIsProjectDialogOpen(false)} onSelect={handleSelectProject} branchCode={branch.code} />}
+            <button type="button" onClick={handleClearProject} className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"><X size={16} /></button>
           </div>
         </div>
-
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Account No.
-          </label>
-          <input
-            type="text"
-            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">Account No.</label>
+          <input type="text" className="w-full sm:w-[375px] p-2 border rounded-md bg-gray-50" value={accountNo} onChange={(e) => setAccountNo(e.target.value)} placeholder="Select a customer to auto-fill" />
         </div>
-        {/* Date From */}
-
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Date From
-          </label>
-          <input
-            type="date"
-            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">Date From</label>
+          <input type="date" className="w-full sm:w-[375px] p-2 border rounded-md bg-gray-50" value={dateFrom} onChange={e => setDateFrom(e.target.value)} />
         </div>
-
-        {/* Date To */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Date To
-          </label>
-          <input
-            type="date"
-            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">Date To</label>
+          <input type="date" className="w-full sm:w-[375px] p-2 border rounded-md bg-gray-50" value={dateTo} onChange={e => setDateTo(e.target.value)} />
         </div>
-
-        {/* Search Button */}
         <div className="flex justify-center sm:justify-start sm:pl-40">
-          <button className="w-full sm:w-40 py-2 bg-[#FF9900] text-white rounded-md transition hover:brightness-105">
-            Search
+          <button onClick={() => handleSearch(1)} disabled={isSearching} className="w-full sm:w-40 py-2 bg-[#FF9900] text-white rounded-md transition hover:brightness-105 disabled:bg-gray-400">
+            {isSearching ? 'Searching...' : 'Search'}
           </button>
         </div>
       </div>
 
-
+      {/* Pagination Controls (UPDATED) */}
       <div className="p-2 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                <div className="flex items-center gap-2 sm:gap-4">
-                  <div className="flex gap-1 sm:gap-2">
-                    <ChevronFirst className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer hover:text-[#FF9900]" />
-                    <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer hover:text-[#FF9900]" />
-                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF9900] cursor-pointer" />
-                    <ChevronLast className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF9900] cursor-pointer" />
-                  </div>
-                  <div className="flex items-center gap-1 sm:gap-2 bg-gray-100 px-2 sm:px-3 py-1 rounded text-xs sm:text-sm">
-                    <span className="text-gray-600 whitespace-nowrap">
-                      Total 1 Records
-                    </span>
-                    <span className="text-gray-600 hidden sm:inline">|</span>
-                    <span className="text-gray-600 whitespace-nowrap">
-                      Record 1-1, Page 1/1
-                    </span>
-                    <span className="text-gray-600">|</span>
-                    <span className="text-gray-600 whitespace-nowrap">
-                      Turn To Page
-                    </span>
-                    <input
-                      type="text"
-                      className="w-8 sm:w-12 border rounded px-1 sm:px-2 py-1 text-center text-xs sm:text-sm"
-                      value="1"
-                    />
-                    <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 hover:text-green-600 cursor-pointer" />
-                  </div>
-                </div>
-              </div>
+        <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex gap-1 sm:gap-2">
+                <button onClick={() => handleSearch(1)} disabled={pagination.pageIndex <= 1 || isSearching} className="disabled:text-gray-400 p-1"><ChevronFirst className="w-4 h-4 sm:w-5 sm:h-5" /></button>
+                <button onClick={() => handleSearch(pagination.pageIndex - 1)} disabled={pagination.pageIndex <= 1 || isSearching} className="disabled:text-gray-400 p-1"><ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" /></button>
+                <button onClick={() => handleSearch(pagination.pageIndex + 1)} disabled={pagination.pageIndex >= pagination.totalPages || isSearching} className="disabled:text-gray-400 p-1"><ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" /></button>
+                <button onClick={() => handleSearch(pagination.totalPages)} disabled={pagination.pageIndex >= pagination.totalPages || isSearching} className="disabled:text-gray-400 p-1"><ChevronLast className="w-4 h-4 sm:w-5 sm:h-5" /></button>
+            </div>
+            <div className="flex items-center gap-1 sm:gap-2 bg-gray-100 px-2 sm:px-3 py-1 rounded text-xs sm:text-sm">
+                <span className="text-gray-600 whitespace-nowrap">Total {pagination.total} Records</span>
+                <span className="text-gray-600 hidden sm:inline">|</span>
+                <span className="text-gray-600 whitespace-nowrap">Page {pagination.pageIndex}/{pagination.totalPages || 1}</span>
+            </div>
+        </div>
+      </div>
 
-      {/* Table */}
+      {/* Table (UPDATED) */}
       <div className="overflow-x-auto">
         <table className="w-full min-w-[800px]">
           <thead className="bg-[#FF9900] text-white text-sm font-medium tracking-wide">
@@ -349,15 +243,24 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {tableData.map((row, index) => (
-              <tr key={index} className="hover:bg-[#FFE2B7] transition text-sm">
-                <td className="p-3">{row.accountNo}</td>
-                <td className="p-3">{row.payingDate}</td>
-                <td className="p-3">{row.payMethod}</td>
-                <td className="p-3">{row.periodicPayment}</td>
-                <td className="p-3">{row.remainBalance}</td>
-              </tr>
-            ))}
+            {isSearching ? (
+              <tr><td colSpan="5" className="text-center p-4">Loading...</td></tr>
+            ) : searchError ? (
+              <tr><td colSpan="5" className="text-center p-4 text-red-500">Error: {searchError}</td></tr>
+            ) : paymentsData.length > 0 ? (
+              paymentsData.map((row, index) => (
+                <tr key={index} className="hover:bg-[#FFE2B7] transition text-sm">
+                  {/* NOTE: The keys (e.g., row.accountNo) MUST match the actual keys in your API response objects */}
+                  <td className="p-3">{row.accountNo || 'N/A'}</td>
+                  <td className="p-3">{row.payingDate || 'N/A'}</td>
+                  <td className="p-3">{row.payMethod || 'N/A'}</td>
+                  <td className="p-3">{row.periodicPayment || 'N/A'}</td>
+                  <td className="p-3">{row.remainBalance || 'N/A'}</td>
+                </tr>
+              ))
+            ) : (
+              <tr><td colSpan="5" className="text-center p-4 text-gray-500">No records found. Please try a different search.</td></tr>
+            )}
           </tbody>
         </table>
       </div>

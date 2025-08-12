@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Dialogue1 from "@/app/components/clientdialogue/dialogue1";
+import { useRouter } from "next/navigation";
 import {
   ChevronFirst,
   ChevronLeft,
@@ -10,223 +10,256 @@ import {
 } from "lucide-react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import Dialogue3 from "@/app/components/clientdialogue/Dialogue3";
+
+// Import the functional modal components
+import BranchSelectionDialogue from "@/app/components/clientdialogue/dialogue1";
+import OperatorSelectionDialogue from "@/app/components/clientdialogue/dialog4";
+
+// A simple modal component for showing API errors
+const ErrorPopup = ({ message, onClose }) => (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+      <h2 className="text-xl font-bold mb-4 text-red-600">API Error</h2>
+      <p className="mb-4 break-words">{message}</p>
+      <button
+        onClick={onClose}
+        className="mt-4 px-4 py-2 bg-[#FF9900] text-white rounded-md hover:brightness-105 w-full"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+);
+
 
 function Page() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const router = useRouter();
 
-  const handleReload = () => {
-    window.location.reload();
+  // State for form inputs
+  const [branch, setBranch] = useState({ code: "", name: "" });
+  const [operator, setOperator] = useState({ code: "", name: "" });
+  const [reasonCode, setReasonCode] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  
+  // State for dialogs and errors
+  const [isBranchDialogOpen, setIsBranchDialogOpen] = useState(false);
+  const [isOperatorDialogOpen, setIsOperatorDialogOpen] = useState(false);
+  const [apiError, setApiError] = useState(null);
+
+  // State for table data and search status
+  const [tableData, setTableData] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    totalPages: 1,
+    pageIndex: 1,
+  });
+
+  const handleReload = () => window.location.reload();
+
+  const handleExportToExcel = () => {
+    if (tableData.length === 0) {
+      alert("No data to export.");
+      return;
+    }
+    const headers = ["Branch", "Date", "Full Name", "kWh", "raison", "Token", "Operator"];
+    const data = tableData.map((row) => [
+      row.Branch,
+      row.Date,
+      row.FullName,
+      row.KWH,
+      row.Reason,
+      row.Token,
+      row.Operator,
+    ]);
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "CreditGratuitEtat");
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(blob, "credit_gratuit_etat.xlsx");
   };
 
+  const handleSelectBranch = (selectedBranch) => {
+    if (selectedBranch) {
+      setBranch({ code: selectedBranch.Code, name: selectedBranch.Name });
+    }
+    setIsBranchDialogOpen(false);
+  };
 
+  const handleClearBranch = () => setBranch({ code: "", name: "" });
+
+  const handleSelectOperator = (selectedOperator) => {
+    if (selectedOperator) {
+      setOperator({ code: selectedOperator.Code, name: selectedOperator.Name });
+    }
+    setIsOperatorDialogOpen(false);
+  };
+
+  const handleClearOperator = () => setOperator({ code: "", name: "" });
+
+  const handleSearch = async (page = 1) => {
+    if (!branch.code || !dateFrom || !dateTo) {
+      alert("Please select a branch and both date fields.");
+      return;
+    }
+    setIsSearching(true);
+    setApiError(null);
+    setTableData([]);
+
+    const payload = new URLSearchParams();
+    payload.append("ACTION", "42");
+    payload.append("branchcode", branch.code);
+    payload.append("operator", operator.code);
+    payload.append("reasonCode", reasonCode);
+    payload.append("dateFrom", dateFrom);
+    payload.append("dateTo", dateTo);
+    payload.append("PAGE_INDEX", page - 1);
+
+    try {
+      const cookieString = document.cookie;
+      if (!cookieString || cookieString.trim() === "") {
+        router.push("/auth/login");
+        throw new Error("Authentication required: No cookies found.");
+      }
+
+      const response = await fetch('/api/sge-reports', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Cookie: cookieString,
+        },
+        body: payload.toString(),
+      });
+
+      const responseText = await response.text();
+      if (!response.ok) { throw new Error(`HTTP error ${response.status}: ${responseText}`); }
+      
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (e) {
+        throw new Error(responseText);
+      }
+
+      if (data && data.state === "0") {
+        setTableData(data.rows || []);
+        setPagination({
+          total: Number(data.total),
+          totalPages: Number(data.totalPages),
+          pageIndex: Number(data.pageIndex),
+        });
+      } else {
+        throw new Error(data.message || `API returned an error state: ${JSON.stringify(data)}`);
+      }
+    } catch (err) {
+      setApiError(err.message);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const tableHeaders = ["Branch", "Date", "Full Name", "kWh", "raison", "Token", "Operator"];
 
   return (
     <div className="min-h-screen bg-white p-6">
-      {/* Header */}
+      {apiError && <ErrorPopup message={apiError} onClose={() => setApiError(null)} />}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-semibold text-gray-800">
-        Credit Gratuit Etat
-        </h1>
+        <h1 className="text-2xl font-semibold text-gray-800">Credit Gratuit Etat</h1>
         <div className="flex gap-4">
-          <button
-            onClick={handleReload}
-            className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105 hover:cursor-pointer"
-          >
-            Refresh
-          </button>
-          <button
-            onClick={()=>window.print()}
-            className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105 hover:cursor-pointer"
-          >
-            Print
-          </button>
-       
-       
+          <button onClick={handleReload} className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105">Refresh</button>
+          <button onClick={handleExportToExcel} className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105">Excel</button>
+          <button onClick={() => window.print()} className="px-4 py-2 bg-[#FF9900] text-white rounded-md w-40 transition hover:brightness-105">Print</button>
         </div>
       </div>
 
-      {/* Form Fields */}
       <div className="max-w-7xl w-full text-left mb-14 space-y-8 px-4">
-        {/* Branch Fields */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Branch
-          </label>
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">Branch</label>
           <div className="flex flex-wrap gap-2 w-full max-w-4xl">
-            <input
-              type="text"
-              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-            <input
-              type="text"
-              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-            <button
-              type="button"
-              onClick={() => setIsDialogOpen(true)}
-              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
-            >
-              ...
-            </button>
-            {isDialogOpen && (
-              <Dialogue3 onClose={() => setIsDialogOpen(false)} />
-            )}
-            <button
-              type="button"
-              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
-            >
-              <X size={16} />
-            </button>
+            <input type="text" value={branch.code} placeholder="Branch Code" className="flex-1 min-w-[150px] p-2 border rounded-md bg-gray-200" readOnly />
+            <input type="text" value={branch.name} placeholder="Branch Name" className="flex-1 min-w-[150px] p-2 border rounded-md bg-gray-200" readOnly />
+            <button type="button" onClick={() => setIsBranchDialogOpen(true)} className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105">...</button>
+            {isBranchDialogOpen && <BranchSelectionDialogue onClose={() => setIsBranchDialogOpen(false)} onSelect={handleSelectBranch} />}
+            <button type="button" onClick={handleClearBranch} className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"><X size={16} /></button>
           </div>
         </div>
-         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-           Operator
-          </label>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">Operator</label>
           <div className="flex flex-wrap gap-2 w-full max-w-4xl">
-            <input
-              type="text"
-              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-            <input
-              type="text"
-              className="flex-1 min-w-[150px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-            <button
-              type="button"
-              onClick={() => setIsDialogOpen(true)}
-              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
-            >
-              ...
-            </button>
-            {isDialogOpen && (
-              <Dialogue3 onClose={() => setIsDialogOpen(false)} />
-            )}
-            <button
-              type="button"
-              className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"
-            >
-              <X size={16} />
-            </button>
+            <input type="text" value={operator.code} placeholder="Operator Code" className="flex-1 min-w-[150px] p-2 border rounded-md bg-gray-200" readOnly />
+            <input type="text" value={operator.name} placeholder="Operator Name" className="flex-1 min-w-[150px] p-2 border rounded-md bg-gray-200" readOnly />
+            <button type="button" onClick={() => setIsOperatorDialogOpen(true)} className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105">...</button>
+            {isOperatorDialogOpen && <OperatorSelectionDialogue onClose={() => setIsOperatorDialogOpen(false)} onSelect={handleSelectOperator} />}
+            <button type="button" onClick={handleClearOperator} className="w-[50px] h-[40px] bg-[#FF9900] text-white rounded-md flex items-center justify-center hover:brightness-105"><X size={16} /></button>
           </div>
         </div>
-     
-       <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-  <label class="w-full sm:w-32 text-sm font-medium text-gray-700">
-   
-  </label>
-  <select
-    class="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-  >
-    <option value="">Select an option</option>
-    <option value="General Monophase">Free issue requested by management</option>
-    <option value="General Triphase">Replacement token </option>
-    <option value="Compteur HT">No cost transaction</option>
-     <option value="Compteur HT">Initial Free Credit</option>
-  </select>
-</div>
-
-        
-        {/* Date From */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Date From 
-          </label>
-          <input
-            type="date"
-            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">Reason</label>
+          <select value={reasonCode} onChange={(e) => setReasonCode(e.target.value)} className="w-full sm:w-[375px] p-2 border rounded-md bg-gray-50">
+            <option value="">Select an option</option>
+            <option value="1">Free issue requested by management</option>
+            <option value="2">Replacement token</option>
+            <option value="3">No cost transaction</option>
+            <option value="4">Initial Free Credit</option>
+          </select>
         </div>
-
-         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">
-            Date To
-          </label>
-          <input
-            type="date"
-            className="w-full sm:w-[375px] p-2 border border-gray-200 rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">Date From</label>
+          <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="w-full sm:w-[375px] p-2 border rounded-md bg-gray-50" />
         </div>
-
-
-        {/* Search Button */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="w-full sm:w-32 text-sm font-medium text-gray-700">Date To</label>
+          <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="w-full sm:w-[375px] p-2 border rounded-md bg-gray-50" />
+        </div>
         <div className="flex justify-center sm:justify-start sm:pl-40">
-          <button className="w-full sm:w-40 py-2 bg-[#FF9900] text-white rounded-md transition hover:brightness-105">
-            Search
+          <button onClick={() => handleSearch(1)} disabled={isSearching} className="w-full sm:w-40 py-2 bg-[#FF9900] text-white rounded-md transition hover:brightness-105 disabled:bg-gray-400">
+            {isSearching ? 'Searching...' : 'Search'}
           </button>
         </div>
       </div>
-
 
       <div className="p-2 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                <div className="flex items-center gap-2 sm:gap-4">
-                  <div className="flex gap-1 sm:gap-2">
-                    <ChevronFirst className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer hover:text-[#FF9900]" />
-                    <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer hover:text-[#FF9900]" />
-                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF9900] cursor-pointer" />
-                    <ChevronLast className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF9900] cursor-pointer" />
-                  </div>
-                  <div className="flex items-center gap-1 sm:gap-2 bg-gray-100 px-2 sm:px-3 py-1 rounded text-xs sm:text-sm">
-                    <span className="text-gray-600 whitespace-nowrap">
-                      Total 1 Records
-                    </span>
-                    <span className="text-gray-600 hidden sm:inline">|</span>
-                    <span className="text-gray-600 whitespace-nowrap">
-                      Record 1-1, Page 1/1
-                    </span>
-                    <span className="text-gray-600">|</span>
-                    <span className="text-gray-600 whitespace-nowrap">
-                      Turn To Page
-                    </span>
-                    <input
-                      type="text"
-                      className="w-8 sm:w-12 border rounded px-1 sm:px-2 py-1 text-center text-xs sm:text-sm"
-                      value="1"
-                    />
-                    <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 hover:text-green-600 cursor-pointer" />
-                  </div>
-                </div>
-              </div>
+        <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex gap-1 sm:gap-2">
+            <button onClick={() => handleSearch(1)} disabled={pagination.pageIndex <= 1 || isSearching} className="disabled:text-gray-400 p-1"><ChevronFirst /></button>
+            <button onClick={() => handleSearch(pagination.pageIndex - 1)} disabled={pagination.pageIndex <= 1 || isSearching} className="disabled:text-gray-400 p-1"><ChevronLeft /></button>
+            <button onClick={() => handleSearch(pagination.pageIndex + 1)} disabled={pagination.pageIndex >= pagination.totalPages || isSearching} className="disabled:text-gray-400 p-1"><ChevronRight /></button>
+            <button onClick={() => handleSearch(pagination.totalPages)} disabled={pagination.pageIndex >= pagination.totalPages || isSearching} className="disabled:text-gray-400 p-1"><ChevronLast /></button>
+          </div>
+          <div className="flex items-center gap-1 sm:gap-2 bg-gray-100 px-2 sm:px-3 py-1 rounded text-xs sm:text-sm">
+            <span className="text-gray-600 whitespace-nowrap">Total {pagination.total} Records</span>
+            <span className="text-gray-600 hidden sm:inline">|</span>
+            <span className="text-gray-600 whitespace-nowrap">Page {pagination.pageIndex}/{pagination.totalPages || 1}</span>
+          </div>
+        </div>
+      </div>
 
-<div class="flex items-center justify-start py-3 gap-x-2">
-  <div class="flex items-center gap-x-1">
-    <button class="p-2 text-gray-500 hover:bg-gray-100 rounded-md cursor-not-allowed" disabled>
-      &#x226A; </button>
-    <button class="p-2 text-gray-500 hover:bg-gray-100 rounded-md cursor-not-allowed" disabled>
-      &#x2039; </button>
-    <button class="p-2 text-orange-500 hover:bg-orange-100 rounded-md">
-      &#x203A; </button>
-  </div>
-
-  <div class="flex items-center text-sm text-gray-700">
-    <span>Total 17 Records, Record 1 - 10, Page 1/2, Turn To Page</span>
-    <input
-      type="text"
-      class="w-20 p-1 ml-2 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-    />
-  </div>
-
-  <button class="p-2 text-green-500 hover:bg-green-100 rounded-md">
-    &#x2192; </button>
-</div>
-
-      {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full min-w-[800px]">
           <thead className="bg-[#FF9900] text-white text-sm font-medium tracking-wide">
-            <tr>
-            <th className="p-3 text-left">Branch</th>
-              <th className="p-3 text-left">Date</th>
-              <th className="p-3 text-left">Full Name</th>
-              <th className="p-3 text-left">kWh</th>
-              <th className="p-3 text-left">raison</th>
-              <th className="p-3 text-left">Token</th>
-               <th className="p-3 text-left">Operator</th>
-        
-            </tr>
+            <tr>{tableHeaders.map(h => <th key={h} className="p-3 text-left">{h}</th>)}</tr>
           </thead>
-        
+          <tbody className="text-sm text-gray-700 bg-white">
+            {isSearching ? (
+              <tr><td colSpan={tableHeaders.length} className="text-center p-4">Loading...</td></tr>
+            ) : tableData.length > 0 ? (
+              tableData.map((row, idx) => (
+                <tr key={idx} className="hover:bg-gray-50">
+                  <td className="p-3">{row.Branch || 'N/A'}</td>
+                  <td className="p-3">{row.Date || 'N/A'}</td>
+                  <td className="p-3">{row.FullName || 'N/A'}</td>
+                  <td className="p-3">{row.KWH || 'N/A'}</td>
+                  <td className="p-3">{row.Reason || 'N/A'}</td>
+                  <td className="p-3">{row.Token || 'N/A'}</td>
+                  <td className="p-3">{row.Operator || 'N/A'}</td>
+                </tr>
+              ))
+            ) : (
+              <tr><td colSpan={tableHeaders.length} className="text-center p-4 text-gray-500">No records found. Please start a search.</td></tr>
+            )}
+          </tbody>
         </table>
       </div>
     </div>

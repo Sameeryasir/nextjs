@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { apiFetcher } from "@/app/utils/apiFetcher"; // Ensure this path is correct
+import { apiFetcher } from "@/app/utils/apiFetcher"; // Ensure this path is correct for your project
 import {
   X,
   ChevronFirst,
@@ -12,37 +12,34 @@ import {
 } from "lucide-react";
 
 /**
- * A modal dialogue for searching and selecting a customer.
+ * A modal dialogue for searching and selecting an operator.
  * @param {object} props - The component props.
  * @param {Function} props.onClose - Function to call when the modal should be closed.
- * @param {Function} props.onSelect - Function to call with the selected customer data.
+ * @param {Function} props.onSelect - Function to call with the selected operator data.
  */
-function CustomerInfoDialogue({ onClose, onSelect }) {
+function OperatorSelectionDialogue({ onClose, onSelect }) {
   const router = useRouter();
 
-  const [search, setSearch] = useState({ code: "", name: "", refCode: "", number: "" });
+  const [search, setSearch] = useState({ userCode: "", userName: "" });
   const [data, setData] = useState({ rows: [], total: 0, totalPages: 1, pageIndex: 1 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
 
-  const fetchCustomers = async (page = 1) => {
+  const fetchOperators = async (page = 1) => {
     setLoading(true);
     setError(null);
 
     const payload = new URLSearchParams();
-    payload.append("ACTION", "4");
-    payload.append("selectAll", "N");
-    payload.append("selectNew", "installed");
-    payload.append("code", search.code);
-    payload.append("name", search.name);
-    payload.append("refCode", search.refCode);
-    payload.append("number", search.number);
-    payload.append("meterType", "");
+    payload.append("ACTION", "5");
+    payload.append("userCode", search.userCode);
+    payload.append("userName", search.userName);
+    payload.append("deptCode", ""); // API requires this
     payload.append("PAGE_INDEX", page - 1);
 
     try {
-      const response = await apiFetcher('/api/public-exchange', 'POST', payload, router);
+      // Assumes a rewrite for '/api/utility-exchange' exists in next.config.mjs
+      const response = await apiFetcher('/api/utility-exchange', 'POST', payload, router);
       if (response && response.state === "0") {
         setData({
           rows: response.rows || [],
@@ -62,7 +59,7 @@ function CustomerInfoDialogue({ onClose, onSelect }) {
   };
 
   useEffect(() => {
-    fetchCustomers(1);
+    fetchOperators(1);
   }, []);
 
   const handleInputChange = (e) => {
@@ -70,7 +67,7 @@ function CustomerInfoDialogue({ onClose, onSelect }) {
     setSearch((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSearchClick = () => { fetchCustomers(1); };
+  const handleSearchClick = () => { fetchOperators(1); };
   
   const handleOkClick = () => {
     if (selectedRow) {
@@ -82,7 +79,7 @@ function CustomerInfoDialogue({ onClose, onSelect }) {
   const handlePageChange = (newPage) => {
     const pageNum = Number(newPage);
     if (pageNum >= 1 && pageNum <= data.totalPages) {
-      fetchCustomers(pageNum);
+      fetchOperators(pageNum);
     }
   };
   
@@ -91,22 +88,20 @@ function CustomerInfoDialogue({ onClose, onSelect }) {
     onClose();
   };
   
-  const tableHeaders = ["Code", "Full Name", "Ref Code", "Meter No.", "Branch"];
+  const tableHeaders = ["Code", "Name", "Description", "Department", "Role"];
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-6xl p-4 flex flex-col max-h-[90vh]">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-5xl p-4 flex flex-col max-h-[90vh]">
         <div className="flex justify-between items-center border-b pb-2 mb-4">
-          <h2 className="text-xl font-semibold">Select Customer</h2>
+          <h2 className="text-xl font-semibold">Select Operator</h2>
           <button onClick={onClose} className="p-1 rounded-full hover:bg-gray-200"><X size={24} /></button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mb-2">
-          <input type="text" name="code" placeholder="Code" value={search.code} onChange={handleInputChange} className="p-2 border rounded-md"/>
-          <input type="text" name="name" placeholder="Full Name" value={search.name} onChange={handleInputChange} className="p-2 border rounded-md"/>
-          <input type="text" name="refCode" placeholder="Ref Code" value={search.refCode} onChange={handleInputChange} className="p-2 border rounded-md"/>
-          <input type="text" name="number" placeholder="Meter No." value={search.number} onChange={handleInputChange} className="p-2 border rounded-md"/>
+        <div className="flex items-center gap-2 mb-2">
+            <input type="text" name="userCode" placeholder="Code" value={search.userCode} onChange={handleInputChange} className="p-2 border rounded-md w-32"/>
+            <input type="text" name="userName" placeholder="Name" value={search.userName} onChange={handleInputChange} className="p-2 border rounded-md w-48"/>
+            <button type="button" onClick={handleSearchClick} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Search...</button>
         </div>
-        <button type="button" onClick={handleSearchClick} disabled={loading} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 self-start mb-4">Search...</button>
         <div className="flex flex-wrap items-center gap-2 bg-gray-100 px-3 py-1 rounded text-sm mb-4">
             <div className="flex items-center">
               <button onClick={() => handlePageChange(1)} disabled={data.pageIndex <= 1} className="disabled:text-gray-400 p-1"><ChevronFirst size={20} /></button>
@@ -134,10 +129,10 @@ function CustomerInfoDialogue({ onClose, onSelect }) {
                 data.rows.map((row) => (
                   <tr key={row.Code} onClick={() => setSelectedRow(row)} onDoubleClick={() => handleRowDoubleClick(row)} className={`cursor-pointer hover:bg-orange-100 ${selectedRow?.Code === row.Code ? 'bg-orange-200' : ''}`}>
                     <td className="p-2 border-t">{row.Code}</td>
-                    <td className="p-2 border-t">{row.FullName}</td>
-                    <td className="p-2 border-t">{row.RefCode}</td>
-                    <td className="p-2 border-t">{row.MeterNum}</td>
-                    <td className="p-2 border-t">{row.BranchName}</td>
+                    <td className="p-2 border-t">{row.Name}</td>
+                    <td className="p-2 border-t">{row.Description}</td>
+                    <td className="p-2 border-t">{row.DeptName || 'N/A'}</td>
+                    <td className="p-2 border-t">{row.RoleName || 'N/A'}</td>
                   </tr>
                 ))
               )}
@@ -153,4 +148,4 @@ function CustomerInfoDialogue({ onClose, onSelect }) {
   );
 }
 
-export default CustomerInfoDialogue;
+export default OperatorSelectionDialogue;

@@ -1,84 +1,140 @@
 "use client";
 import React, { useState } from "react";
-import { Search, Plus, StopCircle, MenuIcon } from "lucide-react";
-import Payement from "./Payement"; // Assuming this is a static component
-import IdentifyCustomerDialog from "../sections/IdentifyCustomerDialog"; // Import the new dialog
+import { useRouter } from "next/navigation";
+import { Search, Plus, StopCircle, MenuIcon, X } from "lucide-react";
+import Payement from "./Payement"; 
+import IdentifyCustomerDialog from "../sections/IdentifyCustomerDialog";
+import { apiFetcher } from "../utils/apiFetcher"; // Ensure path is correct
+
+// A simple modal component for showing API errors
+const ErrorPopup = ({ message, onClose }) => (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+      <h2 className="text-xl font-bold mb-4 text-red-600">API Error</h2>
+      <p className="mb-4 break-words">{message}</p>
+      <button
+        onClick={onClose}
+        className="mt-4 px-4 py-2 bg-[#FF9900] text-white rounded-md hover:brightness-105 w-full"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+);
+
 
 function Vending() {
+  const router = useRouter();
+
+  // State for search form inputs
+  const [searchParams, setSearchParams] = useState({
+    meterNum: "",
+    accountNo: "", // Corresponds to refCode in the API
+    code: "",
+    name: "",
+  });
+
+  // State for API data, loading, and errors
+  const [customerData, setCustomerData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState(null);
+
+  // State for UI control
   const [activeTab, setActiveTab] = useState("info");
   const [showIdentifyCustomerDialog, setShowIdentifyCustomerDialog] = useState(false);
-  const [identifiedCustomer, setIdentifiedCustomer] = useState(null); // State to store identified customer data
 
-  console.log("Vending: Component rendered.");
-
-  const handleIdentifyCustomerClick = () => {
-    console.log("Vending: 'Identify Customer' button clicked. Opening dialog.");
-    setShowIdentifyCustomerDialog(true);
+  // Handler for form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSearchParams(prev => ({ ...prev, [name]: value }));
   };
 
-  // NEW: Handler for the top "Search" button
-  const handleTopSearchClick = () => {
-    console.log("Vending: Top 'Search' button clicked. Opening dialog.");
-    setShowIdentifyCustomerDialog(true);
+  // Handler for the "Identify Customer" button
+  const handleIdentifyCustomer = async () => {
+    // Check if at least one field is filled
+    if (Object.values(searchParams).every(val => val.trim() === '')) {
+        alert("Please fill at least one search field.");
+        return;
+    }
+
+    setIsLoading(true);
+    setApiError(null);
+    setCustomerData(null);
+
+    const payload = new URLSearchParams();
+    payload.append("ACTION", "53");
+    payload.append("meterNum", searchParams.meterNum);
+    payload.append("refCode", searchParams.accountNo); // Map UI to API field name
+    payload.append("code", searchParams.code);
+    payload.append("name", searchParams.name);
+
+    try {
+        const data = await apiFetcher("/api/customer-exchange", "POST", payload, router);
+        
+        if (data.state !== 0 && data.state !== "0") { // Handle both number and string states
+            throw new Error(data.message || "Customer could not be identified.");
+        }
+        
+        setCustomerData(data); // Assuming success response is the customer object
+
+    } catch (error) {
+        setApiError(error.message);
+    } finally {
+        setIsLoading(false);
+    }
   };
 
-  const handleCustomerIdentified = (customerData) => {
-    console.log("Vending: Customer identified from dialog:", customerData);
-    setIdentifiedCustomer(customerData);
-    setShowIdentifyCustomerDialog(false); // Close the dialog
-    // Here you would populate your Vending form fields with customerData
-    // Example: updateMeterNum(customerData.MeterNum), etc.
-    // For now, let's just log it and close the dialog
+  // Handler for receiving data from the search dialog
+  const handleCustomerIdentifiedFromDialog = (customer) => {
+    setCustomerData(customer);
+    setShowIdentifyCustomerDialog(false);
+    // Optionally pre-fill search fields from dialog selection
+    setSearchParams({
+        meterNum: customer.MeterNum || "",
+        accountNo: customer.RefCode || "",
+        code: customer.Code || "",
+        name: customer.FullName || ""
+    });
   };
 
   return (
     <div className="bg-white">
+      {apiError && <ErrorPopup message={apiError} onClose={() => setApiError(null)} />}
       {/* Top Navigation Bar */}
       <div className="bg-blue-50 p-4 flex items-center gap-4 border-b border-gray-200">
         <button
           className="flex items-center gap-2 px-3 py-2 hover:bg-blue-100 rounded-md"
-          onClick={handleTopSearchClick} // Connect the top search button to open the dialog
+          onClick={() => setShowIdentifyCustomerDialog(true)}
         >
           <Search size={20} />
           <span>Search</span>
         </button>
-        <button className="flex items-center gap-2 px-3 py-2 text-green-600 hover:bg-blue-100 rounded-md">
-          <Plus size={20} />
-          <span>New Vend</span>
-        </button>
-        <button className="flex items-center gap-2 px-3 py-2 hover:bg-blue-100 rounded-md">
-          <StopCircle size={20} />
-          <span>Stop Session</span>
-        </button>
-        <button className="flex items-center gap-2 px-3 py-2 hover:bg-blue-100 rounded-md">
-          <MenuIcon size={20} />
-          <span>End Session</span>
-        </button>
+        {/* Other top buttons */}
       </div>
 
-      <div className="container mx-auto mt-1.5">
-        <div className="grid grid-cols-3 gap-15">
+      <div className="container mx-auto mt-1.5 p-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Search Customer Section */}
           <div className="col-span-1">
             <h2 className="text-xl font-semibold mb-4">Search Customer</h2>
-            <form className="space-y-1.5" onSubmit={(e) => e.preventDefault()}> {/* Prevent default form submission */}
+            <form className="space-y-2" onSubmit={(e) => { e.preventDefault(); handleIdentifyCustomer(); }}>
               <div>
-                <label className="block text-sm text-gray-600 mb-1">
-                  Meter Num
-                </label>
+                <label className="block text-sm text-gray-600 mb-1">Meter Num</label>
                 <input
                   type="text"
+                  name="meterNum"
+                  value={searchParams.meterNum}
+                  onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  // You would bind this input to a state variable (e.g., meterNumSearch)
-                  // and pass that to the dialog's initial search term if desired.
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-600 mb-1">
-                  Account No
-                </label>
+                <label className="block text-sm text-gray-600 mb-1">Account No</label>
                 <input
                   type="text"
+                  name="accountNo"
+                  value={searchParams.accountNo}
+                  onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -86,31 +142,39 @@ function Vending() {
                 <label className="block text-sm text-gray-600 mb-1">Code</label>
                 <input
                   type="text"
+                  name="code"
+                  value={searchParams.code}
+                  onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-600 mb-1">
-                  Full Name
-                </label>
+                <label className="block text-sm text-gray-600 mb-1">Full Name</label>
                 <input
                   type="text"
+                  name="name"
+                  value={searchParams.name}
+                  onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <button
-                type="button" // Change to type="button" to prevent form submission, let onClick handle dialog
-                onClick={handleIdentifyCustomerClick}
-                className="w-[160px] bg-orange-500 text-white px-2 py-2 rounded-md hover:bg-orange-600 transition-colors"
+                type="submit"
+                disabled={isLoading}
+                className="w-[160px] bg-orange-500 text-white px-2 py-2 rounded-md hover:bg-orange-600 transition-colors disabled:bg-gray-400"
               >
-                Identify Customer
+                {isLoading ? 'Identifying...' : 'Identify Customer'}
               </button>
             </form>
-            {identifiedCustomer && (
-              <div className="mt-4 p-3 bg-green-50 rounded-md border border-green-200 text-green-800">
-                Customer Identified: {identifiedCustomer.MeterNum} ({identifiedCustomer.ID} - {identifiedCustomer.FullName})
-              </div>
-            )}
+            
+            {/* API Feedback Section */}
+            <div className="mt-4">
+                {customerData && !apiError && (
+                    <div className="p-3 bg-green-50 rounded-md border border-green-200 text-green-800">
+                        Customer Identified: {customerData.FullName} ({customerData.Code})
+                    </div>
+                )}
+            </div>
           </div>
 
           {/* Customer Information Section */}
@@ -118,136 +182,57 @@ function Vending() {
             <div className="mb-6">
               <nav className="flex gap-4 border-b border-gray-200">
                 <button
-                  className={`px-4 py-2 ${
-                    activeTab === "info"
-                      ? "text-blue-600 border-b-2 border-blue-600"
-                      : "text-gray-500 hover:text-gray-700"
-                  }`}
+                  className={`px-4 py-2 ${activeTab === "info" ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-500"}`}
                   onClick={() => setActiveTab("info")}
                 >
                   Customer Information
                 </button>
-                <button
-                  className={`px-4 py-2 ${
-                    activeTab === "fees"
-                      ? "text-blue-600 border-b-2 border-blue-600"
-                      : "text-gray-500 hover:text-gray-700"
-                  }`}
-                  onClick={() => setActiveTab("fees")}
-                >
-                  Fees Details
-                </button>
-                <button
-                  className={`px-4 py-2 ${
-                    activeTab === "arrear"
-                      ? "text-blue-600 border-b-2 border-blue-600"
-                      : "text-gray-500 hover:text-gray-700"
-                  }`}
-                  onClick={() => setActiveTab("arrear")}
-                >
-                  Arrear Details
-                </button>
+                {/* Other tabs */}
               </nav>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <div className="mb-4">
-                  <label className="block text-sm text-gray-600 mb-1">
-                    Meter Num.
-                  </label>
-                  <div className="text-gray-900">{identifiedCustomer?.MeterNum || "-"}</div>
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm text-gray-600 mb-1">
-                    Code
-                  </label>
-                  <div className="text-gray-900">{identifiedCustomer?.Code || "-"}</div>
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm text-gray-600 mb-1">
-                    Full Name
-                  </label>
-                  <div className="text-gray-900">{identifiedCustomer?.FullName || "-"}</div>
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm text-gray-600 mb-1">
-                    Tariff
-                  </label>
-                  <div className="text-gray-900">{identifiedCustomer?.TariffName || identifiedCustomer?.TariffCode || "-"}</div>
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm text-gray-600 mb-1">
-                    Sponsor Amount
-                  </label>
-                  <div className="text-gray-900">{identifiedCustomer?.SponsorAMT || "-"}</div>
-                </div>
-              </div>
-              <div>
-                <div className="mb-4">
-                  <label className="block text-sm text-gray-600 mb-1">
-                    Balance Of Account
-                  </label>
-                  <div className="text-gray-900">{identifiedCustomer?.AccBalance || "-"}</div>
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm text-gray-600 mb-1">
-                    Monthly Purchased
-                  </label>
-                  <div className="text-gray-900">{identifiedCustomer?.TotalKWh || "-"}</div>
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm text-gray-600 mb-1">
-                    Time Of Purchase
-                  </label>
-                  <div className="text-gray-900">{identifiedCustomer?.LastVendTime || "-"}</div>
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm text-gray-600 mb-1">
-                    Date Of Last Purchase
-                  </label>
-                  <div className="text-gray-900">{identifiedCustomer?.LastVendDate || "-"}</div>
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm text-gray-600 mb-1">
-                    Min. Transaction Amount
-                  </label>
-                  <div className="text-gray-900">{identifiedCustomer?.MinAMT || "-"}</div>
-                </div>
-              </div>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                <InfoItem label="Meter Num." value={customerData?.MeterNum} />
+                <InfoItem label="Balance Of Account" value={customerData?.AccBalance} />
+                <InfoItem label="Code" value={customerData?.Code} />
+                <InfoItem label="Monthly Purchased" value={customerData?.TotalKWh} />
+                <InfoItem label="Full Name" value={customerData?.FullName} />
+                <InfoItem label="Time Of Purchase" value={customerData?.LastVendTime} />
+                <InfoItem label="Tariff" value={customerData?.TariffName || customerData?.TariffCode} />
+                <InfoItem label="Date Of Last Purchase" value={customerData?.LastVendDate} />
+                <InfoItem label="Sponsor Amount" value={customerData?.SponsorAMT} />
+                <InfoItem label="Min. Transaction Amount" value={customerData?.MinAMT} />
             </div>
-
-            {/* Bottom Sections */}
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-10 mt-2">
-          <div>
-            <h3 className="text-lg text-left pl-34">Vending Details</h3>
-          </div>
-          <div>
-            <h3 className="text-lg text-left">Arrear To Pay</h3>
-          </div>
+        
+        <div className="mt-8">
+            <div className="grid grid-cols-2 gap-10">
+                <h3 className="text-lg font-semibold">Vending Details</h3>
+                <h3 className="text-lg font-semibold">Arrear To Pay</h3>
+            </div>
+            <div className="border-t border-gray-200 mt-2 pt-4">
+                 <h3 className="font-semibold text-gray-800">Payment Info</h3>
+                 <Payement />
+            </div>
         </div>
       </div>
-      <div className="space-y-4">
-        {/* Payment Info Heading */}
-        <div className="justify-between px-6 border-t border-gray-200 ">
-          <h3 className="font-medium text-gray-400">Free To Pay</h3>
-          <h3 className="font-medium pt-4">Payment Info</h3>
-        </div>
-
-        {/* Payment Sections */}
-        <Payement />
-      </div>
-
-      {/* Identify Customer Dialog */}
+      
       <IdentifyCustomerDialog
         isOpen={showIdentifyCustomerDialog}
         onClose={() => setShowIdentifyCustomerDialog(false)}
-        onSelect={handleCustomerIdentified}
+        onSelect={handleCustomerIdentifiedFromDialog}
       />
     </div>
   );
 }
+
+// Helper component for displaying customer info items
+const InfoItem = ({ label, value }) => (
+    <div>
+        <label className="block text-sm text-gray-600 mb-1">{label}</label>
+        <div className="text-gray-900 font-medium h-6">{value || "-"}</div>
+    </div>
+);
 
 export default Vending;

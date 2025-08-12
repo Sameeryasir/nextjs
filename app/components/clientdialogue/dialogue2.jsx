@@ -1,4 +1,8 @@
-import React, { useState } from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { apiFetcher } from "@/app/utils/apiFetcher"; // Ensure this path is correct
 import {
   X,
   ChevronFirst,
@@ -7,226 +11,137 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-function Dialogue2({ onClose }) {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    code: "",
-    accountNo: "",
-    meterNum: "",
-  });
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 10;
+/**
+ * A modal dialogue for searching and selecting an area.
+ * @param {object} props - The component props.
+ * @param {Function} props.onClose - Function to call when the modal should be closed.
+ * @param {Function} props.onSelect - Function to call with the selected area data.
+ */
+function AreaSelectionDialogue({ onClose, onSelect }) {
+  const router = useRouter();
+
+  const [search, setSearch] = useState({ code: "", description: "" });
+  const [data, setData] = useState({ rows: [], total: 0, totalPages: 1, pageIndex: 1 });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedRow, setSelectedRow] = useState(null);
+
+  const fetchAreas = async (page = 1) => {
+    setLoading(true);
+    setError(null);
+
+    const payload = new URLSearchParams();
+    payload.append("ACTION", "6");
+    payload.append("parentCode", ""); // As per API spec
+    payload.append("code", search.code);
+    payload.append("description", search.description);
+    payload.append("PAGE_INDEX", page - 1);
+
+    try {
+      const response = await apiFetcher('/api/public-exchange', 'POST', payload, router);
+      if (response && response.state === "0") {
+        setData({
+          rows: response.rows || [],
+          total: Number(response.total),
+          totalPages: Number(response.totalPages),
+          pageIndex: Number(response.pageIndex),
+        });
+      } else {
+        throw new Error(response.message || "API returned an error state.");
+      }
+    } catch (err) {
+      setError(err.message);
+      setData({ rows: [], total: 0, totalPages: 1, pageIndex: 1 });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAreas(1);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setSearch((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
+  const handleSearchClick = () => { fetchAreas(1); };
+  
+  const handleOkClick = () => {
+    if (selectedRow) {
+      onSelect(selectedRow);
+    }
     onClose();
   };
 
-  const tableData = [
-    {
-      code: "EM100001",
-
-      description: "Installed new energy meter",
-    },
-    {
-      code: "WM200101",
-
-      description: "Transferred from East warehouse",
-    },
-  ];
+  const handlePageChange = (newPage) => {
+    const pageNum = Number(newPage);
+    if (pageNum >= 1 && pageNum <= data.totalPages) {
+      fetchAreas(pageNum);
+    }
+  };
+  
+  const handleRowDoubleClick = (row) => {
+    onSelect(row);
+    onClose();
+  };
+  
+  const tableHeaders = ["Code", "Description"];
 
   return (
-    <div className="fixed inset-0 bg-transparent flex items-center justify-center p-2 sm:p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-2 sm:mx-4 p-4 sm:p-6 relative max-h-[90vh] overflow-y-auto">
-        <button
-          onClick={onClose}
-          className="absolute right-2 sm:right-4 top-2 sm:top-4 text-gray-500 hover:text-gray-700"
-        >
-          <X size={20} className="w-5 h-5 sm:w-6 sm:h-6" />
-        </button>
-
-        <h2 className="text-xl font-semibold mb-4">Add New Record</h2>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            <div className="flex items-center gap-2 sm:gap-4">
-              <label
-                className="text-gray-700 text-sm sm:text-base font-medium whitespace-nowrap w-24"
-                htmlFor="fullName"
-              >
-                Code
-              </label>
-              <input
-                id="fullName"
-                type="text"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleInputChange}
-                className="flex-1 px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-              />
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl p-4 flex flex-col max-h-[90vh]">
+        <div className="flex justify-between items-center border-b pb-2 mb-4">
+          <h2 className="text-xl font-semibold">Select Area</h2>
+          <button onClick={onClose} className="p-1 rounded-full hover:bg-gray-200"><X size={24} /></button>
+        </div>
+        <div className="flex items-center gap-2 mb-2">
+            <input type="text" name="code" placeholder="Code" value={search.code} onChange={handleInputChange} className="p-2 border rounded-md w-32"/>
+            <input type="text" name="description" placeholder="Description" value={search.description} onChange={handleInputChange} className="p-2 border rounded-md w-48"/>
+            <button type="button" onClick={handleSearchClick} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Search...</button>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 bg-gray-100 px-3 py-1 rounded text-sm mb-4">
+            <div className="flex items-center">
+              <button onClick={() => handlePageChange(1)} disabled={data.pageIndex <= 1} className="disabled:text-gray-400 p-1"><ChevronFirst size={20} /></button>
+              <button onClick={() => handlePageChange(data.pageIndex - 1)} disabled={data.pageIndex <= 1} className="disabled:text-gray-400 p-1"><ChevronLeft size={20} /></button>
             </div>
-
-            <div className="flex items-center gap-2 sm:gap-4">
-              <label
-                htmlFor="meterNum"
-                className="text-gray-700 text-sm sm:text-base font-medium whitespace-nowrap w-24"
-              >
-                Description
-              </label>
-              <input
-                id="meterNum"
-                type="text"
-                name="meterNum"
-                value={formData.meterNum}
-                onChange={handleInputChange}
-                className="flex-1 px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-              />
+            <span>Total {data.total} records, page {data.pageIndex}/{data.totalPages || 1}</span>
+             <div className="flex items-center">
+              <button onClick={() => handlePageChange(data.pageIndex + 1)} disabled={data.pageIndex >= data.totalPages} className="disabled:text-gray-400 p-1"><ChevronRight size={20} /></button>
+              <button onClick={() => handlePageChange(data.totalPages)} disabled={data.pageIndex >= data.totalPages} className="disabled:text-gray-400 p-1"><ChevronLast size={20} /></button>
             </div>
-          </div>
-          <div className="mt-4">
-            <button
-              type="submit"
-              className="px-4 py-2 bg-gray-800 text-white text-sm rounded-md hover:brightness-110"
-            >
-              Search...
-            </button>
-          </div>
-
-          <div className="mt-4 sm:mt-6">
-            <div className="flex flex-col sm:flex-row items-center justify-between bg-gray-100 p-2 rounded gap-2 sm:gap-4">
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  className="p-1 rounded hover:bg-gray-200 disabled:opacity-50"
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(1)}
-                >
-                  <ChevronFirst size={16} className="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  className="p-1 rounded hover:bg-gray-200 disabled:opacity-50"
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                >
-                  <ChevronLeft size={16} className="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  className="p-1 rounded hover:bg-gray-200 disabled:opacity-50"
-                  disabled={currentPage === totalPages}
-                  onClick={() =>
-                    setCurrentPage((p) => Math.min(totalPages, p + 1))
-                  }
-                >
-                  <ChevronRight size={16} className="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  className="p-1 rounded hover:bg-gray-200 disabled:opacity-50"
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage(totalPages)}
-                >
-                  <ChevronLast size={16} className="w-4 h-4" />
-                </button>
-              </div>
-              <span className="text-xs sm:text-sm text-gray-600 text-center sm:text-left whitespace-nowrap">
-                Total {tableData.length} Records, Page {currentPage}/
-                {totalPages}, Turn To Page
-              </span>
-              <div className="flex items-center gap-1">
-                <input
-                  type="number"
-                  min="1"
-                  max={totalPages}
-                  value={currentPage}
-                  onChange={(e) => {
-                    const page = Math.min(
-                      totalPages,
-                      Math.max(1, Number(e.target.value))
-                    );
-                    setCurrentPage(page || 1);
-                  }}
-                  className="w-10 sm:w-12 px-1 sm:px-2 py-1 text-xs sm:text-sm border rounded text-center"
-                />
-                <span className="text-green-500 cursor-pointer hover:text-green-600">
-                  →
-                </span>
-              </div>
-            </div>
-
-            <div className="overflow-x-auto mt-2 sm:mt-4">
-              <table className="w-full sm:min-w-full border-collapse">
-                <thead>
-                  <tr className="bg-gray-800 text-white">
-                    <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
-                      Code
-                    </th>
-
-                    <th className="px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-normal">
-                      Description
-                    </th>
+        </div>
+        <div className="flex-grow overflow-auto border">
+          <table className="w-full text-sm text-left">
+            <thead className="bg-[#005587] text-white sticky top-0">
+              <tr>{tableHeaders.map(h => <th key={h} className="p-2 font-semibold">{h}</th>)}</tr>
+            </thead>
+            <tbody className="bg-white">
+              {loading ? (
+                <tr><td colSpan={tableHeaders.length} className="text-center p-4">Loading...</td></tr>
+              ) : error ? (
+                <tr><td colSpan={tableHeaders.length} className="text-center p-4 text-red-500">Error: {error}</td></tr>
+              ) : data.rows.length === 0 ? (
+                <tr><td colSpan={tableHeaders.length} className="text-center p-4">No records found.</td></tr>
+              ) : (
+                data.rows.map((row) => (
+                  <tr key={row.Code} onClick={() => setSelectedRow(row)} onDoubleClick={() => handleRowDoubleClick(row)} className={`cursor-pointer hover:bg-orange-100 ${selectedRow?.Code === row.Code ? 'bg-orange-200' : ''}`}>
+                    <td className="p-2 border-t">{row.Code}</td>
+                    <td className="p-2 border-t">{row.Description}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {tableData.length > 0 ? (
-                    tableData.map((row, index) => (
-                      <tr
-                        key={index}
-                        className="border-b hover:bg-gray-50 text-xs sm:text-sm"
-                      >
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.code}
-                        </td>
-
-                        <td className="px-2 sm:px-4 py-1 sm:py-2">
-                          {row.description}
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan="6"
-                        className="px-2 sm:px-4 py-2 sm:py-4 text-center text-xs sm:text-sm text-gray-500"
-                      >
-                        No records found
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-4 mt-4 sm:mt-6">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 sm:px-6 py-2 text-sm sm:text-base border border-gray-300 rounded-md hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-gray-800 text-white rounded-md hover:bg-gray-700"
-            >
-              OK
-            </button>
-          </div>
-        </form>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex justify-end gap-4 pt-4 border-t mt-4">
+          <button onClick={handleOkClick} disabled={!selectedRow || loading} className="w-28 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-400 flex items-center justify-center">✓ Ok</button>
+          <button onClick={onClose} className="w-28 px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">Cancel</button>
+        </div>
       </div>
     </div>
   );
 }
 
-export default Dialogue2;
+export default AreaSelectionDialogue;

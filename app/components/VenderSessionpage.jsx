@@ -3,289 +3,188 @@ import React, { useState, useEffect } from "react";
 import {
   RefreshCw,
   ChevronFirst,
+  ChevronLast,
   ChevronLeft,
   ChevronRight,
-  ChevronLast,
+  Search,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Vendorsessoinform from "./Vendorsessoinform";
+import { apiFetcher } from "../utils/apiFetcher"; // Adjust path as necessary
 
-// Helper function to get today's date in YYYY-MM-DD format
-const getTodayDate = () => {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-  const day = String(today.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
+// A simple modal component for showing API errors
+const ErrorPopup = ({ message, onClose }) => (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+      <h2 className="text-xl font-bold mb-4 text-red-600">API Error</h2>
+      <p className="mb-4 break-words">{message}</p>
+      <button
+        onClick={onClose}
+        className="mt-4 px-4 py-2 bg-[#FF9900] text-white rounded-md hover:brightness-105 w-full"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+);
 
-function VenderSessionpage() {
+
+function VenderAccountPage() {
   const router = useRouter();
 
   // State for search form inputs
   const [userCode, setUserCode] = useState("");
-  const [dateFrom, setDateFrom] = useState("");
-  const [dateTo, setDateTo] = useState(getTodayDate()); // Initialize dateTo with current date
-  const [status, setStatus] = useState("");
-  const [selectedAreaCode, setSelectedAreaCode] = useState("");
+  const [userName, setUserName] = useState("");
 
   // State for table data and pagination
-  const [vendorSessionRecords, setVendorSessionRecords] = useState([]);
-  const [totalRecords, setTotalRecords] = useState(0);
-  const [pageIndex, setPageIndex] = useState(0); // 0-based for internal logic (page 0 is the first page)
-  const [totalPages, setTotalPages] = useState(0);
+  const [vendorAccountRecords, setVendorAccountRecords] = useState([]);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    totalPages: 1,
+    pageIndex: 1,
+  });
+  
+  // State for loading and errors
+  const [isLoading, setIsLoading] = useState(true);
+  const [apiError, setApiError] = useState(null);
 
-  console.log("VenderSessionpage: Component rendered.");
 
-  // Fetch data on component mount and when pageIndex changes
-  useEffect(() => {
-    console.log("VenderSessionpage: useEffect triggered for pageIndex change. Current pageIndex (0-based):", pageIndex);
-    fetchVendorSessionData();
-  }, [pageIndex]); // Re-fetch data when pageIndex changes
+  const fetchVendorAccounts = async (page = 1) => {
+    setIsLoading(true);
+    setApiError(null);
 
-  const fetchVendorSessionData = async () => {
-    console.log("VenderSessionpage: fetchVendorSessionData called.");
-
-    const cookieString = document.cookie;
-    console.log("VenderSessionpage: Current cookie string:", cookieString);
-
-    if (!cookieString || cookieString.trim() === "") {
-      console.warn("VenderSessionpage: No cookies found or cookie string is empty. Redirecting to /auth/login.");
-      router.push("/auth/login");
-      return;
-    }
-
-    const formData = new URLSearchParams();
-    formData.append("ACTION", "4");
-    formData.append("code", userCode);
-
-    formData.append("dateTo", dateTo); // Use dateTo state value
-    console.log("VenderSessionpage: Sending dateTo in payload:", dateTo);
-
-    if (dateFrom) { // dateFrom is UI field, add if present
-      formData.append("dateFrom", dateFrom);
-      console.log("VenderSessionpage: Adding dateFrom to payload:", dateFrom);
-    }
-
-    formData.append("status", status);
-    // --- FIX APPLIED HERE ---
-    // Convert 0-based pageIndex (internal state) to 1-based for API payload
-    formData.append("PAGE_INDEX", (pageIndex + 1).toString());
-    console.log("VenderSessionpage: Sending PAGE_INDEX to API (1-based):", (pageIndex + 1).toString());
-    // --- END FIX ---
-
-    const payloadObject = {};
-    for (const pair of formData.entries()) {
-      payloadObject[pair[0]] = pair[1];
-    }
-    console.log("VenderSessionpage: Sending payload (object for clarity):", payloadObject);
-    console.log("VenderSessionpage: Sending payload (FormData.toString()):", formData.toString());
-
+    const payload = new URLSearchParams();
+    payload.append("ACTION", "1");
+    payload.append("userCode", userCode);
+    payload.append("userName", userName);
+    payload.append("isVender", "Y");
+    payload.append("PAGE_INDEX", page - 1);
 
     try {
-      console.log("VenderSessionpage: Attempting to fetch from /api/vendor-sessions");
-      const response = await fetch("/api/vendor-sessions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          Cookie: cookieString,
-          Accept: "application/json, text/javascript, */*",
-          "User-Agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
-          "X-Requested-With": "XMLHttpRequest",
-        },
-        body: formData.toString(),
-      });
-
-      console.log("VenderSessionpage: Fetch response received. Status:", response.status, "Status Text:", response.statusText);
-      console.log("VenderSessionpage: Response headers:", response.headers);
-
-      if (!response.ok) {
-        const errorBody = await response.text();
-        console.error(`VenderSessionpage: HTTP error! status: ${response.status}`, errorBody);
-        throw new Error(`HTTP error! status: ${response.status} - ${errorBody}`);
-      }
-
-      const data = await response.json();
-      console.log("VenderSessionpage: API response data (parsed JSON):", data);
-
-      if (data.state === "0") {
-        setVendorSessionRecords(data.rows || []);
-        setTotalRecords(parseInt(data.total) || 0);
-        setTotalPages(parseInt(data.totalPages) || 0);
-        // We no longer update pageIndex here, it's controlled by user interaction.
-        // This prevents the double call and ensures client state drives the request.
-        console.log("VenderSessionpage: Data fetched successfully. Records received:", data.rows?.length, "Total records:", data.total, "Total pages:", data.totalPages, "Current Page (0-based state based on request):", pageIndex);
-      } else {
-        console.error("VenderSessionpage: API returned an error state (data.state is not '0'):", data);
-        setVendorSessionRecords([]);
-        setTotalRecords(0);
-        setTotalPages(0);
-        setPageIndex(0);
-      }
+        const data = await apiFetcher("/api/vendor-accounts", "POST", payload, router);
+        if (data.state !== 0 && data.state !== "0") {
+            throw new Error(data.message || "Failed to fetch vendor accounts.");
+        }
+        setVendorAccountRecords(data.rows || []);
+        setPagination({
+            total: Number(data.total),
+            totalPages: Number(data.totalPages),
+            pageIndex: Number(data.pageIndex),
+        });
     } catch (error) {
-      console.error("VenderSessionpage: Error during fetch operation:", error);
-      setVendorSessionRecords([]);
-      setTotalRecords(0);
-      setTotalPages(0);
-      setPageIndex(0);
+        setApiError(error.message);
+        setVendorAccountRecords([]);
+    } finally {
+        setIsLoading(false);
     }
   };
 
-  const handlePageChange = (newPage) => {
-    console.log("VenderSessionpage: handlePageChange called. Attempting to change to page (0-based):", newPage);
-    // Ensure newPage is within valid bounds (0-based)
-    if (newPage >= 0 && newPage < totalPages) {
-      setPageIndex(newPage); // This state update will trigger useEffect and fetch data for the new page
-    } else {
-      console.log("VenderSessionpage: Page change ignored: New page out of bounds.", { newPage, totalPages, currentPageIndex: pageIndex });
-    }
-  };
+  // Fetch data on component mount
+  useEffect(() => {
+    fetchVendorAccounts(1);
+  }, []);
 
-  const handlePageInputChange = (e) => {
-    let value = e.target.value;
-    console.log("VenderSessionpage: handlePageInputChange called. Input value:", value);
-    if (value === "") {
-      console.log("VenderSessionpage: Input value is empty, not updating pageIndex immediately.");
-      return;
-    }
-    const page = parseInt(value);
-    // Convert 1-based input to 0-based internal state
-    if (!isNaN(page) && page >= 1 && page <= totalPages) {
-      setPageIndex(page - 1); // This state update will trigger useEffect and fetch data for the new page
-      console.log("VenderSessionpage: Setting pageIndex from input to (0-based):", page - 1);
-    } else {
-      console.log("VenderSessionpage: Invalid page input or out of bounds for input field:", { page, totalPages });
-    }
+  const handleSearch = () => {
+    fetchVendorAccounts(1); // Search always goes to the first page
   };
+  
+  const handleReload = () => {
+      setUserCode("");
+      setUserName("");
+      fetchVendorAccounts(1);
+  }
 
-  const handleSearchTrigger = () => {
-    console.log("VenderSessionpage: handleSearchTrigger called. Resetting pageIndex to 0 and fetching data.");
-    // Resetting pageIndex to 0 will trigger useEffect, which in turn calls fetchVendorSessionData.
-    setPageIndex(0);
-  };
+  const tableHeaders = ["User Code", "Name", "Description", "Department", "Account Balance"];
 
   return (
-    <>
-      <div className="w-full bg-white p-2 md:p-6">
-        <Vendorsessoinform
-          userCode={userCode}
-          setUserCode={setUserCode}
-          dateFrom={dateFrom}
-          setDateFrom={setDateFrom}
-          dateTo={dateTo}
-          setDateTo={setDateTo}
-          status={status}
-          setStatus={setStatus}
-          selectedAreaCode={selectedAreaCode}
-          setSelectedAreaCode={setSelectedAreaCode}
-          handleSearch={handleSearchTrigger}
-          handleRefresh={fetchVendorSessionData}
-        />
-
-        <div className="bg-white rounded-lg shadow mb-4 sm:mb-6 overflow-x-auto">
-          <div className="p-2 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-            <div className="flex items-center gap-2 sm:gap-4">
-              <div className="flex gap-1 sm:gap-2">
-                <ChevronFirst
-                  className={`w-4 h-4 sm:w-5 sm:h-5 cursor-pointer ${pageIndex === 0 ? 'text-gray-400' : 'hover:text-[#FF9900]'}`}
-                  onClick={() => handlePageChange(0)}
-                  disabled={pageIndex === 0}
-                />
-                <ChevronLeft
-                  className={`w-4 h-4 sm:w-5 sm:h-5 cursor-pointer ${pageIndex === 0 ? 'text-gray-400' : 'hover:text-[#FF9900]'}`}
-                  onClick={() => handlePageChange(pageIndex - 1)}
-                  disabled={pageIndex === 0}
-                />
-                <ChevronRight
-                  className={`w-4 h-4 sm:w-5 sm:h-5 cursor-pointer ${pageIndex === totalPages - 1 || totalPages === 0 ? 'text-gray-400' : 'text-[#FF9900] hover:text-[#FF9900]'}`}
-                  onClick={() => handlePageChange(pageIndex + 1)}
-                  disabled={pageIndex === totalPages - 1 || totalPages === 0}
-                />
-                <ChevronLast
-                  className={`w-4 h-4 sm:w-5 sm:h-5 cursor-pointer ${pageIndex === totalPages - 1 || totalPages === 0 ? 'text-gray-400' : 'text-[#FF9900] hover:text-[#FF9900]'}`}
-                  onClick={() => handlePageChange(totalPages - 1)}
-                  disabled={pageIndex === totalPages - 1 || totalPages === 0}
-                />
-              </div>
-              <div className="flex items-center gap-1 sm:gap-2 bg-gray-100 px-2 sm:px-3 py-1 rounded text-xs sm:text-sm">
-                <span className="text-gray-600 whitespace-nowrap">
-                  Total {totalRecords} Records
-                </span>
-                <span className="text-gray-600 hidden sm:inline">|</span>
-                <span className="text-gray-600 whitespace-nowrap">
-                  Record{" "}
-                  {totalRecords > 0 ? pageIndex * 10 + 1 : 0}-
-                  {Math.min((pageIndex + 1) * 10, totalRecords)}, Page{" "}
-                  {pageIndex + 1}/{totalPages}
-                </span>
-                <span className="text-gray-600">|</span>
-                <span className="text-gray-600 whitespace-nowrap">
-                  Turn To Page
-                </span>
-                <input
-                  type="text"
-                  className="w-8 sm:w-12 border rounded px-1 sm:px-2 py-1 text-center text-xs sm:text-sm"
-                  value={pageIndex + 1} // Display 1-based page index
-                  onChange={handlePageInputChange}
-                  onBlur={fetchVendorSessionData} // Re-fetch on blur (if value changed)
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      fetchVendorSessionData(); // Re-fetch on Enter
-                    }
-                  }}
-                />
-                <ChevronRight
-                  className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 hover:text-green-600 cursor-pointer"
-                  onClick={fetchVendorSessionData} // Trigger fetch when clicking this icon
-                />
-              </div>
+    <div className="p-6 bg-gray-50 min-h-screen">
+        {apiError && <ErrorPopup message={apiError} onClose={() => setApiError(null)} />}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-2xl font-semibold text-gray-800">Vendor Account List</h1>
+                <div className="flex gap-4">
+                    <button onClick={handleReload} className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:cursor-pointer transition-colors w-40 flex items-center justify-center gap-2">
+                        <RefreshCw size={16} />
+                        Refresh
+                    </button>
+                </div>
             </div>
-          </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[800px] sm:min-w-0">
-              <thead className="bg-[#FF9900] text-white">
-                <tr>
-                  <th className="p-2 sm:p-3 text-left">User Code</th>
-                  <th className="p-2 sm:p-3 text-left">User Name</th>
-                  <th className="p-2 sm:p-3 text-left">Start Time</th>
-                  <th className="p-2 sm:p-3 text-left">Status</th>
-                  <th className="p-2 sm:p-3 text-left">Trans Amount</th>
-                  <th className="p-2 sm:p-3 text-left">Bank Amount</th>
-                  <th className="p-2 sm:p-3 text-left">Stop Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {vendorSessionRecords.length > 0 ? (
-                  vendorSessionRecords.map((row, index) => (
-                    <tr
-                      key={index}
-                      className="hover:bg-[#FFE2B7] cursor-pointer transition-colors"
-                    >
-                      <td className="p-2 sm:p-3">{row.Code || "-"}</td>
-                      <td className="p-2 sm:p-3">{row.Code || "-"}</td> {/* Displaying Code for User Name */}
-                      <td className="p-2 sm:p-3">{row.StartTime || "-"}</td>
-                      <td className="p-2 sm:p-3">{row.Status || "-"}</td>
-                      <td className="p-2 sm:p-3">{row.TransAmount || "-"}</td>
-                      <td className="p-2 sm:p-3">{row.BankAMT || "-"}</td>
-                      <td className="p-2 sm:p-3">{row.MoneybagAMT || "-"}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="7" className="text-center p-4 text-gray-500">
-                      No vendor session records found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+            <div className="border-t border-gray-200 pt-6">
+                <p className="text-md font-semibold text-gray-700 mb-4">Searching Conditions</p>
+                <div className="flex flex-wrap items-center gap-4">
+                    <div className="flex items-center gap-2">
+                        <label htmlFor="userCode" className="text-sm text-gray-600">User Code:</label>
+                        <input
+                            type="text"
+                            id="userCode"
+                            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
+                            value={userCode}
+                            onChange={(e) => setUserCode(e.target.value)}
+                            onKeyPress={(e) => { if (e.key === "Enter") handleSearch(); }}
+                        />
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <label htmlFor="userName" className="text-sm text-gray-600">Name:</label>
+                        <input
+                            type="text"
+                            id="userName"
+                            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
+                            value={userName}
+                            onChange={(e) => setUserName(e.target.value)}
+                            onKeyPress={(e) => { if (e.key === "Enter") handleSearch(); }}
+                        />
+                    </div>
+                    <button onClick={handleSearch} disabled={isLoading} className="bg-[#FF9900] text-white px-4 py-2 rounded-md flex items-center gap-2 shadow-md transition disabled:bg-gray-400">
+                        <Search size={16} />
+                        <span>{isLoading ? 'Searching...' : 'Search'}</span>
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
-    </>
+
+        <div className="bg-white p-4 mt-6 rounded-lg shadow-md">
+            <div className="flex items-center justify-between text-sm text-gray-600">
+                <div className="flex items-center gap-2">
+                    <button onClick={() => fetchVendorAccounts(1)} disabled={pagination.pageIndex <= 1 || isLoading} className="p-2 rounded hover:bg-gray-100 disabled:text-gray-300"><ChevronFirst /></button>
+                    <button onClick={() => fetchVendorAccounts(pagination.pageIndex - 1)} disabled={pagination.pageIndex <= 1 || isLoading} className="p-2 rounded hover:bg-gray-100 disabled:text-gray-300"><ChevronLeft /></button>
+                    <button onClick={() => fetchVendorAccounts(pagination.pageIndex + 1)} disabled={pagination.pageIndex >= pagination.totalPages || isLoading} className="p-2 rounded hover:bg-gray-100 disabled:text-gray-300"><ChevronRight /></button>
+                    <button onClick={() => fetchVendorAccounts(pagination.totalPages)} disabled={pagination.pageIndex >= pagination.totalPages || isLoading} className="p-2 rounded hover:bg-gray-100 disabled:text-gray-300"><ChevronLast /></button>
+                </div>
+                <div className="flex items-center gap-2 bg-gray-100 px-3 py-1 rounded">
+                    <span>Total {pagination.total} Records</span>
+                    <span>|</span>
+                    <span>Page {pagination.pageIndex}/{pagination.totalPages || 1}</span>
+                </div>
+            </div>
+            <div className="overflow-x-auto mt-4">
+                <table className="w-full">
+                    <thead>
+                        <tr className="bg-gradient-to-r from-[#000D35] to-[#FF9900] text-white h-12">
+                            {tableHeaders.map(header => <th key={header} className="px-6 py-3 text-left font-semibold">{header}</th>)}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {isLoading ? (
+                            <tr><td colSpan={tableHeaders.length} className="text-center p-6">Loading...</td></tr>
+                        ) : vendorAccountRecords.length > 0 ? (
+                            vendorAccountRecords.map((row, index) => (
+                                <tr key={row.Code || index} className="hover:bg-orange-50 border-b">
+                                    <td className="px-6 py-4">{row.Code}</td>
+                                    <td className="px-6 py-4">{row.Name}</td>
+                                    <td className="px-6 py-4">{row.Description}</td>
+                                    <td className="px-6 py-4">{row.DeptName || 'N/A'}</td>
+                                    <td className="px-6 py-4">{row.AccBalance}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr><td colSpan={tableHeaders.length} className="text-center p-6 text-gray-500">No vendor accounts found.</td></tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
   );
 }
 
-export default VenderSessionpage;
+export default VenderAccountPage;
