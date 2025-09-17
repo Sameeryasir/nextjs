@@ -13,6 +13,7 @@ import ArrearTabe from "./ArrearTabe";
 import Maintaintokentab from "./Maintaintokentab";
 import Freeissuetab from "./Freeissuetab";
 import CancellationTab from "./CancellationTab";
+import RegisterCustomerForm from "./RegisterCustomerForm";
 
 function Content() {
   const router = useRouter();
@@ -21,6 +22,7 @@ function Content() {
   const [totalRecords, setTotalRecords] = useState(0);
   const [pageIndex, setPageIndex] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [isRegisterFormVisible, setIsRegisterFormVisible] = useState(false);
 
   const [currentSearchParams, setCurrentSearchParams] = useState({
     name: "",
@@ -33,7 +35,6 @@ function Content() {
     cancelled: "",
   });
 
-  // Simplified tab state management
   const [tabVisibility, setTabVisibility] = useState({
     "customer-event": true,
     "connection": false,
@@ -48,7 +49,7 @@ function Content() {
     setActiveTab(tabName);
     const newVisibility = {};
     Object.keys(tabVisibility).forEach(key => {
-        newVisibility[key] = key === tabName;
+      newVisibility[key] = key === tabName;
     });
     setTabVisibility(newVisibility);
   };
@@ -59,14 +60,12 @@ function Content() {
       if (typeof window !== 'undefined') window.location.href = "/auth/login";
       return;
     }
-
     const formData = new URLSearchParams();
     formData.append("ACTION", "1");
     Object.entries(currentSearchParams).forEach(([key, value]) => {
       if (value) formData.append(key, value);
     });
     formData.append("PAGE_INDEX", (pageIndex + 1).toString());
-
     try {
       const response = await fetch("/api/customer-exchange", {
         method: "POST",
@@ -76,14 +75,12 @@ function Content() {
         },
         body: formData.toString(),
       });
-
       if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
-            if (typeof window !== 'undefined') window.location.href = "/auth/login";
+          if (typeof window !== 'undefined') window.location.href = "/auth/login";
         }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
       const data = await response.json();
       setTableData(data.rows || []);
       setTotalRecords(parseInt(data.total) || 0);
@@ -132,58 +129,68 @@ function Content() {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-        <SearchForm onSearch={handleSearchSubmit} />
-      </div>
+      {isRegisterFormVisible ? (
+        <RegisterCustomerForm onClose={() => setIsRegisterFormVisible(false)} />
+      ) : (
+        <>
+          <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-6 border-b pb-4">Customer Management</h2>
+            <SearchForm 
+              onSearch={handleSearchSubmit}
+              onRegisterClick={() => setIsRegisterFormVisible(true)}
+            />
+          </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-        <CustomerTable
-          tableData={tableData}
-          totalRecords={totalRecords}
-          pageIndex={pageIndex}
-          totalPages={totalPages}
-          handlePageChange={handlePageChange}
-          handlePageInputChange={handlePageInputChange}
-          fetchTableData={fetchTableData}
-        />
-      </div>
-      
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="flex justify-between items-center border-b border-gray-200 mb-4">
-            <nav className="flex overflow-x-auto gap-2 sm:gap-4">
+          <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+            <CustomerTable
+              tableData={tableData}
+              totalRecords={totalRecords}
+              pageIndex={pageIndex}
+              totalPages={totalPages}
+              handlePageChange={handlePageChange}
+              handlePageInputChange={handlePageInputChange}
+              fetchTableData={fetchTableData}
+            />
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <div className="flex justify-between items-center border-b border-gray-200 mb-4">
+              <nav className="flex overflow-x-auto gap-2 sm:gap-4">
                 {tabs.map(tab => (
-                    <button
-                        key={tab.id}
-                        className={`px-3 sm:px-4 py-2 whitespace-nowrap font-semibold text-sm transition-colors ${
-                            activeTab === tab.id
-                            ? "text-[#FF9900] border-b-2 border-[#FF9900]"
-                            : "text-gray-600 hover:text-gray-800"
-                        }`}
-                        onClick={() => handleTabClick(tab.id)}
-                    >
-                        {tab.label}
-                    </button>
+                  <button
+                    key={tab.id}
+                    className={`px-3 sm:px-4 py-2 whitespace-nowrap font-semibold text-sm transition-colors ${
+                      activeTab === tab.id
+                        ? "text-[#FF9900] border-b-2 border-[#FF9900]"
+                        : "text-gray-600 hover:text-gray-800"
+                    }`}
+                    onClick={() => handleTabClick(tab.id)}
+                  >
+                    {tab.label}
+                  </button>
                 ))}
-            </nav>
-            <button
+              </nav>
+              <button
                 className="px-4 py-2 bg-[#FF9900] text-white rounded-md hover:brightness-105 transition-colors flex items-center gap-2"
                 onClick={fetchTableData}
-            >
-                <RefreshCw size={16}/>
+              >
+                <RefreshCw size={16} />
                 Refresh
-            </button>
-        </div>
-        
-        <div className="mt-4">
-            {tabVisibility["customer-event"] && <Customereventtab />}
-            {tabVisibility["connection"] && <Connectiontab />}
-            {tabVisibility["vending"] && <VendingTab />}
-            {tabVisibility["arrear-contract"] && <ArrearTabe />}
-            {tabVisibility["maintenance-token"] && <Maintaintokentab />}
-            {tabVisibility["free-issue-list"] && <Freeissuetab />}
-            {tabVisibility["cancellation"] && <CancellationTab />}
-        </div>
-      </div>
+              </button>
+            </div>
+
+            <div className="mt-4">
+              {tabVisibility["customer-event"] && <Customereventtab />}
+              {tabVisibility["connection"] && <Connectiontab />}
+              {tabVisibility["vending"] && <VendingTab />}
+              {tabVisibility["arrear-contract"] && <ArrearTabe />}
+              {tabVisibility["maintenance-token"] && <Maintaintokentab />}
+              {tabVisibility["free-issue-list"] && <Freeissuetab />}
+              {tabVisibility["cancellation"] && <CancellationTab />}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

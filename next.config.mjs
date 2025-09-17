@@ -6,6 +6,10 @@ const nextConfig = {
         source: '/checkin',
         destination: 'http://localhost:38080/checkin.php',
       },
+       {
+        source: '/checkin-solution2',
+        destination: 'http://localhost:9000/checkin.php',
+      },
       // New rewrite rule for the customer exchange API
       {
         source: '/api/customer-exchange', // This is the path your Next.js app will request
@@ -15,6 +19,10 @@ const nextConfig = {
       {
         source: '/api/region-exchange',
         destination: 'http://localhost:38080/general/region/exchange.php',
+      },
+      {
+        source: '/api/register-customer',
+        destination: 'http://localhost:38080/general/customer/cstregister.php',
       },
       {
         source: '/api/compensating-exchange', // A new local path for this specific API

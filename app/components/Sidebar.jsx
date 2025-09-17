@@ -201,7 +201,7 @@ export default function Sidebar() {
     id: "dashboard",
     name: "Dashboard",
     icon: <Gauge className="w-4 h-4 text-white" />,
-    route: "/",
+    route: "/solution1/firstdashboard",
   };
 
   const baseInformationItems = [
